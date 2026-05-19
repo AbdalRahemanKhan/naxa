@@ -1,0 +1,10 @@
+layer,asset,asset_class,direction,move_14d_pct,move_30d_pct,move_60d_pct,fred_series,data_source
+2,WTI Crude Oil,commodity_energy,UP,-0.38,2.68,9.14,DCOILWTICO,FRED
+2,10Y-2Y Yield Spread (Macro Context),macro_indicator,DOWN,-18.39,-12.64,-50.57,T10Y2Y,FRED
+3,ZIM Integrated Shipping,shipping_equity,DOWN,-11.29,-20.33,-34.52,,yfinance
+3,Matson Inc,shipping_equity,N/A,,,,,yfinance
+3,Genco Shipping (Dry Bulk),shipping_equity,DOWN,-2.02,-3.85,-0.12,,yfinance
+3,Frontline (Tanker),shipping_equity,UP,6.05,5.51,12.89,,yfinance
+4,Deep Sea Freight PPI,freight_rate,DOWN,-4.45,-4.45,-9.67,PCU483111483111,FRED
+4,Natural Gas (LNG Proxy),commodity_energy,UP,2.33,2.33,15.5,MHHNGSP,FRED
+5,Soybean Price (Grain Trade),commodity_agricultural,DOWN,-4.51,-4.51,-7.49,PSOYBUSDM,FRED

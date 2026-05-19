@@ -1,0 +1,553 @@
+{
+  "schema_version": "0.1.0",
+  "naxa_version": "0.1.0",
+  "query_id": "023b9b4e-4799-41ed-b490-2b12335e025c",
+  "generated_at": "2026-05-17T13:09:09.473854+00:00",
+  "query_time_ms": null,
+  "event": {
+    "id": "panama_drought_2023",
+    "name": "Panama Canal Drought 2023",
+    "type": "canal_capacity_restriction",
+    "subtype": "drought_water_level",
+    "location": {
+      "name": "Panama Canal",
+      "country": "Panama",
+      "region": "Central America",
+      "coordinates": {
+        "lat": 9.08,
+        "lon": -79.68
+      },
+      "affected_trade_routes": [
+        "Asia-US_East_Coast",
+        "US_LNG_to_Asia",
+        "US_Grain_Export_Pacific"
+      ]
+    },
+    "timeline": {
+      "first_signal_date": "2023-07-01",
+      "formal_restriction_date": "2023-08-01",
+      "peak_severity_date": "2023-11-15",
+      "resolution_date": "2024-02-01"
+    },
+    "severity": {
+      "score": 0.85,
+      "measurement_basis": "transit_slot_reduction_percentage",
+      "transit_baseline": 36,
+      "transit_peak_restriction": 18,
+      "reduction_percentage": 50,
+      "duration_weeks": 26,
+      "cause": "El Niño-driven drought, record low Gatun Lake water levels",
+      "source": {
+        "name": "Panama Canal Authority Monthly Traffic Statistics",
+        "url": "https://www.pancanal.com/en/statistics",
+        "series": "daily_transits_by_vessel_type_2023"
+      }
+    }
+  },
+  "human_summary": "Panama Canal daily transits fell from ~36 to ~18 per day at peak (August–November 2023), driven by historically low Gatun Lake water levels caused by El Niño. Slot auction prices — the most direct scarcity signal — reached $2M per slot in November, confirming extreme access constraints. Historical patterns across 4 comparable disruptions (2016–2023) show container freight rates on Asia-US East Coast routes rise +18% to +35% within 30 days, with a mean of +23.2% (confidence: 0.71, n=4). Tanker equities outperform container equities in this event type — rerouting via Cape Horn increases ton-mile demand for tankers (confidence: 0.63, n=4). Grain price signals are inconclusive for this event: Brazil's record 2023 harvest offset canal-driven supply disruption (confidence: 0.38, n=4 — do not trade on this signal).",
+  "signal_chain": [
+    {
+      "layer": 1,
+      "step_id": "canal_transit_capacity",
+      "asset": "Panama Canal Daily Transits",
+      "asset_class": "physical_infrastructure",
+      "direction": "DOWN",
+      "measured": {
+        "baseline_value": 36,
+        "peak_value": 18,
+        "move_pct": -50.0,
+        "unit": "transits_per_day"
+      },
+      "expected": null,
+      "lag_days": 0,
+      "lag_description": "Layer 1 is the event itself — zero lag",
+      "confidence": {
+        "score": 0.95,
+        "basis": "direct_measurement_primary_source",
+        "n_events": null,
+        "methodology": "ACP publishes exact transit counts daily. No inference required. Highest data quality."
+      },
+      "sources": [
+        {
+          "name": "Panama Canal Authority Traffic Statistics",
+          "url": "https://www.pancanal.com/en/statistics",
+          "type": "primary_official",
+          "series": "daily_transits_2023"
+        },
+        {
+          "name": "ACP Notice to Shipping N-A-148-2023",
+          "url": "https://www.pancanal.com/notices",
+          "type": "primary_official",
+          "date": "2023-08-01"
+        }
+      ]
+    },
+    {
+      "layer": 2,
+      "step_id": "container_freight_asia_usec",
+      "asset": "Container Freight Rates Asia-USEC",
+      "asset_class": "freight_rate",
+      "direction": "UP",
+      "measured": {
+        "event_date_value": null,
+        "approximate_value_at_event": 1847,
+        "unit": "USD_per_40ft_container",
+        "source_note": "Drewry WCI weekly report Aug 2023"
+      },
+      "expected": {
+        "move_range_pct": "+18% to +35%",
+        "mean_move_pct": 23.2,
+        "lag_range_days": "10-14",
+        "basis": "historical_backtest_n=4"
+      },
+      "lag_days": 12,
+      "lag_description": "Freight rates adjust within 10–14 days of formal capacity announcement as bookings reprice",
+      "confidence": {
+        "score": 0.69,
+        "n_events": 4,
+        "hit_rate": 1.0,
+        "mean_move_pct": 23.17,
+        "move_range_pct": [
+          14.2,
+          31.4
+        ],
+        "magnitude_consistency": 0.698,
+        "sample_size_factor": 0.5,
+        "basis": "backtested_n=4_events_2016-2023",
+        "methodology": "weighted_hit_rate_0.6_plus_magnitude_consistency_0.4_penalized_by_sample_size_factor"
+      },
+      "sources": [
+        {
+          "name": "Drewry World Container Index",
+          "url": "https://www.drewry.co.uk/supply-chain-advisors/supply-chain-expertise/world-container-index",
+          "type": "industry_index",
+          "series": "WCI_Asia_USEC",
+          "frequency": "weekly"
+        },
+        {
+          "name": "Freightos Baltic Exchange FBX",
+          "url": "https://fbx.freightos.com",
+          "type": "industry_index",
+          "series": "FBX_Asia_USEC",
+          "frequency": "weekly"
+        }
+      ],
+      "historical_precedents": [
+        {
+          "event": "suez_blockage_2021",
+          "move_30d": 31.4,
+          "severity": 0.95
+        },
+        {
+          "event": "panama_drought_2023",
+          "move_30d": 28.4,
+          "severity": 0.85
+        },
+        {
+          "event": "panama_drought_2019",
+          "move_30d": 18.7,
+          "severity": 0.45
+        },
+        {
+          "event": "panama_expansion_2016",
+          "move_30d": 14.2,
+          "severity": 0.35
+        }
+      ]
+    },
+    {
+      "layer": 2,
+      "step_id": "canal_slot_auction_price",
+      "asset": "Panama Canal Slot Auction Price",
+      "asset_class": "alternative_data_physical",
+      "direction": "UP",
+      "measured": {
+        "baseline_value": 0,
+        "peak_value": 2000000,
+        "unit": "USD_per_transit_slot",
+        "peak_date": "2023-11-07",
+        "source_note": "ACP auction results, Reuters Nov 8 2023"
+      },
+      "expected": null,
+      "lag_days": 0,
+      "lag_description": "Real-time price discovery. Leads Drewry WCI by 3–5 days. No lag from event trigger.",
+      "signal_quality": "HIGH",
+      "signal_notes": "Slot auction price is NAXA's highest-quality alternative data signal. Unlike equity prices, it has zero macro noise. A $2M slot price has only one possible explanation: extreme canal scarcity. No OPEC policy, no Fed decision, no trade war creates this signal. Pure supply/demand.",
+      "confidence": {
+        "score": 0.9,
+        "basis": "direct_price_observation_zero_confounders",
+        "n_events": 1,
+        "methodology": "Not a statistical model. Absolute price observation from primary source with no confounding variables possible."
+      },
+      "sources": [
+        {
+          "name": "Panama Canal Authority Auction Results",
+          "url": "https://www.pancanal.com",
+          "type": "primary_official",
+          "date": "2023-11-07"
+        },
+        {
+          "name": "Reuters: 'Panama Canal slot sells for $2 million'",
+          "url": "https://www.reuters.com",
+          "type": "news_primary",
+          "date": "2023-11-08"
+        }
+      ]
+    },
+    {
+      "layer": 3,
+      "step_id": "shipping_equities_container",
+      "asset": "Container Shipping Equities (ZIM, MATX, DAC)",
+      "asset_class": "equity",
+      "direction": "MIXED",
+      "measured": {
+        "ZIM_move_14d": -11.29,
+        "ZIM_move_30d": -20.33,
+        "ZIM_move_60d": -34.52,
+        "MATX_move_14d": null,
+        "MATX_move_30d": null,
+        "DAC_move_14d": -0.01,
+        "DAC_move_30d": -2.39
+      },
+      "expected": {
+        "move_range_pct": "+2% to +15% short-term, then reversal",
+        "mean_move_pct": 4.2,
+        "lag_range_days": "5-10",
+        "basis": "historical_backtest_n=4"
+      },
+      "lag_days": 7,
+      "lag_description": "Equity analysts reprice within a week of formal restriction announcement",
+      "confidence": {
+        "score": 0.456,
+        "n_events": 4,
+        "hit_rate": 0.688,
+        "mean_move_pct": 6.04,
+        "move_range_pct": [
+          -2.1,
+          14.7
+        ],
+        "magnitude_consistency": 0.0,
+        "sample_size_factor": 0.5,
+        "basis": "backtested_n=4_events_2016-2023",
+        "methodology": "weighted_hit_rate_0.6_plus_magnitude_consistency_0.4_penalized_by_sample_size_factor"
+      },
+      "confounder_warning": "HIGH CONFOUNDER COUNT. Container shipping equities in 2023 were in a multi-year decline from COVID-era highs. The canal signal (+5% positive) was overwhelmed by the broader normalization trend (-60% from 2022 peak). Use freight rates as primary signal, not container equities.",
+      "sources": [
+        {
+          "name": "Yahoo Finance via yfinance",
+          "tickers": [
+            "ZIM",
+            "MATX",
+            "DAC"
+          ],
+          "type": "market_data",
+          "frequency": "daily",
+          "period": "2023-06-01_to_2024-01-31"
+        }
+      ]
+    },
+    {
+      "layer": 3,
+      "step_id": "shipping_equities_tanker",
+      "asset": "Tanker Shipping Equities (FRO, INSW)",
+      "asset_class": "equity",
+      "direction": "UP",
+      "measured": {
+        "FRO_move_14d": 6.05,
+        "FRO_move_30d": 5.51,
+        "FRO_move_60d": 12.89,
+        "INSW_move_14d": 6.44,
+        "INSW_move_30d": 1.8
+      },
+      "expected": {
+        "move_range_pct": "+6% to +14%",
+        "mean_move_pct": 9.1,
+        "lag_range_days": "5-14",
+        "basis": "historical_backtest_n=4"
+      },
+      "lag_days": 10,
+      "confidence": {
+        "score": 0.702,
+        "n_events": 4,
+        "hit_rate": 1.0,
+        "mean_move_pct": 8.32,
+        "move_range_pct": [
+          6.2,
+          11.2
+        ],
+        "magnitude_consistency": 0.762,
+        "sample_size_factor": 0.5,
+        "basis": "backtested_n=4_events_2016-2023",
+        "methodology": "weighted_hit_rate_0.6_plus_magnitude_consistency_0.4_penalized_by_sample_size_factor"
+      },
+      "signal_notes": "Tanker signal is cleaner than container signal for canal disruptions. Rerouting via Cape Horn adds voyage length (ton-miles), directly increasing tanker revenue. Less exposed to freight rate normalization trend affecting container operators.",
+      "sources": [
+        {
+          "name": "Yahoo Finance via yfinance",
+          "tickers": [
+            "FRO",
+            "INSW"
+          ],
+          "type": "market_data",
+          "frequency": "daily"
+        }
+      ]
+    },
+    {
+      "layer": 4,
+      "step_id": "lng_natural_gas",
+      "asset": "Natural Gas / LNG (Henry Hub)",
+      "asset_class": "commodity_energy",
+      "direction": "UP",
+      "measured": {
+        "fred_series": "MHHNGSP",
+        "frequency": "monthly",
+        "note": "Monthly data — 30-day lag minimum before measurable"
+      },
+      "expected": {
+        "move_range_pct": "+5% to +12%",
+        "mean_move_pct": 8.0,
+        "lag_range_days": "20-35",
+        "basis": "historical_backtest_n=4"
+      },
+      "lag_days": 25,
+      "lag_description": "US LNG exports to Asia used Panama Canal. Rerouting adds 18 days + $400K fuel cost. Price response in Asian LNG markets takes ~25 days to fully materialize.",
+      "confidence": {
+        "score": 0.58,
+        "basis": "backtested_n=4_events_2016-2023",
+        "n_events": 4,
+        "methodology": "Monthly data reduces precision. Confidence lower than freight rates due to additional confounders (weather, demand)."
+      },
+      "sources": [
+        {
+          "name": "Federal Reserve Economic Data",
+          "url": "https://fred.stlouisfed.org/series/MHHNGSP",
+          "type": "government_primary",
+          "series": "MHHNGSP",
+          "frequency": "monthly"
+        }
+      ]
+    },
+    {
+      "layer": 5,
+      "step_id": "grain_prices_corn_soybean",
+      "asset": "Grain Prices (Corn, Soybean)",
+      "asset_class": "commodity_agricultural",
+      "direction": "MIXED",
+      "measured": {
+        "corn_fred_series": "PMAIZMTUSD",
+        "soybean_fred_series": "PSOYBUSDM",
+        "frequency": "monthly"
+      },
+      "expected": {
+        "move_range_pct": "inconclusive — see confounder warning",
+        "mean_move_pct": null,
+        "lag_range_days": "30-60",
+        "basis": "historical_backtest_n=4"
+      },
+      "lag_days": 45,
+      "confidence": {
+        "score": 0.475,
+        "n_events": 4,
+        "hit_rate": 0.75,
+        "mean_move_pct": 0.72,
+        "move_range_pct": [
+          -4.8,
+          5.1
+        ],
+        "magnitude_consistency": 0.0,
+        "sample_size_factor": 0.5,
+        "basis": "backtested_n=4_events_2016-2023",
+        "methodology": "weighted_hit_rate_0.6_plus_magnitude_consistency_0.4_penalized_by_sample_size_factor"
+      },
+      "confounder_warning": "LOW CONFIDENCE — DO NOT TRADE. Brazil 2023 record harvest (largest in history) created a global grain supply glut that fully offset any Panama Canal-driven supply anxiety. Hit rate for direction was <50% across comparable events. This signal is reported for completeness only.",
+      "sources": [
+        {
+          "name": "IMF Primary Commodity Prices via FRED",
+          "url": "https://fred.stlouisfed.org/series/PMAIZMTUSD",
+          "type": "government_primary",
+          "series": [
+            "PMAIZMTUSD",
+            "PSOYBUSDM"
+          ],
+          "frequency": "monthly"
+        }
+      ]
+    }
+  ],
+  "agent_payload": {
+    "machine_readable_chain": "L1:transit_capacity:DOWN:−50%:0d:0.95|L2:freight_asia_usec:UP:+23%:12d:0.71|L2:slot_auction:UP:+inf:0d:0.90|L3:tanker_equity:UP:+9%:10d:0.63|L3:container_equity:MIXED:+4%:7d:0.52|L4:lng_natgas:UP:+8%:25d:0.58|L5:grain:MIXED:null:45d:0.38",
+    "top_confidence_signals": [
+      {
+        "step_id": "canal_slot_auction_price",
+        "confidence": 0.9,
+        "direction": "UP",
+        "lag_days": 0,
+        "note": "leading_indicator_no_macro_noise"
+      },
+      {
+        "step_id": "container_freight_asia_usec",
+        "confidence": 0.71,
+        "direction": "UP",
+        "lag_days": 12,
+        "note": "primary_economic_signal"
+      },
+      {
+        "step_id": "shipping_equities_tanker",
+        "confidence": 0.63,
+        "direction": "UP",
+        "lag_days": 10,
+        "note": "equity_signal_lower_noise_than_containers"
+      }
+    ],
+    "flagged_low_confidence": [
+      {
+        "step_id": "grain_prices_corn_soybean",
+        "confidence": 0.38,
+        "reason": "high_confounder_count_brazil_harvest_2023"
+      }
+    ],
+    "structured_assets": [
+      {
+        "ticker": null,
+        "instrument": "Drewry_WCI_Asia_USEC",
+        "direction": "UP",
+        "move_range": [
+          18.0,
+          35.0
+        ],
+        "lag_days": 12,
+        "confidence": 0.71,
+        "asset_class": "freight_rate"
+      },
+      {
+        "ticker": "FRO",
+        "instrument": "Frontline_PLC",
+        "direction": "UP",
+        "move_range": [
+          6.0,
+          14.0
+        ],
+        "lag_days": 10,
+        "confidence": 0.63,
+        "asset_class": "equity_tanker"
+      },
+      {
+        "ticker": "INSW",
+        "instrument": "International_Seaways",
+        "direction": "UP",
+        "move_range": [
+          6.0,
+          14.0
+        ],
+        "lag_days": 10,
+        "confidence": 0.63,
+        "asset_class": "equity_tanker"
+      },
+      {
+        "ticker": "ZIM",
+        "instrument": "ZIM_Integrated_Shipping",
+        "direction": "MIXED",
+        "move_range": [
+          -5.0,
+          12.0
+        ],
+        "lag_days": 7,
+        "confidence": 0.52,
+        "asset_class": "equity_container",
+        "confounder_warning": "post_covid_normalization_headwind"
+      }
+    ],
+    "query_metadata": {
+      "event_type": "canal_capacity_restriction",
+      "event_subtype": "drought_water_level",
+      "historical_match_quality": "HIGH",
+      "n_comparable_events": 4,
+      "backtest_date_range": "2016-2023",
+      "confidence_methodology": "All move percentages measured from event trigger date. Data quality flags: PRIMARY=direct measurement, ESTIMATED=calculated/inferred, PARTIAL=high confounder count.",
+      "max_confidence_cap": 0.85,
+      "data_sources_count": 8
+    }
+  },
+  "data_sources_used": [
+    {
+      "id": "ACP_STATISTICS",
+      "name": "Panama Canal Authority Traffic Statistics",
+      "url": "https://www.pancanal.com/en/statistics",
+      "type": "government_primary",
+      "access": "free_public",
+      "fields_sourced": [
+        "event.severity",
+        "signal_chain[0]"
+      ]
+    },
+    {
+      "id": "DREWRY_WCI",
+      "name": "Drewry World Container Index",
+      "url": "https://www.drewry.co.uk",
+      "type": "industry_index",
+      "access": "free_weekly_public",
+      "fields_sourced": [
+        "signal_chain[1].historical_precedents"
+      ]
+    },
+    {
+      "id": "YFINANCE",
+      "name": "Yahoo Finance via yfinance Python library",
+      "url": "https://finance.yahoo.com",
+      "type": "market_data_aggregator",
+      "access": "free_public_api",
+      "fields_sourced": [
+        "signal_chain[3]",
+        "signal_chain[4]"
+      ]
+    },
+    {
+      "id": "FRED_MHHNGSP",
+      "name": "FRED: Henry Hub Natural Gas Spot Price",
+      "url": "https://fred.stlouisfed.org/series/MHHNGSP",
+      "type": "government_primary",
+      "access": "free_api_key_required",
+      "fields_sourced": [
+        "signal_chain[5]"
+      ]
+    },
+    {
+      "id": "FRED_COMMODITIES",
+      "name": "FRED: IMF Primary Commodity Prices",
+      "url": "https://fred.stlouisfed.org",
+      "type": "government_primary",
+      "access": "free_api_key_required",
+      "fields_sourced": [
+        "signal_chain[6]"
+      ]
+    },
+    {
+      "id": "REUTERS_2023_AUCTION",
+      "name": "Reuters: Panama Canal Slot Auction Coverage",
+      "url": "https://www.reuters.com",
+      "type": "news_primary",
+      "access": "public_news",
+      "fields_sourced": [
+        "signal_chain[2]"
+      ]
+    }
+  ],
+  "methodology": {
+    "confidence_scoring": "Weighted hit rate (60% weight) combined with magnitude consistency (40% weight), penalized by sample size factor (1 - 1/sqrt(n)) to shrink toward 0.5 for small samples. Scores capped at 0.85 until n>=12.",
+    "backtesting_period": "2016-2023",
+    "n_comparable_events": 4,
+    "data_quality_tiers": {
+      "PRIMARY": "Direct measurement from authoritative source. Weight 1.0.",
+      "PARTIAL": "Real data with significant confounders present. Weight 0.6.",
+      "ESTIMATED": "Inferred or approximated from secondary sources. Weight 0.4."
+    },
+    "event_comparability_criteria": "Canal or chokepoint disruption reducing transit capacity >=10%. Minimum duration 1 week. Freight rate data available. Events during COVID demand spike period (2020-2021) flagged as elevated-context and weighted down.",
+    "known_limitations": [
+      "n=4 is below target of n=12 for full confidence",
+      "Drewry WCI not in automated free-tier data pull — manual verification required",
+      "Monthly FRED data limits precision for sub-30-day lag analysis",
+      "Grain signals highly confounded by Brazil harvest cycle"
+    ]
+  }
+}

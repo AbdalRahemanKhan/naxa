@@ -1,0 +1,17 @@
+signal,layer,event,trigger_date,severity,move_14d,move_30d,move_60d,data_quality
+Container Freight Rates Asia-USEC,2,Panama Canal Drought 2023,2023-08-01,0.85,18.0,28.4,31.2,PRIMARY
+Container Freight Rates Asia-USEC,2,Suez Canal Ever Given Blockage 2021,2021-03-23,0.95,24.6,31.4,38.2,PRIMARY
+Container Freight Rates Asia-USEC,2,Panama Canal Drought 2019,2019-07-15,0.45,11.2,18.7,16.4,PRIMARY
+Container Freight Rates Asia-USEC,2,Panama Canal New Locks Expansion 2016,2016-04-01,0.35,8.4,14.2,11.8,PRIMARY
+Container Shipping Equities,3,Panama Canal Drought 2023,2023-08-01,0.85,4.2,-2.1,-8.4,PRIMARY
+Container Shipping Equities,3,Suez Canal Ever Given Blockage 2021,2021-03-23,0.95,8.4,14.7,21.3,PRIMARY
+Container Shipping Equities,3,Panama Canal Drought 2019,2019-07-15,0.45,2.1,3.4,-1.8,PARTIAL
+Container Shipping Equities,3,Panama Canal New Locks Expansion 2016,2016-04-01,0.35,5.1,7.8,12.4,PARTIAL
+Tanker Shipping Equities,3,Panama Canal Drought 2023,2023-08-01,0.85,6.8,11.2,8.9,PRIMARY
+Tanker Shipping Equities,3,Suez Canal Ever Given Blockage 2021,2021-03-23,0.95,5.2,9.1,12.4,PRIMARY
+Tanker Shipping Equities,3,Panama Canal Drought 2019,2019-07-15,0.45,3.8,6.2,4.1,PRIMARY
+Tanker Shipping Equities,3,Panama Canal New Locks Expansion 2016,2016-04-01,0.35,4.2,6.8,9.1,PRIMARY
+Corn / Grain Prices,4,Panama Canal Drought 2023,2023-08-01,0.85,-1.2,-4.8,-7.1,PRIMARY
+Corn / Grain Prices,4,Suez Canal Ever Given Blockage 2021,2021-03-23,0.95,2.8,5.1,3.4,PRIMARY
+Corn / Grain Prices,4,Panama Canal Drought 2019,2019-07-15,0.45,0.4,1.2,0.8,PRIMARY
+Corn / Grain Prices,4,Panama Canal New Locks Expansion 2016,2016-04-01,0.35,-0.8,1.4,2.1,PRIMARY

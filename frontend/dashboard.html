@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NAXA — Signal Chain Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --canvas:#FAFAF7;
+  --surface:#FFFFFF;
+  --surface-alt:#F5F4F0;
+  --border:#E5E3DD;
+  --border-strong:#C8C5BE;
+  --text-1:#1A1917;
+  --text-2:#6B6860;
+  --text-3:#9B9890;
+  --font-sans:'Inter',system-ui,sans-serif;
+  --font-serif:'Instrument Serif',Georgia,serif;
+  --font-mono:'IBM Plex Mono','Courier New',monospace;
+  --up-bg:#EEF2FF;--up-text:#1B4FD8;
+  --down-bg:#FFF7ED;--down-text:#C2410C;
+  --mixed-bg:#F1F5F9;--mixed-text:#475569;
+  --warn-bg:#FFFBEB;--warn-text:#B45309;
+  --low-bg:#FEF2F2;--low-text:#DC2626;
+  --r-sm:4px;--r-md:8px;--r-lg:12px
+}
+body{font-family:var(--font-sans);background:var(--canvas);color:var(--text-1);min-height:100vh;font-size:14px;line-height:1.5}
+
+/* LOADING */
+.loading-overlay{position:fixed;inset:0;background:var(--canvas);z-index:300;display:flex;align-items:center;padding:0 0 0 32px}
+.loading-inner{max-width:460px;width:100%}
+.loading-logo{font-size:13px;font-weight:500;letter-spacing:-0.03em;color:var(--text-1);margin-bottom:28px}
+.loading-title{font-family:var(--font-serif);font-style:italic;font-size:18px;color:var(--text-2);margin-bottom:22px}
+.loading-steps{display:flex;flex-direction:column;gap:11px;margin-bottom:26px}
+.loading-step{display:flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:11px;color:var(--text-3);transition:color 0.25s}
+.loading-step.active{color:var(--text-1)}
+.loading-step.done{color:var(--border-strong)}
+.step-dot{width:5px;height:5px;border-radius:50%;background:var(--border);flex-shrink:0;transition:background 0.25s}
+.loading-step.active .step-dot{background:var(--text-1)}
+.loading-step.done .step-dot{background:var(--border-strong)}
+.loading-bar-track{height:1.5px;background:var(--border);border-radius:1px;width:300px;overflow:hidden}
+.loading-bar-fill{height:100%;background:var(--text-1);width:0;transition:width 0.45s ease}
+
+/* DRILLDOWN */
+.dd-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.10);z-index:200;opacity:0;pointer-events:none;transition:opacity 0.2s}
+.dd-overlay.open{opacity:1;pointer-events:all}
+.dd-panel{position:fixed;right:-500px;top:0;width:460px;height:100vh;background:var(--surface);border-left:0.5px solid var(--border);z-index:201;overflow-y:auto;transition:right 0.25s ease;padding:22px}
+.dd-overlay.open .dd-panel{right:0}
+.dd-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px}
+.dd-title{font-size:13px;font-weight:500;color:var(--text-1)}
+.dd-sub{font-family:var(--font-mono);font-size:10px;color:var(--text-3);margin-top:2px}
+.dd-close{background:none;border:0.5px solid var(--border);border-radius:var(--r-sm);padding:4px 10px;font-size:11px;color:var(--text-2);cursor:pointer;flex-shrink:0}
+.dd-close:hover{border-color:var(--border-strong)}
+.dd-sec{margin-bottom:18px}
+.dd-sec-title{font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-3);margin-bottom:8px}
+.dd-prec-table{width:100%;border-collapse:collapse;font-size:11px}
+.dd-prec-table th{font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-3);padding:4px 6px;border-bottom:0.5px solid var(--border);text-align:left}
+.dd-prec-table td{font-family:var(--font-mono);font-size:11px;padding:7px 6px;border-bottom:0.5px solid var(--border);color:var(--text-2);font-variant-numeric:tabular-nums}
+.dd-method{background:var(--surface-alt);border:0.5px solid var(--border);border-radius:var(--r-md);padding:10px 12px;font-family:var(--font-mono);font-size:10px;color:var(--text-2);line-height:1.7;white-space:pre-wrap}
+.dd-src-item{display:flex;justify-content:space-between;align-items:flex-start;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:11px;gap:8px}
+.dd-src-name{color:var(--text-2);line-height:1.5}
+.dd-src-link{font-family:var(--font-mono);font-size:10px;color:var(--up-text);text-decoration:none;flex-shrink:0}
+.dd-json{background:var(--surface-alt);border:0.5px solid var(--border);border-radius:var(--r-md);padding:12px;font-family:var(--font-mono);font-size:10px;line-height:1.65;overflow:auto;white-space:pre;max-height:260px}
+.json-k{color:#1B4FD8}.json-s{color:#0D7A5F}.json-n{color:#C2410C}.json-b{color:#7C3AED}.json-null{color:var(--text-3)}
+
+/* HEADER */
+.hdr{position:sticky;top:0;z-index:100;background:var(--canvas);border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:52px}
+.logo{display:flex;align-items:center;gap:8px}
+.logo-text{font-size:13px;font-weight:500;letter-spacing:-0.03em}
+.ver{font-family:var(--font-mono);font-size:10px;color:var(--text-3);border:0.5px solid var(--border);padding:2px 6px;border-radius:var(--r-sm)}
+.evt-sel{display:flex;align-items:center;gap:7px;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r-md);padding:6px 12px;font-size:12px;color:var(--text-2);cursor:default}
+.view-toggle{display:flex;border:0.5px solid var(--border);border-radius:var(--r-md);overflow:hidden}
+.vbtn{padding:5px 13px;font-size:11px;font-weight:500;border:none;cursor:pointer;background:transparent;color:var(--text-3);transition:all 0.15s;letter-spacing:0.01em}
+.vbtn.active{background:var(--text-1);color:var(--canvas)}
+
+/* MAIN */
+.main{max-width:1280px;margin:0 auto;padding:0 32px 56px}
+
+/* QUERY BAR */
+.qbar{display:flex;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid var(--border)}
+.qbar-text{font-family:var(--font-mono);font-size:10px;color:var(--text-3)}
+
+/* EVENT STRIP */
+.evt-strip{border-bottom:0.5px solid var(--border);padding:18px 0 16px;display:flex;justify-content:space-between;align-items:flex-start;gap:24px}
+.evt-title{font-family:var(--font-serif);font-size:22px;font-weight:400;color:var(--text-1);margin-bottom:8px;letter-spacing:-0.01em}
+.tag-row{display:flex;align-items:center;gap:8px;margin-bottom:9px;flex-wrap:wrap}
+.tag{font-family:var(--font-mono);font-size:10px;color:var(--text-3);background:var(--surface-alt);border:0.5px solid var(--border);padding:2px 7px;border-radius:var(--r-sm)}
+.evt-summary{font-family:var(--font-serif);font-style:italic;font-size:13px;color:var(--text-2);line-height:1.65;max-width:600px}
+.evt-stats{text-align:right;flex-shrink:0}
+.sev-num{font-family:var(--font-mono);font-size:34px;font-weight:500;font-variant-numeric:tabular-nums;color:var(--text-1);line-height:1}
+.sev-lbl{font-size:10px;color:var(--text-3);margin-top:2px;text-transform:uppercase;letter-spacing:0.06em}
+.stat-rows{font-family:var(--font-mono);font-size:10px;color:var(--text-3);line-height:2;margin-top:10px;text-align:right}
+.stat-rows a{color:var(--up-text);text-decoration:none}
+
+/* LAYER */
+.layer-sec{padding-top:18px}
+.layer-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.layer-lbl{font-family:var(--font-mono);font-size:9px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-3)}
+.layer-desc{font-size:11px;color:var(--text-3)}
+.layer-rule{flex:1;height:0.5px;background:var(--border)}
+
+/* SIGNAL GRID */
+.sig-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+
+/* SIGNAL CARD */
+.sig-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r-lg);padding:16px;cursor:pointer;transition:border-color 0.15s,box-shadow 0.15s;opacity:0;transform:translateY(8px)}
+.sig-card.in{opacity:1;transform:translateY(0);transition:opacity 0.3s ease,transform 0.3s ease,border-color 0.15s,box-shadow 0.15s}
+.sig-card:hover{border-color:var(--border-strong);box-shadow:0 2px 10px rgba(0,0,0,0.04)}
+.sig-card.low-conf{border-color:#FECACA}
+.sig-card.low-conf:hover{border-color:#FCA5A5}
+
+.card-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:13px}
+.asset-name{font-size:13px;font-weight:500;color:var(--text-1);line-height:1.25;padding-right:8px}
+.asset-cls{font-family:var(--font-mono);font-size:10px;color:var(--text-3);margin-top:2px}
+.dir-badge{font-size:10px;font-weight:500;padding:3px 8px;border-radius:var(--r-sm);white-space:nowrap;flex-shrink:0}
+.dir-badge.UP{background:var(--up-bg);color:var(--up-text)}
+.dir-badge.DOWN{background:var(--down-bg);color:var(--down-text)}
+.dir-badge.MIXED{background:var(--mixed-bg);color:var(--mixed-text)}
+
+/* MEASURED vs EXPECTED */
+.mv-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 0;border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border);margin-bottom:12px}
+.mv-lbl{font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-3);margin-bottom:3px}
+.mv-num{font-family:var(--font-mono);font-size:20px;font-weight:500;font-variant-numeric:tabular-nums;line-height:1}
+.mv-num.UP{color:var(--up-text)}.mv-num.DOWN{color:var(--down-text)}.mv-num.MIXED{color:var(--mixed-text)}.mv-num.DIVG{color:var(--low-text)}
+.mv-sub{font-family:var(--font-mono);font-size:9px;color:var(--text-3);margin-top:2px}
+.mv-range{font-family:var(--font-mono);font-size:12px;font-weight:500;color:var(--text-2);font-variant-numeric:tabular-nums;line-height:1}
+.divg-note{font-family:var(--font-mono);font-size:9px;color:var(--low-text);margin-top:3px}
+
+/* CONFIDENCE */
+.conf-lbl{font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-3);margin-bottom:4px}
+.conf-score{font-family:var(--font-mono);font-size:26px;font-weight:500;font-variant-numeric:tabular-nums;color:var(--text-1);line-height:1}
+.conf-receipts{font-family:var(--font-mono);font-size:10px;color:var(--text-3);border-top:0.5px solid var(--border);padding-top:6px;margin-top:6px;line-height:1.75}
+.conf-method{font-size:9px;color:var(--text-3)}
+
+/* FLAGS */
+.flag-row{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:10px}
+.fpill{font-family:var(--font-mono);font-size:9px;padding:2px 6px;border-radius:var(--r-sm);border:0.5px solid}
+.fpill.proxy{background:var(--surface-alt);color:var(--text-2);border-color:var(--border)}
+.fpill.thin{background:var(--warn-bg);color:var(--warn-text);border-color:#FDE68A}
+.fpill.low{background:var(--low-bg);color:var(--low-text);border-color:#FECACA}
+.fpill.divg{background:var(--low-bg);color:var(--low-text);border-color:#FECACA}
+.src-link{font-family:var(--font-mono);font-size:9px;color:var(--up-text);text-decoration:none;margin-left:auto}
+
+/* LIMITATIONS */
+.lims{margin-top:14px;background:var(--surface-alt);border:0.5px solid var(--border);border-radius:var(--r-md);padding:10px 16px;display:flex;align-items:flex-start;gap:10px}
+.lims-icon{font-size:12px;color:var(--warn-text);flex-shrink:0;margin-top:1px}
+.lims-title{font-size:11px;font-weight:500;color:var(--text-2);margin-bottom:5px}
+.lims-list{display:flex;flex-wrap:wrap;gap:5px}
+.lims-item{font-family:var(--font-mono);font-size:10px;color:var(--text-3);background:var(--surface);border:0.5px solid var(--border);padding:2px 8px;border-radius:var(--r-sm)}
+.lims-link{font-family:var(--font-mono);font-size:10px;color:var(--up-text);text-decoration:none;flex-shrink:0;align-self:center}
+
+/* AGENT VIEW */
+.agent-view{display:none}
+.agent-hdr{display:flex;justify-content:space-between;align-items:center;padding:16px 0 10px;border-bottom:0.5px solid var(--border);margin-bottom:12px}
+.agent-title{font-size:12px;font-weight:500;color:var(--text-2)}
+.agent-sub{font-family:var(--font-mono);font-size:10px;color:var(--text-3);margin-top:2px}
+.curl-block{background:var(--surface-alt);border:0.5px solid var(--border);border-radius:var(--r-md);padding:12px 16px;font-family:var(--font-mono);font-size:11px;color:var(--text-2);line-height:1.8;white-space:pre-wrap;margin-bottom:10px}
+.copy-btn{font-family:var(--font-mono);font-size:10px;color:var(--text-3);background:var(--surface);border:0.5px solid var(--border);padding:4px 10px;border-radius:var(--r-sm);cursor:pointer;transition:all 0.15s}
+.copy-btn:hover{border-color:var(--border-strong);color:var(--text-1)}
+.json-full{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r-lg);padding:20px;font-family:var(--font-mono);font-size:11px;line-height:1.7;overflow-x:auto;white-space:pre}
+.agent-tagline{text-align:center;margin-top:12px;font-family:var(--font-mono);font-size:10px;color:var(--text-3)}
+
+/* FOOTER */
+.footer{text-align:center;padding:20px 0 0;margin-top:28px;border-top:0.5px solid var(--border)}
+.footer-row{font-family:var(--font-mono);font-size:10px;color:var(--text-3);display:flex;justify-content:center;gap:20px}
+.footer-row a{color:var(--text-3);text-decoration:none}
+.footer-row a:hover{color:var(--text-2)}
+
+/* ERROR */
+.err-state{text-align:center;padding:72px 0}
+.err-title{font-family:var(--font-serif);font-size:20px;color:var(--text-2);margin-bottom:8px}
+.err-sub{font-family:var(--font-mono);font-size:11px;color:var(--text-3);margin-bottom:16px}
+.err-hint{font-size:11px;color:var(--text-3);line-height:1.8}
+.retry-btn{font-family:var(--font-mono);font-size:11px;background:var(--text-1);color:var(--canvas);border:none;padding:8px 18px;border-radius:var(--r-md);cursor:pointer;margin-top:16px}
+</style>
+</head>
+<body>
+
+<!-- ═══ LOADING OVERLAY ════════════════════════════════════════════════ -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-inner">
+    <div class="loading-logo">NAXA</div>
+    <div class="loading-title">Mapping the signal chain…</div>
+    <div class="loading-steps">
+      <div class="loading-step" id="ls0"><span class="step-dot"></span>Connecting to data feeds</div>
+      <div class="loading-step" id="ls1"><span class="step-dot"></span>Pulling FRED freight indices</div>
+      <div class="loading-step" id="ls2"><span class="step-dot"></span>Querying equity markets via yfinance</div>
+      <div class="loading-step" id="ls3"><span class="step-dot"></span>Running backtest correlation</div>
+      <div class="loading-step" id="ls4"><span class="step-dot"></span>Computing confidence scores</div>
+      <div class="loading-step" id="ls5"><span class="step-dot"></span>Synthesizing human summary</div>
+    </div>
+    <div class="loading-bar-track"><div class="loading-bar-fill" id="lbar"></div></div>
+  </div>
+</div>
+
+<!-- ═══ DRILLDOWN PANEL ═══════════════════════════════════════════════ -->
+<div class="dd-overlay" id="ddOverlay" onclick="closeDrilldown(event)">
+  <div class="dd-panel" onclick="event.stopPropagation()">
+    <div class="dd-hdr">
+      <div>
+        <div class="dd-title" id="ddTitle">—</div>
+        <div class="dd-sub" id="ddSub">—</div>
+      </div>
+      <button class="dd-close" onclick="closeDrilldown()">close ✕</button>
+    </div>
+    <div class="dd-sec">
+      <div class="dd-sec-title">Historical Precedents</div>
+      <table class="dd-prec-table">
+        <thead><tr><th>Event</th><th>Year</th><th>Severity</th><th>30d Move</th></tr></thead>
+        <tbody id="ddPrec"></tbody>
+      </table>
+    </div>
+    <div class="dd-sec">
+      <div class="dd-sec-title">Confidence Methodology</div>
+      <div class="dd-method" id="ddMethod">—</div>
+    </div>
+    <div class="dd-sec">
+      <div class="dd-sec-title">Data Sources</div>
+      <div id="ddSrcs"></div>
+    </div>
+    <div class="dd-sec">
+      <div class="dd-sec-title">Raw JSON — this signal</div>
+      <div class="dd-json" id="ddJson"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ HEADER ════════════════════════════════════════════════════════ -->
+<header class="hdr">
+  <div class="logo">
+    <span class="logo-text">NAXA</span>
+    <span class="ver" id="verTag">v0.2.0</span>
+  </div>
+  <div class="evt-sel">
+    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+    <span id="evtLabel">Panama Canal Drought · Aug 2023</span>
+  </div>
+  <div class="view-toggle">
+    <button class="vbtn active" id="btnA" onclick="setView('analyst')">Analyst</button>
+    <button class="vbtn" id="btnG" onclick="setView('agent')">Agent · JSON</button>
+  </div>
+</header>
+
+<!-- ═══ MAIN ══════════════════════════════════════════════════════════ -->
+<main class="main">
+
+  <!-- ANALYST VIEW -->
+  <div id="analystView">
+    <div class="qbar">
+      <span class="qbar-text" id="qId">—</span>
+      <span class="qbar-text" id="qTime">—</span>
+    </div>
+    <div class="evt-strip">
+      <div>
+        <h1 class="evt-title" id="evtTitle">—</h1>
+        <div class="tag-row">
+          <span class="tag" id="evtTypeTag">—</span>
+          <span class="tag" id="evtDateTag">—</span>
+          <span class="tag" id="evtNTag">—</span>
+        </div>
+        <p class="evt-summary" id="evtSummary">—</p>
+      </div>
+      <div class="evt-stats">
+        <div class="sev-num" id="sevNum">—</div>
+        <div class="sev-lbl">Severity Index</div>
+        <div class="stat-rows" id="statRows">—</div>
+      </div>
+    </div>
+    <div id="signalChain"></div>
+    <div class="lims" id="limsBar" style="display:none">
+      <span class="lims-icon">⚠</span>
+      <div style="flex:1">
+        <div class="lims-title">Known limitations</div>
+        <div class="lims-list" id="limsList"></div>
+      </div>
+      <a href="#" class="lims-link">methodology ↗</a>
+    </div>
+    <footer class="footer">
+      <div class="footer-row">
+        <span>NAXA Signal Intelligence</span>
+        <a href="#">methodology</a>
+        <a href="https://github.com" target="_blank">github</a>
+        <span id="footerVer">—</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- AGENT VIEW -->
+  <div class="agent-view" id="agentView">
+    <div class="agent-hdr">
+      <div>
+        <div class="agent-title">Agent Payload — Raw JSON Response</div>
+        <div class="agent-sub">POST /v1/analyze → application/json</div>
+      </div>
+      <button class="copy-btn" id="copyBtn" onclick="copyJson()">copy JSON</button>
+    </div>
+    <div class="curl-block" id="curlBlock">—</div>
+    <div class="json-full" id="jsonFull">—</div>
+    <div class="agent-tagline">Same data. Different surface. One API call.</div>
+  </div>
+
+</main>
+
+<script>
+// ─── CONFIG ─────────────────────────────────────────────────────────────
+const CFG = {
+  base: '',                         // empty = same origin (served by Flask)
+  token: 'naxa_live_349497b06a2c8b1c0a7d26ac66fb9690',    // replace with your actual token
+  event: { event_type:'canal_restriction', date:'2023-08-01', severity:0.85 }
+};
+
+// ─── SOURCE MAP ──────────────────────────────────────────────────────────
+const SRC = {
+  fred_monthly:  { label:'FRED (monthly PPI)',  url:'https://fred.stlouisfed.org' },
+  fred_weekly:   { label:'FRED (weekly)',        url:'https://fred.stlouisfed.org' },
+  equity:        { label:'yfinance',             url:'https://finance.yahoo.com'   }
+};
+
+const LAYER_META = {
+  1:{ label:'Layer 1', desc:'Canal operations' },
+  2:{ label:'Layer 2', desc:'Freight & shipping rates' },
+  3:{ label:'Layer 3', desc:'Equity markets' },
+  4:{ label:'Layer 4', desc:'Agricultural commodities' }
+};
+
+// ─── STATE ───────────────────────────────────────────────────────────────
+let DATA = null;
+
+// ─── BOOT ────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  startLoadingAnim();
+  doFetch();
+});
+
+// ─── LOADING ANIMATION ───────────────────────────────────────────────────
+const LS = [
+  { id:'ls0', t:0,     p:8  },
+  { id:'ls1', t:1100,  p:28 },
+  { id:'ls2', t:3800,  p:46 },
+  { id:'ls3', t:7200,  p:63 },
+  { id:'ls4', t:11500, p:80 },
+  { id:'ls5', t:15000, p:92 }
+];
+
+function startLoadingAnim() {
+  const bar = document.getElementById('lbar');
+  LS.forEach(s => {
+    setTimeout(() => {
+      const el = document.getElementById(s.id);
+      el.classList.add('active');
+      bar.style.width = s.p + '%';
+    }, s.t);
+  });
+}
+
+function hideLoading() {
+  document.getElementById('lbar').style.width = '100%';
+  setTimeout(() => {
+    const ov = document.getElementById('loadingOverlay');
+    ov.style.transition = 'opacity 0.4s';
+    ov.style.opacity = '0';
+    setTimeout(() => { ov.style.display = 'none'; }, 420);
+  }, 300);
+}
+
+// ─── FETCH ───────────────────────────────────────────────────────────────
+function doFetch() {
+  fetch(CFG.base + '/v1/analyze', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + CFG.token
+    },
+    body: JSON.stringify(CFG.event)
+  })
+  .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+  .then(data => {
+    DATA = data;
+    hideLoading();
+    setTimeout(() => renderAll(data), 120);
+  })
+  .catch(err => {
+    hideLoading();
+    document.getElementById('signalChain').innerHTML = errHTML(err.message);
+  });
+}
+
+function errHTML(msg) {
+  return `<div class="err-state">
+    <div class="err-title">API unreachable</div>
+    <div class="err-sub">${msg}</div>
+    <div class="err-hint">
+      Make sure Flask is running: <code>python api/app.py</code><br>
+      Expected: <strong>POST ${CFG.base || 'http://localhost:5000'}/v1/analyze</strong><br>
+      Token in CFG.token must match your Flask VALID_TOKENS
+    </div>
+    <button class="retry-btn" onclick="location.reload()">retry ↺</button>
+  </div>`;
+}
+
+// ─── RENDER ALL ──────────────────────────────────────────────────────────
+function renderAll(d) {
+  const e = d.event, m = d.methodology;
+
+  document.getElementById('verTag').textContent     = d.naxa_version || 'v0.2.0';
+  document.getElementById('footerVer').textContent  = d.naxa_version || '—';
+  document.getElementById('qId').textContent        = 'id: ' + (d.query_id || '—').slice(0, 20) + '…';
+  document.getElementById('qTime').textContent      = 'analyzed in ' + (d.query_time_ms / 1000).toFixed(1) + 's';
+
+  // Event strip
+  document.getElementById('evtTitle').textContent   = fmtEvtTitle(e.type, e.date);
+  document.getElementById('evtTypeTag').textContent = e.type;
+  document.getElementById('evtDateTag').textContent = fmtDate(e.date);
+  document.getElementById('evtNTag').textContent    = 'n=' + m.n_comparable_events + ' events';
+  document.getElementById('evtSummary').textContent = shortSummary(d.human_summary);
+  document.getElementById('sevNum').textContent     = e.severity_score.toFixed(2);
+  document.getElementById('statRows').innerHTML =
+    `${m.backtesting_period}<br>` +
+    `<a href="https://pancanal.com" target="_blank">PCA advisory ↗</a><br>` +
+    `${d.query_id ? 'id: ' + d.query_id.slice(0,8) + '…' : ''}`;
+
+  renderChain(d.signal_chain);
+  renderLims(m.known_limitations);
+  renderAgent(d);
+}
+
+// ─── SIGNAL CHAIN ────────────────────────────────────────────────────────
+function renderChain(signals) {
+  const by = {};
+  signals.forEach(s => { const l = s.layer || 3; (by[l] = by[l] || []).push(s); });
+
+  let html = '';
+  Object.keys(by).sort((a,b)=>a-b).forEach(l => {
+    const mt = LAYER_META[l] || { label:'Layer '+l, desc:'' };
+    html += `<div class="layer-sec">
+      <div class="layer-hdr">
+        <span class="layer-lbl">${mt.label}</span>
+        <span class="layer-desc">${mt.desc}</span>
+        <div class="layer-rule"></div>
+      </div>
+      <div class="sig-grid">
+        ${by[l].map(cardHTML).join('')}
+      </div>
+    </div>`;
+  });
+
+  const container = document.getElementById('signalChain');
+  container.innerHTML = html;
+
+  // Staggered reveal
+  container.querySelectorAll('.sig-card').forEach((c, i) => {
+    c.style.transitionDelay = (i * 90) + 'ms';
+    requestAnimationFrame(() => requestAnimationFrame(() => c.classList.add('in')));
+  });
+}
+
+function cardHTML(s) {
+  const c   = s.confidence;
+  const msd = s.measured;
+  const exp = s.expected;
+  const score   = c.score_30d;
+  const isLow   = score < 0.50;
+  const isThin  = c.n < 6;
+  const isProxy = msd.is_proxy;
+  const divg    = isDivg(msd.move_30d_pct, exp.move_range);
+  const arrow   = s.direction === 'UP' ? '↑' : s.direction === 'DOWN' ? '↓' : '↔';
+  const src     = SRC[msd.data_source] || { label:msd.data_source, url:'#' };
+  const numCls  = divg ? 'DIVG' : s.direction;
+  const wRange  = backRange(c.basis);
+
+  let flags = '';
+  if (isProxy) flags += `<span class="fpill proxy">PROXY</span>`;
+  if (isThin)  flags += `<span class="fpill thin">THIN BACKTEST</span>`;
+  if (isLow)   flags += `<span class="fpill low">LOW CONFIDENCE</span>`;
+  if (divg)    flags += `<span class="fpill divg">BELOW EXPECTED</span>`;
+
+  return `<div class="sig-card${isLow?' low-conf':''}" onclick="openDrill('${s.step_id}')">
+    <div class="card-hdr">
+      <div>
+        <div class="asset-name">${s.asset}</div>
+        <div class="asset-cls">${s.asset_class.replace(/_/g,' ')}</div>
+      </div>
+      <span class="dir-badge ${s.direction}">${arrow} ${s.direction}</span>
+    </div>
+    <div class="mv-grid">
+      <div>
+        <div class="mv-lbl">Measured</div>
+        <div class="mv-num ${numCls}">${fmtMov(msd.move_30d_pct)}</div>
+        <div class="mv-sub">30d actual${isProxy?' · proxy':''}</div>
+        ${divg?`<div class="divg-note">outside expected range</div>`:''}
+      </div>
+      <div>
+        <div class="mv-lbl">Expected</div>
+        <div class="mv-range">${exp.move_range}</div>
+        <div class="mv-sub">lag: ${exp.lag_days}d</div>
+      </div>
+    </div>
+    <div>
+      <div class="conf-lbl">Confidence</div>
+      <div class="conf-score">${score.toFixed(3)}</div>
+      <div class="conf-receipts">
+        n=${c.n} · hit_rate: ${c.hit_rate.toFixed(2)} · ${wRange}
+        <br><span class="conf-method">${fmtMeth(c.methodology)}</span>
+      </div>
+    </div>
+    <div class="flag-row">
+      ${flags}
+      <a class="src-link" href="${src.url}" target="_blank" onclick="event.stopPropagation()">${src.label} ↗</a>
+    </div>
+  </div>`;
+}
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────
+function fmtMov(n) {
+  if (n == null) return '—';
+  return (n >= 0 ? '+' : '') + n.toFixed(1) + '%';
+}
+
+function isDivg(measured, rangeStr) {
+  if (!rangeStr || measured == null) return false;
+  try {
+    const pts = rangeStr.replace(/%/g,'').split(' to ');
+    const lo = parseFloat(pts[0]), hi = parseFloat(pts[1]);
+    if (isNaN(lo) || isNaN(hi)) return false;
+    return measured < lo || measured > hi;
+  } catch(e) { return false; }
+}
+
+function fmtEvtTitle(type, date) {
+  const map = { canal_restriction:'Panama Canal Drought', suez_blockage:'Suez Canal Blockage', red_sea_disruption:'Red Sea Disruption' };
+  const d = new Date(date);
+  const mon = d.toLocaleString('default', { month:'long', timeZone:'UTC' });
+  return (map[type] || type.replace(/_/g,' ')) + ' — ' + mon + ' ' + d.getUTCFullYear();
+}
+
+function fmtDate(ds) {
+  const d = new Date(ds);
+  return d.toLocaleString('default', { month:'short', year:'numeric', timeZone:'UTC' });
+}
+
+function shortSummary(raw) {
+  if (!raw) return '—';
+  const s = raw.split('.').slice(0, 2).join('.').trim();
+  return (s.length > 200 ? s.slice(0, 200) + '…' : s) + '.';
+}
+
+function backRange(basis) {
+  if (!basis) return '—';
+  const m = basis.match(/(\d{4}-\d{4})/);
+  return m ? m[1] : basis;
+}
+
+function fmtMeth(m) {
+  if (!m) return '';
+  return m.replace(/_/g,' ').replace('weighted ','wt. ').replace('penalized by sample size factor','sample-penalized');
+}
+
+// ─── LIMITATIONS ─────────────────────────────────────────────────────────
+function renderLims(lims) {
+  if (!lims || !lims.length) return;
+  document.getElementById('limsList').innerHTML = lims.map(l=>`<span class="lims-item">${l}</span>`).join('');
+  document.getElementById('limsBar').style.display = 'flex';
+}
+
+// ─── AGENT VIEW ──────────────────────────────────────────────────────────
+function renderAgent(d) {
+  const base = CFG.base || 'http://localhost:5000';
+  document.getElementById('curlBlock').textContent =
+    `curl -X POST ${base}/v1/analyze \\\n` +
+    `  -H "Authorization: Bearer <your-token>" \\\n` +
+    `  -H "Content-Type: application/json" \\\n` +
+    `  -d '{"event_type":"${d.event.type}","date":"${d.event.date}"}'`;
+  document.getElementById('jsonFull').innerHTML = synHL(JSON.stringify(d, null, 2));
+}
+
+function synHL(json) {
+  return json.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/("(?:[^"\\]|\\.)*"(\s*:)?|\b(?:true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)/g, m => {
+      if (/^"/.test(m)) return /:$/.test(m) ? `<span class="json-k">${m}</span>` : `<span class="json-s">${m}</span>`;
+      if (/true|false/.test(m)) return `<span class="json-b">${m}</span>`;
+      if (/null/.test(m)) return `<span class="json-null">${m}</span>`;
+      return `<span class="json-n">${m}</span>`;
+    });
+}
+
+function copyJson() {
+  if (!DATA) return;
+  navigator.clipboard.writeText(JSON.stringify(DATA, null, 2)).then(() => {
+    const b = document.getElementById('copyBtn');
+    b.textContent = 'copied ✓';
+    setTimeout(() => { b.textContent = 'copy JSON'; }, 2000);
+  });
+}
+
+// ─── VIEW TOGGLE ─────────────────────────────────────────────────────────
+function setView(v) {
+  const isA = v === 'analyst';
+  document.getElementById('analystView').style.display = isA ? 'block' : 'none';
+  document.getElementById('agentView').style.display   = isA ? 'none'  : 'block';
+  document.getElementById('btnA').classList.toggle('active', isA);
+  document.getElementById('btnG').classList.toggle('active', !isA);
+}
+
+// ─── DRILLDOWN ───────────────────────────────────────────────────────────
+function openDrill(stepId) {
+  if (!DATA) return;
+  const s = DATA.signal_chain.find(x => x.step_id === stepId);
+  if (!s) return;
+  const c = s.confidence, m = s.measured, exp = s.expected;
+
+  document.getElementById('ddTitle').textContent = s.asset;
+  document.getElementById('ddSub').textContent   = s.step_id + ' · layer ' + s.layer;
+
+  // Precedents
+  document.getElementById('ddPrec').innerHTML = (exp.precedents || []).map(p => {
+    const color = p.move_30d >= 0 ? 'var(--up-text)' : 'var(--down-text)';
+    const yr = (p.event.match(/(\d{4})/) || ['','—'])[1];
+    return `<tr>
+      <td>${p.event.replace(/_/g,' ')}</td>
+      <td>${yr}</td>
+      <td>${p.severity.toFixed(2)}</td>
+      <td style="color:${color};font-weight:500">${fmtMov(p.move_30d)}</td>
+    </tr>`;
+  }).join('');
+
+  // Methodology
+  document.getElementById('ddMethod').textContent =
+    `Score = 0.6 × hit_rate + 0.4 × magnitude_consistency\n(penalized by sample size factor)\n\n` +
+    `Hit rate:  ${c.hit_rate.toFixed(2)} — ${Math.round(c.hit_rate * c.n)}/${c.n} events moved as expected\n` +
+    `n:         ${c.n} comparable events\n` +
+    `Window:    ${backRange(c.basis)}\n\n` +
+    `Score 14d: ${(c.score_14d||0).toFixed(3)}  ` +
+    `30d: ${c.score_30d.toFixed(3)}  ` +
+    `60d: ${(c.score_60d||0).toFixed(3)}`;
+
+  // Sources
+  const src = SRC[m.data_source] || { label:m.data_source, url:'#' };
+  let srcHTML = `<div class="dd-src-item">
+    <span class="dd-src-name">${src.label}</span>
+    <a class="dd-src-link" href="${src.url}" target="_blank">${src.url.replace('https://','').split('/')[0]} ↗</a>
+  </div>`;
+  if (m.proxy_note) {
+    srcHTML += `<div style="font-family:var(--font-mono);font-size:10px;color:var(--text-3);line-height:1.65;margin-top:8px">${m.proxy_note}</div>`;
+  }
+  document.getElementById('ddSrcs').innerHTML = srcHTML;
+
+  // Raw JSON
+  document.getElementById('ddJson').innerHTML = synHL(JSON.stringify(s, null, 2));
+
+  document.getElementById('ddOverlay').classList.add('open');
+}
+
+function closeDrilldown(evt) {
+  if (evt && evt.target !== document.getElementById('ddOverlay')) return;
+  document.getElementById('ddOverlay').classList.remove('open');
+}
+</script>
+</body>
+</html>

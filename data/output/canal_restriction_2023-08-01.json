@@ -1,0 +1,319 @@
+{
+  "schema_version": "0.2.0",
+  "naxa_version": "0.2.0",
+  "query_id": "5a4275eb-75eb-4ac1-be2c-682ec7137b7b",
+  "generated_at": "2026-05-17T22:12:48.331874+00:00",
+  "query_time_ms": 19215,
+  "event": {
+    "type": "canal_restriction",
+    "date": "2023-08-01",
+    "severity_score": 0.85,
+    "severity_basis": "transit_slot_reduction_pct_x_duration_weeks"
+  },
+  "human_summary": "An August 1st canal restriction, rated at 0.85 severity, correlates with various movements across shipping and commodity signals. Proxy data for container freight in Asia to the U.S. East Coast measured a -4.5% 30-day move, significantly below its historical range of +14.2% to +31.4%; this data should be verified against primary sources. Shipping equities for containers registered a -9.6% 30-day move, falling below their historical expected range of -2.1% to +14.7%, while tanker equities saw a +3.7% move against a historical range of +6.2% to +11.2%. Grain prices for corn, also based on proxy data, showed a -4.5% 30-day move within its historical range of -4.8% to +5.1%, and similarly requires verification. Without explicit confidence scores, the observed 30-day move of -9.6% for shipping_equities_container, which is below its historical expected range, represents the most clearly defined deviation from historical patterns.",
+  "signal_chain": [
+    {
+      "layer": 2,
+      "step_id": "container_freight_asia_usec",
+      "asset": "Deep Sea Freight PPI (Drewry WCI proxy)",
+      "asset_class": "freight_rate",
+      "direction": "UP",
+      "measured": {
+        "move_14d_pct": -4.45,
+        "move_30d_pct": -4.45,
+        "move_60d_pct": -9.67,
+        "data_available": true,
+        "data_source": "fred_monthly",
+        "is_proxy": true,
+        "proxy_note": "Ideal source is Drewry WCI (paywalled). FRED PCU483111483111 is PPI: Deep Sea Freight — measures same cost signal, monthly frequency."
+      },
+      "expected": {
+        "move_range": "+14.2% to +31.4%",
+        "mean_move_pct": 23.2,
+        "lag_days": 12,
+        "n_events": 4,
+        "precedents": [
+          {
+            "event": "panama_drought_2023",
+            "move_30d": 28.4,
+            "severity": 0.85
+          },
+          {
+            "event": "suez_blockage_2021",
+            "move_30d": 31.4,
+            "severity": 0.95
+          },
+          {
+            "event": "panama_drought_2019",
+            "move_30d": 18.7,
+            "severity": 0.45
+          },
+          {
+            "event": "panama_expansion_2016",
+            "move_30d": 14.2,
+            "severity": 0.35
+          }
+        ]
+      },
+      "confidence": {
+        "score_14d": 0.669,
+        "score_30d": 0.69,
+        "score_60d": 0.662,
+        "n": 4,
+        "hit_rate": 1.0,
+        "basis": "backtested_n=4_events_2016-2023",
+        "methodology": "weighted_hit_rate_0.6_plus_magnitude_consistency_0.4_penalized_by_sample_size_factor"
+      }
+    },
+    {
+      "layer": 3,
+      "step_id": "shipping_equities_container",
+      "asset": "Container Shipping Equities",
+      "asset_class": "equity",
+      "direction": "MIXED",
+      "measured": {
+        "move_14d_pct": -3.98,
+        "move_30d_pct": -9.63,
+        "move_60d_pct": -14.95,
+        "data_available": true,
+        "data_source": "equity",
+        "is_proxy": false,
+        "proxy_note": null
+      },
+      "expected": {
+        "move_range": "-2.1% to +14.7%",
+        "mean_move_pct": 5.9,
+        "lag_days": 7,
+        "n_events": 4,
+        "precedents": [
+          {
+            "event": "panama_drought_2023",
+            "move_30d": -2.1,
+            "severity": 0.85
+          },
+          {
+            "event": "suez_blockage_2021",
+            "move_30d": 14.7,
+            "severity": 0.95
+          },
+          {
+            "event": "panama_drought_2019",
+            "move_30d": 3.4,
+            "severity": 0.45
+          },
+          {
+            "event": "panama_expansion_2016",
+            "move_30d": 7.8,
+            "severity": 0.35
+          }
+        ]
+      },
+      "confidence": {
+        "score_14d": 0.658,
+        "score_30d": 0.456,
+        "score_60d": 0.4,
+        "n": 4,
+        "hit_rate": 0.688,
+        "basis": "backtested_n=4_events_2016-2023",
+        "methodology": "weighted_hit_rate_0.6_plus_magnitude_consistency_0.4_penalized_by_sample_size_factor"
+      }
+    },
+    {
+      "layer": 3,
+      "step_id": "shipping_equities_tanker",
+      "asset": "Tanker Shipping Equities",
+      "asset_class": "equity",
+      "direction": "UP",
+      "measured": {
+        "move_14d_pct": 6.24,
+        "move_30d_pct": 3.66,
+        "move_60d_pct": 9.28,
+        "data_available": true,
+        "data_source": "equity",
+        "is_proxy": false,
+        "proxy_note": null
+      },
+      "expected": {
+        "move_range": "+6.2% to +11.2%",
+        "mean_move_pct": 8.3,
+        "lag_days": 10,
+        "n_events": 4,
+        "precedents": [
+          {
+            "event": "panama_drought_2023",
+            "move_30d": 11.2,
+            "severity": 0.85
+          },
+          {
+            "event": "suez_blockage_2021",
+            "move_30d": 9.1,
+            "severity": 0.95
+          },
+          {
+            "event": "panama_drought_2019",
+            "move_30d": 6.2,
+            "severity": 0.45
+          },
+          {
+            "event": "panama_expansion_2016",
+            "move_30d": 6.8,
+            "severity": 0.35
+          }
+        ]
+      },
+      "confidence": {
+        "score_14d": 0.704,
+        "score_30d": 0.702,
+        "score_60d": 0.681,
+        "n": 4,
+        "hit_rate": 1.0,
+        "basis": "backtested_n=4_events_2016-2023",
+        "methodology": "weighted_hit_rate_0.6_plus_magnitude_consistency_0.4_penalized_by_sample_size_factor"
+      }
+    },
+    {
+      "layer": 4,
+      "step_id": "grain_prices_corn",
+      "asset": "Global Soybean Price (grain proxy)",
+      "asset_class": "commodity_agricultural",
+      "direction": "MIXED",
+      "measured": {
+        "move_14d_pct": -4.51,
+        "move_30d_pct": -4.51,
+        "move_60d_pct": -7.49,
+        "data_available": true,
+        "data_source": "fred_monthly",
+        "is_proxy": true,
+        "proxy_note": "Corn series PMAIZMTUSD unavailable via FRED free tier. Soybean (PSOYBUSDM) used as grain trade proxy — both commodities use the same shipping routes."
+      },
+      "expected": {
+        "move_range": "-4.8% to +5.1%",
+        "mean_move_pct": 0.7,
+        "lag_days": 45,
+        "n_events": 4,
+        "precedents": [
+          {
+            "event": "panama_drought_2023",
+            "move_30d": -4.8,
+            "severity": 0.85
+          },
+          {
+            "event": "suez_blockage_2021",
+            "move_30d": 5.1,
+            "severity": 0.95
+          },
+          {
+            "event": "panama_drought_2019",
+            "move_30d": 1.2,
+            "severity": 0.45
+          },
+          {
+            "event": "panama_expansion_2016",
+            "move_30d": 1.4,
+            "severity": 0.35
+          }
+        ]
+      },
+      "confidence": {
+        "score_14d": 0.4,
+        "score_30d": 0.475,
+        "score_60d": 0.475,
+        "n": 4,
+        "hit_rate": 0.75,
+        "basis": "backtested_n=4_events_2016-2023",
+        "methodology": "weighted_hit_rate_0.6_plus_magnitude_consistency_0.4_penalized_by_sample_size_factor"
+      }
+    }
+  ],
+  "agent_payload": {
+    "machine_readable_chain": "container_freight_asia_usec:UP:-4.5%:0.69 | shipping_equities_container:MIXED:-9.6%:0.46 | shipping_equities_tanker:UP:+3.7%:0.70 | grain_prices_corn:MIXED:-4.5%:0.47",
+    "top_confidence_signals": [
+      {
+        "step_id": "shipping_equities_tanker",
+        "confidence": 0.702,
+        "direction": "UP",
+        "lag_days": 10
+      },
+      {
+        "step_id": "container_freight_asia_usec",
+        "confidence": 0.69,
+        "direction": "UP",
+        "lag_days": 12
+      }
+    ],
+    "flagged_low_confidence": [
+      {
+        "step_id": "shipping_equities_container",
+        "confidence": 0.456,
+        "reason": "below_minimum_actionable_threshold"
+      },
+      {
+        "step_id": "grain_prices_corn",
+        "confidence": 0.475,
+        "reason": "below_minimum_actionable_threshold"
+      }
+    ],
+    "structured_assets": [
+      {
+        "step_id": "container_freight_asia_usec",
+        "asset_class": "freight_rate",
+        "direction": "UP",
+        "confidence_30d": 0.69,
+        "lag_days": 12,
+        "move_range": "+14.2% to +31.4%",
+        "measured_30d": -4.45,
+        "is_proxy": true
+      },
+      {
+        "step_id": "shipping_equities_container",
+        "asset_class": "equity",
+        "direction": "MIXED",
+        "confidence_30d": 0.456,
+        "lag_days": 7,
+        "move_range": "-2.1% to +14.7%",
+        "measured_30d": -9.63,
+        "is_proxy": false
+      },
+      {
+        "step_id": "shipping_equities_tanker",
+        "asset_class": "equity",
+        "direction": "UP",
+        "confidence_30d": 0.702,
+        "lag_days": 10,
+        "move_range": "+6.2% to +11.2%",
+        "measured_30d": 3.66,
+        "is_proxy": false
+      },
+      {
+        "step_id": "grain_prices_corn",
+        "asset_class": "commodity_agricultural",
+        "direction": "MIXED",
+        "confidence_30d": 0.475,
+        "lag_days": 45,
+        "move_range": "-4.8% to +5.1%",
+        "measured_30d": -4.51,
+        "is_proxy": true
+      }
+    ],
+    "query_metadata": {
+      "event_type": "canal_restriction",
+      "n_comparable_events": 4,
+      "backtest_date_range": "2016-2023",
+      "confidence_methodology": "All move percentages measured from event trigger date. PRIMARY=direct measurement, PARTIAL=high confounder count, ESTIMATED=calculated from secondary sources.",
+      "confidence_ceiling": 0.85
+    }
+  },
+  "methodology": {
+    "confidence_scoring": "All move percentages measured from event trigger date. PRIMARY=direct measurement, PARTIAL=high confounder count, ESTIMATED=calculated from secondary sources.",
+    "backtesting_period": "2016-2023",
+    "n_comparable_events": 4,
+    "confidence_floor": 0.3,
+    "confidence_ceiling": 0.85,
+    "known_limitations": [
+      "n=4 is below target of n=12 for full confidence",
+      "Drewry WCI not available on free tier — using FRED proxy",
+      "Monthly FRED data limits precision for sub-30d lag analysis",
+      "Corn series PMAIZMTUSD unavailable — soybean used as proxy"
+    ]
+  }
+}

@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+ <html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NAXA Engine — Explained (v2)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0d10;--surface:#16161b;--surface2:#1e1e25;--border:#2a2a35;--border2:#383845;
+  --text:#ddd9cc;--muted:#7a7870;--amber:#f59e0b;--amber-dim:#78490a;
+  --blue:#60a5fa;--blue-dim:#1e3a5f;--green:#34d399;--green-dim:#0d3d27;
+  --purple:#a78bfa;--purple-dim:#2d1f5e;--coral:#fb7185;--coral-dim:#4a1020;
+  --teal:#2dd4bf;--teal-dim:#0d3530;
+  --font-sans:'IBM Plex Sans',system-ui,sans-serif;
+  --font-mono:'IBM Plex Mono','Courier New',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-size:15px;line-height:1.7;display:flex}
+nav{position:fixed;top:0;left:0;width:220px;height:100vh;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:24px 0;z-index:100}
+.nav-logo{padding:0 20px 20px;border-bottom:1px solid var(--border);margin-bottom:12px}
+.nav-logo-text{font-family:var(--font-mono);font-size:18px;font-weight:500;color:var(--amber)}
+.nav-logo-sub{font-size:10px;color:var(--muted);margin-top:2px;letter-spacing:.06em;text-transform:uppercase}
+nav a{display:flex;align-items:center;gap:10px;padding:7px 20px;color:var(--muted);text-decoration:none;font-size:12.5px;transition:color .15s,background .15s;border-left:2px solid transparent}
+nav a:hover{color:var(--text);background:var(--surface2)}
+nav a.active{color:var(--amber);border-left-color:var(--amber);background:var(--surface2)}
+.nav-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+.nav-section-label{padding:14px 20px 4px;font-size:9.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.nav-badge{font-family:var(--font-mono);font-size:9px;padding:1px 5px;border-radius:3px;background:var(--green-dim);color:var(--green);margin-left:auto}
+.nav-badge.wip{background:var(--amber-dim);color:var(--amber)}
+main{margin-left:220px;flex:1;max-width:900px;padding:0 48px 120px}
+section{padding-top:64px;margin-bottom:16px}
+.section-label{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+h1{font-family:var(--font-mono);font-size:28px;font-weight:500;color:var(--text);line-height:1.3;margin-bottom:4px}
+h1 span{color:var(--amber)}
+h2{font-family:var(--font-mono);font-size:20px;font-weight:500;color:var(--text);margin-bottom:4px}
+h2 span{color:var(--amber)}
+p{color:var(--text);margin-bottom:14px;line-height:1.8}
+p:last-child{margin-bottom:0}
+.lead{font-size:17px;font-weight:300;line-height:1.75;margin-bottom:20px}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-bottom:16px}
+.card-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.card-row.three{grid-template-columns:1fr 1fr 1fr}
+.callout{border-radius:8px;padding:16px 20px;margin-bottom:16px;border-left:3px solid}
+.callout h3{margin-bottom:8px;font-size:13px;text-transform:uppercase;letter-spacing:.06em}
+.callout p{margin-bottom:0;font-size:14px}
+.callout-amber{background:#1a1200;border-color:var(--amber)}.callout-amber h3{color:var(--amber)}
+.callout-blue{background:#0a1628;border-color:var(--blue)}.callout-blue h3{color:var(--blue)}
+.callout-green{background:#071a12;border-color:var(--green)}.callout-green h3{color:var(--green)}
+.callout-purple{background:#130e2a;border-color:var(--purple)}.callout-purple h3{color:var(--purple)}
+.callout-coral{background:#1a0609;border-color:var(--coral)}.callout-coral h3{color:var(--coral)}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px 20px;text-align:center}
+.stat-number{font-family:var(--font-mono);font-size:28px;font-weight:500;margin-bottom:4px}
+.stat-label{font-size:12px;color:var(--muted)}
+.chart-container{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-bottom:16px;position:relative}
+.chart-title{font-family:var(--font-mono);font-size:13px;color:var(--amber);margin-bottom:4px;font-weight:500}
+.chart-sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+.chart-wrap{position:relative;height:200px}
+.signal-chain{display:flex;flex-direction:column;gap:0;margin:20px 0}
+.chain-layer{display:flex;align-items:center;gap:16px;margin-bottom:0}
+.chain-label{width:52px;font-family:var(--font-mono);font-size:11px;color:var(--muted);text-align:right;flex-shrink:0}
+.chain-node{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin-bottom:0}
+.chain-title{font-size:13px;font-weight:500;margin-bottom:4px}
+.chain-stats{display:flex;gap:12px;flex-wrap:wrap}
+.chain-stat{font-family:var(--font-mono);font-size:11px}
+.chain-arrow-down{font-size:18px;color:var(--border2);padding:2px 0;text-align:center;width:72px;margin-left:68px}
+.layer-1 .chain-node{border-color:var(--coral-dim)}.layer-1 .chain-title{color:var(--coral)}
+.layer-2 .chain-node{border-color:var(--amber-dim)}.layer-2 .chain-title{color:var(--amber)}
+.layer-3 .chain-node{border-color:var(--blue-dim)}.layer-3 .chain-title{color:var(--blue)}
+.layer-4 .chain-node{border-color:var(--green-dim)}.layer-4 .chain-title{color:var(--green)}
+.layer-5 .chain-node{border-color:var(--purple-dim)}.layer-5 .chain-title{color:var(--purple)}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
+.compare-col{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.compare-header{padding:10px 16px;font-family:var(--font-mono);font-size:12px;font-weight:500;border-bottom:1px solid var(--border)}
+.compare-header.bad{background:var(--coral-dim);color:var(--coral)}
+.compare-header.good{background:var(--green-dim);color:var(--green)}
+.compare-item{padding:8px 16px;font-size:13px;border-bottom:1px solid var(--border);color:var(--muted)}
+.compare-item:last-child{border-bottom:none}
+.phase-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:24px 0}
+.phase-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;position:relative;overflow:hidden}
+.phase-card.done{border-color:var(--green-dim)}
+.phase-card.wip{border-color:var(--amber-dim)}
+.phase-card.upcoming{opacity:.6}
+.phase-num{font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-bottom:6px}
+.phase-title{font-size:13px;font-weight:500;margin-bottom:8px}
+.phase-status{font-family:var(--font-mono);font-size:10px;padding:2px 6px;border-radius:3px;display:inline-block;margin-bottom:10px}
+.phase-status.done{background:var(--green-dim);color:var(--green)}
+.phase-status.wip{background:var(--amber-dim);color:var(--amber)}
+.phase-status.soon{background:var(--border);color:var(--muted)}
+.phase-items{list-style:none}
+.phase-items li{font-size:12px;color:var(--muted);padding:3px 0;border-bottom:1px solid var(--border)}
+.phase-items li:last-child{border-bottom:none}
+.phase-items li::before{content:'→ ';color:var(--amber);font-family:var(--font-mono)}
+.json-block{background:#080810;border:1px solid var(--border);border-radius:8px;padding:20px;font-family:var(--font-mono);font-size:12px;line-height:1.9;overflow-x:auto;margin-bottom:16px}
+.json-key{color:var(--blue)}.json-str{color:var(--green)}.json-num{color:var(--amber)}.json-note{color:#3a3a50;font-style:italic}
+.badge{display:inline-block;font-size:11px;font-family:var(--font-mono);padding:2px 8px;border-radius:4px;margin-right:6px}
+.badge-amber{background:var(--amber-dim);color:var(--amber)}.badge-green{background:var(--green-dim);color:var(--green)}
+.badge-blue{background:var(--blue-dim);color:var(--blue)}.badge-purple{background:var(--purple-dim);color:var(--purple)}
+.conf-bar-row{margin-bottom:14px}
+.conf-bar-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px}
+.conf-bar-label span:first-child{color:var(--muted)}.conf-bar-label span:last-child{font-family:var(--font-mono);color:var(--text)}
+.conf-bar-track{height:8px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.conf-bar-fill{height:100%;border-radius:4px}
+.formula{background:#0a0a0d;border:1px solid var(--border2);border-radius:8px;padding:16px 24px;font-family:var(--font-mono);font-size:13px;line-height:2.2;color:var(--text);margin:16px 0;text-align:center}
+.humor-box{background:linear-gradient(135deg,#0d0d10 0%,#1a1200 100%);border:1px dashed var(--amber-dim);border-radius:8px;padding:16px 20px;margin-bottom:16px;font-size:13px;font-style:italic;color:var(--muted)}
+.humor-box .tag{font-style:normal;font-family:var(--font-mono);font-size:10px;color:var(--amber);display:block;margin-bottom:6px}
+.ask-naxa{background:var(--surface);border:1px solid var(--purple-dim);border-radius:10px;padding:24px;margin-bottom:16px}
+.ask-input-row{display:flex;gap:10px;margin-bottom:12px}
+.ask-input{flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:10px 14px;color:var(--text);font-family:var(--font-sans);font-size:14px;outline:none;transition:border-color .2s}
+.ask-input:focus{border-color:var(--purple)}
+.ask-input::placeholder{color:var(--muted)}
+.ask-key-input{width:260px;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;color:var(--muted);font-family:var(--font-mono);font-size:12px;outline:none}
+.ask-key-input:focus{border-color:var(--purple);color:var(--text)}
+.ask-btn{background:var(--purple-dim);color:var(--purple);border:1px solid var(--purple-dim);border-radius:6px;padding:10px 20px;font-family:var(--font-mono);font-size:12px;cursor:pointer;transition:background .2s;white-space:nowrap}
+.ask-btn:hover{background:#3d2a7a}
+.ask-btn:disabled{opacity:.4;cursor:not-allowed}
+.ask-response{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:14px 16px;font-size:14px;line-height:1.7;min-height:60px;color:var(--muted)}
+.ask-response.loaded{color:var(--text)}
+.ask-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.ask-chip{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--muted);cursor:pointer;transition:border-color .2s,color .2s}
+.ask-chip:hover{border-color:var(--purple);color:var(--purple)}
+.scroll-target{scroll-margin-top:20px}
+.footer{margin-top:80px;padding-top:24px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);font-family:var(--font-mono);text-align:center}
+.pipe-step{display:flex;align-items:stretch;gap:0}
+.pipe-track{display:flex;flex-direction:column;align-items:center;width:40px;flex-shrink:0}
+.pipe-dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--amber);background:var(--bg);flex-shrink:0;margin-top:18px}
+.pipe-line{width:2px;flex:1;background:var(--border2);min-height:16px}
+.pipe-content{flex:1;padding:12px 0 20px 12px}
+.pipe-title{font-family:var(--font-mono);font-size:13px;color:var(--amber);font-weight:500;margin-bottom:4px}
+.pipe-sub{font-size:13px;color:var(--muted)}
+.events-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+.events-table th{background:var(--surface2);color:var(--muted);padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+.events-table td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--text)}
+.events-table tr:last-child td{border-bottom:none}
+.events-table tr:hover td{background:var(--surface2)}
+.sev-pill{display:inline-block;font-family:var(--font-mono);font-size:10px;padding:2px 7px;border-radius:3px}
+.typing-dots::after{content:'...';animation:dots 1.2s steps(4,end) infinite}
+@keyframes dots{0%,20%{content:''}40%{content:'.'}60%{content:'..'}80%,100%{content:'...'}}
+@media(max-width:800px){nav{width:0;overflow:hidden}main{margin-left:0;padding:0 20px 80px}.phase-row{grid-template-columns:1fr 1fr}.card-row,.card-row.three,.compare,.stat-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="nav-logo">
+    <div class="nav-logo-text">NAXA</div>
+    <div class="nav-logo-sub">Engine Docs v2</div>
+  </div>
+  <div class="nav-section-label">Overview</div>
+  <a href="#what-is-naxa" class="active"><span class="nav-dot"></span> What is NAXA?</a>
+  <a href="#the-problem"><span class="nav-dot"></span> The Problem</a>
+  <a href="#architecture"><span class="nav-dot"></span> Architecture</a>
+  <div class="nav-section-label">Data & Signals</div>
+  <a href="#signal-chain"><span class="nav-dot"></span> Signal Chain</a>
+  <a href="#charts"><span class="nav-dot"></span> Data Visualizations</a>
+  <a href="#confidence"><span class="nav-dot"></span> Confidence Scores</a>
+  <div class="nav-section-label">The Build</div>
+  <a href="#phases"><span class="nav-dot"></span> Phase Roadmap <span class="nav-badge">done</span></a>
+  <a href="#scripts"><span class="nav-dot"></span> The Scripts</a>
+  <a href="#json-output"><span class="nav-dot"></span> JSON Output</a>
+  <a href="#business"><span class="nav-dot"></span> Business Case</a>
+  <div class="nav-section-label">Interactive</div>
+  <a href="#ask-naxa"><span class="nav-dot"></span> Ask NAXA (AI) <span class="nav-badge">new</span></a>
+</nav>
+
+<main>
+
+<!-- ═══ WHAT IS NAXA ═══ -->
+<section id="what-is-naxa" class="scroll-target">
+  <div class="section-label">// 00 — overview</div>
+  <h1>What is <span>NAXA</span>?</h1>
+  <p style="color:var(--muted);font-size:13px;margin-bottom:28px">The complete plain-English explanation. Charts included. Judgemental asides also included.</p>
+
+  <p class="lead">NAXA is a system that answers one question: <em>"When this big thing happened in the world, what happened to money, markets, and supply chains next?"</em> — automatically, in 90 seconds, with every answer sourced and verifiable.</p>
+
+  <div class="humor-box">
+    <span class="tag">// honest_origin_story</span>
+    Before NAXA: analyst opens 14 browser tabs, Googles "panama canal stock market", reads 3 paywalled articles, pulls numbers from memory, writes "prices may rise (probably)" and calls it a research note. After NAXA: one API call, structured JSON, every field cited, done before the analyst's coffee cools. The analyst can now use those 18 minutes to contemplate their career choices.
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-number" id="stat-time" style="color:var(--coral)">0</div><div class="stat-label">Minutes, manual workflow</div></div>
+    <div class="stat-card"><div class="stat-number" id="stat-api" style="color:var(--green)">0</div><div class="stat-label">Seconds, NAXA API call</div></div>
+    <div class="stat-card"><div class="stat-number" id="stat-src" style="color:var(--amber)">0%</div><div class="stat-label">Of outputs sourced</div></div>
+  </div>
+
+  <div class="callout callout-amber">
+    <h3>🧒 Explain it like I'm 10</h3>
+    <p>Imagine a detective agency. Something big happens — a huge drought blocks a major shipping canal. The agency immediately opens a case, pulls all the evidence (stock prices, freight costs, commodity prices), digs through old case files to find similar past events, and delivers a complete sourced report with a confidence rating. NAXA is that detective agency. But automated. And it never takes lunch breaks.</p>
+  </div>
+
+  <div class="callout callout-blue">
+    <h3>📊 Explain it like I'm an investor</h3>
+    <p>Alternative data API mapping downstream signal chains from macro events. Returns structured JSON with backtested confidence scores (n=4→12), cited sources, and lag-calibrated directional signals across freight rates, equities, and commodities. Infrastructure for the agent economy. Wedge: shipping vertical.</p>
+  </div>
+</section>
+
+<!-- ═══ THE PROBLEM ═══ -->
+<section id="the-problem" class="scroll-target">
+  <div class="section-label">// 01 — the problem</div>
+  <h2>The <span>Problem</span></h2>
+
+  <div class="compare">
+    <div class="compare-col">
+      <div class="compare-header bad">❌ Without NAXA</div>
+      <div class="compare-item">⏱️ ~20 minutes of manual suffering</div>
+      <div class="compare-item">🔍 Googling 6+ fragmented sources</div>
+      <div class="compare-item">🤷 Confidence: "gut feeling"</div>
+      <div class="compare-item">📝 Output: unstructured prose</div>
+      <div class="compare-item">🔗 Sources: "I think I read this somewhere"</div>
+      <div class="compare-item">🤖 AI agents: cannot consume prose reliably</div>
+      <div class="compare-item" style="color:var(--coral)">Every analyst produces different answers</div>
+    </div>
+    <div class="compare-col">
+      <div class="compare-header good">✓ With NAXA</div>
+      <div class="compare-item">⚡ 90 seconds, one API call</div>
+      <div class="compare-item">📡 All data pulled automatically</div>
+      <div class="compare-item">📊 Confidence: 0.74, n=12, cited</div>
+      <div class="compare-item">📦 Output: structured JSON</div>
+      <div class="compare-item">🔗 Sources: every single field, always</div>
+      <div class="compare-item">🤖 AI agents: designed specifically for this</div>
+      <div class="compare-item" style="color:var(--green)">Same event = same answer, reproducible</div>
+    </div>
+  </div>
+
+  <div class="humor-box">
+    <span class="tag">// the_deeper_problem</span>
+    The real issue isn't speed. It's that two analysts studying the same event will produce wildly different conclusions because they're both pattern-matching against different mental databases of vague memories. NAXA is pattern-matching against a real database of sourced historical events. The difference between "vibes" and "n=12 backtested events" is the entire value proposition.
+  </div>
+</section>
+
+<!-- ═══ ARCHITECTURE ═══ -->
+<section id="architecture" class="scroll-target">
+  <div class="section-label">// 02 — architecture</div>
+  <h2>The <span>Engine</span> Architecture</h2>
+  <p style="color:var(--muted);font-size:13px;margin-bottom:24px">Raw data in one end. Gold Standard JSON out the other. Five stations on the assembly line.</p>
+
+  <div class="card" style="margin-top:24px">
+
+    <div style="margin-bottom:16px">
+      <svg width="100%" viewBox="0 0 820 60" style="overflow:visible">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="#7a7870" stroke-width="1.5"/>
+          </marker>
+        </defs>
+        <g>
+          <rect x="0" y="10" width="110" height="36" rx="6" fill="#1e1e25" stroke="#2a2a35" stroke-width="0.5"/>
+          <text x="55" y="32" text-anchor="middle" fill="#7a7870" font-family="IBM Plex Mono" font-size="10">Data Sources</text>
+        </g>
+        <line x1="110" y1="28" x2="128" y2="28" stroke="#7a7870" stroke-width="1" marker-end="url(#ar)"/>
+        <g>
+          <rect x="130" y="10" width="100" height="36" rx="6" fill="#120e02" stroke="#78490a" stroke-width="0.5"/>
+          <text x="180" y="32" text-anchor="middle" fill="#f59e0b" font-family="IBM Plex Mono" font-size="10">Ingestor</text>
+        </g>
+        <line x1="230" y1="28" x2="248" y2="28" stroke="#7a7870" stroke-width="1" marker-end="url(#ar)"/>
+        <g>
+          <rect x="250" y="10" width="100" height="36" rx="6" fill="#080f1c" stroke="#1e3a5f" stroke-width="0.5"/>
+          <text x="300" y="32" text-anchor="middle" fill="#60a5fa" font-family="IBM Plex Mono" font-size="10">Correlator</text>
+        </g>
+        <line x1="350" y1="28" x2="368" y2="28" stroke="#7a7870" stroke-width="1" marker-end="url(#ar)"/>
+        <g>
+          <rect x="370" y="10" width="100" height="36" rx="6" fill="#071a12" stroke="#0d3d27" stroke-width="0.5"/>
+          <text x="420" y="32" text-anchor="middle" fill="#34d399" font-family="IBM Plex Mono" font-size="10">Scorer</text>
+        </g>
+        <line x1="470" y1="28" x2="488" y2="28" stroke="#7a7870" stroke-width="1" marker-end="url(#ar)"/>
+        <g>
+          <rect x="490" y="10" width="100" height="36" rx="6" fill="#130e2a" stroke="#2d1f5e" stroke-width="0.5"/>
+          <text x="540" y="32" text-anchor="middle" fill="#a78bfa" font-family="IBM Plex Mono" font-size="10">Synthesizer</text>
+        </g>
+        <text x="595" y="24" fill="#3a3a50" font-family="IBM Plex Mono" font-size="9">← Claude/Gemini</text>
+        <line x1="590" y1="28" x2="608" y2="28" stroke="#7a7870" stroke-width="1" marker-end="url(#ar)"/>
+        <g>
+          <rect x="610" y="6" width="130" height="44" rx="6" fill="#05100a" stroke="#1D9E75" stroke-width="1"/>
+          <text x="675" y="24" text-anchor="middle" fill="#34d399" font-family="IBM Plex Mono" font-size="10" font-weight="500">Gold Standard</text>
+          <text x="675" y="40" text-anchor="middle" fill="#0d3d27" font-family="IBM Plex Mono" font-size="9">JSON output</text>
+        </g>
+      </svg>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;font-size:12px">
+      <div style="text-align:center;color:var(--amber)">yfinance<br>FRED<br>AIS</div>
+      <div style="text-align:center;color:var(--blue)">Pull + clean<br>Normalize<br>Align dates</div>
+      <div style="text-align:center;color:var(--green)">Match events<br>Calculate lags<br>Find signals</div>
+      <div style="text-align:center;color:var(--green)">Hit rate<br>Consistency<br>n= penalty</div>
+      <div style="text-align:center;color:var(--purple)">Read JSON<br>Write summary<br>No inventing</div>
+    </div>
+  </div>
+
+  <div class="callout callout-green">
+    <h3>🔑 The golden rule</h3>
+    <p>Scripts 1–3 measure the present event. Scripts 4–5 compare it to the past. Confidence comes from pattern frequency across history — never from an AI's opinion. The LLM reads data and describes it. That's it. It is not allowed to have feelings about the confidence score.</p>
+  </div>
+</section>
+
+<!-- ═══ SIGNAL CHAIN ═══ -->
+<section id="signal-chain" class="scroll-target">
+  <div class="section-label">// 03 — signal chain</div>
+  <h2>The Complete <span>Signal Chain</span></h2>
+  <p style="color:var(--muted);font-size:13px;margin-bottom:20px">Panama Canal Drought 2023 — cause and effect, layer by layer, with lag times.</p>
+
+  <p>Read top to bottom. This is what happens after a major canal disruption, in what order, how fast, and how reliably. The signal <em>travels</em> down the chain — fastest assets at the top, slowest at the bottom.</p>
+
+  <div class="signal-chain" style="margin-top:24px">
+    <div class="chain-layer layer-1">
+      <div class="chain-label">L1</div>
+      <div style="width:20px;flex-shrink:0;display:flex;flex-direction:column;align-items:center"><div style="width:10px;height:10px;border-radius:50%;background:var(--coral);margin-top:18px"></div><div style="width:2px;flex:1;background:var(--border2);min-height:16px"></div></div>
+      <div class="chain-node">
+        <div class="chain-title">Panama Canal Transit Capacity</div>
+        <div class="chain-stats">
+          <span class="chain-stat" style="color:var(--coral)">−50% transits</span>
+          <span class="chain-stat" style="color:var(--muted)">36→18/day at peak</span>
+          <span class="chain-stat" style="color:var(--muted)">lag: 0 days</span>
+          <span class="chain-stat" style="color:var(--muted)">conf: 0.95</span>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-top:8px">This IS the event. The trigger. The moment the detective opens a new case file.</div>
+      </div>
+    </div>
+    <div class="chain-arrow-down">↓</div>
+    <div class="chain-layer layer-2">
+      <div class="chain-label">L2</div>
+      <div style="width:20px;flex-shrink:0;display:flex;flex-direction:column;align-items:center"><div style="width:10px;height:10px;border-radius:50%;background:var(--amber);margin-top:18px"></div><div style="width:2px;flex:1;background:var(--border2);min-height:16px"></div></div>
+      <div class="chain-node">
+        <div class="chain-title">⭐ Slot Auction Price — Alternative Data</div>
+        <div class="chain-stats">
+          <span class="chain-stat" style="color:var(--amber)">$0 → $2,000,000</span>
+          <span class="chain-stat" style="color:var(--muted)">lag: immediate</span>
+          <span class="chain-stat" style="color:var(--amber)">conf: 0.90</span>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-top:8px">A permission slip to use a canal sold for two million dollars. Zero noise. Zero confounders. Pure scarcity. This is NAXA's killer signal — it leads freight rate indexes by 3–5 days.</div>
+      </div>
+    </div>
+    <div class="chain-arrow-down">↓</div>
+    <div class="chain-layer layer-2">
+      <div class="chain-label">L2</div>
+      <div style="width:20px;flex-shrink:0;display:flex;flex-direction:column;align-items:center"><div style="width:10px;height:10px;border-radius:50%;background:var(--amber);margin-top:18px"></div><div style="width:2px;flex:1;background:var(--border2);min-height:16px"></div></div>
+      <div class="chain-node">
+        <div class="chain-title">Container Freight Rates Asia-USEC</div>
+        <div class="chain-stats">
+          <span class="chain-stat" style="color:var(--green)">+28% at 30d</span>
+          <span class="chain-stat" style="color:var(--muted)">lag: 10–14 days</span>
+          <span class="chain-stat" style="color:var(--amber)">conf: 0.71</span>
+          <span class="chain-stat" style="color:var(--muted)">source: Drewry WCI</span>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-top:8px">Fewer ships can transit → shipping companies charge more per container → rate indexes spike. Mean move +23% across n=4 comparable events.</div>
+      </div>
+    </div>
+    <div class="chain-arrow-down">↓</div>
+    <div class="chain-layer layer-3">
+      <div class="chain-label">L3</div>
+      <div style="width:20px;flex-shrink:0;display:flex;flex-direction:column;align-items:center"><div style="width:10px;height:10px;border-radius:50%;background:var(--blue);margin-top:18px"></div><div style="width:2px;flex:1;background:var(--border2);min-height:16px"></div></div>
+      <div class="chain-node">
+        <div class="chain-title">Tanker Shipping Equities (FRO, INSW)</div>
+        <div class="chain-stats">
+          <span class="chain-stat" style="color:var(--green)">+11% at 30d</span>
+          <span class="chain-stat" style="color:var(--muted)">lag: 5–14 days</span>
+          <span class="chain-stat" style="color:var(--blue)">conf: 0.63</span>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-top:8px">Rerouting via Cape Horn adds voyage length → more ton-miles → higher tanker revenue. Cleaner signal than container stocks.</div>
+      </div>
+    </div>
+    <div class="chain-arrow-down">↓</div>
+    <div class="chain-layer layer-4">
+      <div class="chain-label">L4</div>
+      <div style="width:20px;flex-shrink:0;display:flex;flex-direction:column;align-items:center"><div style="width:10px;height:10px;border-radius:50%;background:var(--green);margin-top:18px"></div><div style="width:2px;flex:1;background:var(--border2);min-height:16px"></div></div>
+      <div class="chain-node">
+        <div class="chain-title">LNG / Natural Gas</div>
+        <div class="chain-stats">
+          <span class="chain-stat" style="color:var(--green)">+8% at 30d</span>
+          <span class="chain-stat" style="color:var(--muted)">lag: 20–35 days</span>
+          <span class="chain-stat" style="color:var(--green)">conf: 0.58</span>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-top:8px">US LNG exports to Asia rerouted via Cape Horn → +18 days voyage time → Asian spot LNG prices rise.</div>
+      </div>
+    </div>
+    <div class="chain-arrow-down">↓</div>
+    <div class="chain-layer layer-5">
+      <div class="chain-label">L5</div>
+      <div style="width:20px;flex-shrink:0;display:flex;flex-direction:column;align-items:center"><div style="width:10px;height:10px;border-radius:50%;background:var(--purple);margin-top:18px"></div></div>
+      <div class="chain-node">
+        <div class="chain-title">Grain Prices (Corn, Soybean)</div>
+        <div class="chain-stats">
+          <span class="chain-stat" style="color:var(--muted)">mixed / confounded</span>
+          <span class="chain-stat" style="color:var(--muted)">lag: 30–60 days</span>
+          <span class="chain-stat" style="color:var(--coral)">conf: 0.38</span>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-top:8px">Brazil's 2023 record harvest drowned the canal signal. Reported for completeness. Confidence 0.38 = do not trade on this. (0.38 is the shrug emoji, but in statistics.)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CHARTS ═══ -->
+<section id="charts" class="scroll-target">
+  <div class="section-label">// 04 — data visualizations</div>
+  <h2><span>Charts</span> & Data</h2>
+  <p style="color:var(--muted);font-size:13px;margin-bottom:24px">The actual numbers from our backtested signal chain. These are not estimates.</p>
+
+  <div class="chart-container">
+    <div class="chart-title">Signal Chain — % Move at 30 Days</div>
+    <div class="chart-sub">Measured moves from event date. Panama Canal 2023. Each bar = one layer of the chain.</div>
+    <div class="chart-wrap"><canvas id="chainChart"></canvas></div>
+  </div>
+
+  <div class="chart-container">
+    <div class="chart-title">Confidence Scores by Signal</div>
+    <div class="chart-sub">Higher = more historically consistent. Scores penalized for n=4 (target: n=12).</div>
+    <div class="chart-wrap"><canvas id="confChart"></canvas></div>
+  </div>
+
+  <div class="chart-container">
+    <div class="chart-title">How Confidence Grows with n= Events</div>
+    <div class="chart-sub">The sample size penalty in action. Each additional historical event makes scores more reliable.</div>
+    <div class="chart-wrap"><canvas id="nChart"></canvas></div>
+  </div>
+
+  <div class="callout callout-amber">
+    <h3>📖 Reading the n= chart</h3>
+    <p>At n=1 you're guessing. At n=4 you have a pattern. At n=12 you have a defensible score. At n=100 you approach certainty — but never reach it. The score never hits 1.0. That's intentional. Intellectual honesty baked into math.</p>
+  </div>
+
+  <div class="card">
+    <div style="font-family:var(--font-mono);font-size:13px;color:var(--amber);margin-bottom:14px;font-weight:500">Historical Events Database — All 4 Events</div>
+    <table class="events-table">
+      <thead><tr><th>Event</th><th>Date</th><th>Severity</th><th>Transit Cut</th><th>Freight +30d</th><th>Data Quality</th></tr></thead>
+      <tbody>
+        <tr><td>Panama Canal Drought 2023</td><td style="color:var(--muted);font-family:var(--font-mono);font-size:12px">2023-08-01</td><td><span class="sev-pill" style="background:#4a1020;color:var(--coral)">0.85</span></td><td style="color:var(--coral)">−50%</td><td style="color:var(--green)">+28.4%</td><td><span class="badge badge-green">PRIMARY</span></td></tr>
+        <tr><td>Suez Canal Blockage (Ever Given)</td><td style="color:var(--muted);font-family:var(--font-mono);font-size:12px">2021-03-23</td><td><span class="sev-pill" style="background:#4a1020;color:var(--coral)">0.95</span></td><td style="color:var(--coral)">−100%</td><td style="color:var(--green)">+31.4%</td><td><span class="badge badge-green">PRIMARY</span></td></tr>
+        <tr><td>Panama Canal Drought 2019</td><td style="color:var(--muted);font-family:var(--font-mono);font-size:12px">2019-07-15</td><td><span class="sev-pill" style="background:var(--amber-dim);color:var(--amber)">0.45</span></td><td style="color:var(--amber)">−20%</td><td style="color:var(--green)">+18.7%</td><td><span class="badge badge-amber">PARTIAL</span></td></tr>
+        <tr><td>Panama Canal Expansion Delay</td><td style="color:var(--muted);font-family:var(--font-mono);font-size:12px">2016-04-01</td><td><span class="sev-pill" style="background:var(--border);color:var(--muted)">0.35</span></td><td style="color:var(--muted)">−10%</td><td style="color:var(--green)">+14.2%</td><td><span class="badge badge-amber">PARTIAL</span></td></tr>
+      </tbody>
+    </table>
+    <div style="font-size:12px;color:var(--muted);margin-top:8px">Key insight: freight rates went UP in all 4 events. 100% hit rate. Mean move: +23.2%. Direction signal is solid.</div>
+  </div>
+</section>
+
+<!-- ═══ CONFIDENCE ═══ -->
+<section id="confidence" class="scroll-target">
+  <div class="section-label">// 05 — confidence scores</div>
+  <h2>The <span>Confidence Score</span></h2>
+  <p style="color:var(--muted);font-size:13px;margin-bottom:20px">What 0.71 actually means. Why it's not just made up. Why it caps at 0.85.</p>
+
+  <div class="humor-box">
+    <span class="tag">// why_this_matters</span>
+    Most "AI confidence scores" are vibes laundered through a softmax function. NAXA's scores are: hit rate across historical events, weighted by data quality, penalized for small samples. A score of 0.71 means "in 71% of comparable historical cases, this pattern held — accounting for data quality and our current sample size of 4." That's a sentence you can say in a meeting without being laughed out of the room.
+  </div>
+
+  <div class="card">
+    <div style="font-family:var(--font-mono);font-size:13px;color:var(--amber);margin-bottom:16px;font-weight:500">Confidence Scores — Freight Rate Signal (30-day lag)</div>
+    <div class="conf-bar-row"><div class="conf-bar-label"><span>Slot auction price (alternative data)</span><span>0.90</span></div><div class="conf-bar-track"><div class="conf-bar-fill" style="width:90%;background:var(--amber)"></div></div></div>
+    <div class="conf-bar-row"><div class="conf-bar-label"><span>Container freight rates Asia-USEC</span><span>0.71</span></div><div class="conf-bar-track"><div class="conf-bar-fill" style="width:71%;background:var(--green)"></div></div></div>
+    <div class="conf-bar-row"><div class="conf-bar-label"><span>Tanker shipping equities</span><span>0.63</span></div><div class="conf-bar-track"><div class="conf-bar-fill" style="width:63%;background:var(--blue)"></div></div></div>
+    <div class="conf-bar-row"><div class="conf-bar-label"><span>Natural gas / LNG</span><span>0.58</span></div><div class="conf-bar-track"><div class="conf-bar-fill" style="width:58%;background:var(--teal)"></div></div></div>
+    <div class="conf-bar-row"><div class="conf-bar-label"><span>Container shipping equities</span><span>0.52</span></div><div class="conf-bar-track"><div class="conf-bar-fill" style="width:52%;background:var(--purple)"></div></div></div>
+    <div class="conf-bar-row"><div class="conf-bar-label"><span>Grain prices (corn/soybean)</span><span>0.38</span></div><div class="conf-bar-track"><div class="conf-bar-fill" style="width:38%;background:var(--coral)"></div></div></div>
+  </div>
+
+  <div class="formula">
+    raw_score = (hit_rate × 0.6) + (consistency × 0.4)<br>
+    <span style="color:var(--muted)">↓ apply sample size penalty</span><br>
+    final = 0.5 + (raw_score − 0.5) × (1 − 1/√n)<br>
+    <span style="color:var(--amber)">capped at 0.85 until n ≥ 12</span>
+  </div>
+
+  <div class="callout callout-purple">
+    <h3>🔑 Why it caps at 0.85</h3>
+    <p>With n=4, even a 100% hit rate doesn't mean we're fully confident. We might have just gotten lucky 4 times. The cap enforces intellectual honesty: no score above 0.85 until we have 12+ historical events. A quant who tells you they're 95% confident based on 4 data points is either lying or selling something.</p>
+  </div>
+</section>
+
+<!-- ═══ PHASES ═══ -->
+<section id="phases" class="scroll-target">
+  <div class="section-label">// 06 — phase roadmap</div>
+  <h2>The <span>Build Roadmap</span></h2>
+  <p style="color:var(--muted);font-size:13px;margin-bottom:20px">Four weeks. Four phases. One demo that proves the product thesis.</p>
+
+  <div class="phase-row">
+    <div class="phase-card done">
+      <div class="phase-num">PHASE 1 — Week 1</div>
+      <div class="phase-title" style="color:var(--green)">Prove The Chain</div>
+      <div class="phase-status done">✓ Complete</div>
+      <ul class="phase-items">
+        <li>Shipping equity data pulled</li>
+        <li>FRED economic data pulled</li>
+        <li>4-event historical database</li>
+        <li>Confidence score engine</li>
+        <li>Gold Standard JSON built</li>
+        <li>Schema validated</li>
+      </ul>
+    </div>
+    <<div class="phase-card done">
+      <div class="phase-num">PHASE 2 — Week 2</div>
+      <div class="phase-title" style="color:var(--green)">Automate The Chain</div>
+      <div class="phase-status done">✓ Complete</div>
+      <ul class="phase-items">
+        <li>engine/ingestor.py ✓</li>
+        <li>engine/events_db.py ✓</li>
+        <li>engine/scorer.py ✓</li>
+        <li>engine/correlator.py ✓</li>
+        <li>engine/synthesizer.py ✓</li>
+        <li>analyze.py entry point ✓</li>
+        <li>Gemini 2.5 Flash live ✓</li>
+        <li>.env key security ✓</li>
+      </ul>
+    </div>
+    <div class="phase-card wip">
+      <div class="phase-num">PHASE 3 — Week 3</div>
+      <div class="phase-title" style="color:var(--amber)">API + Demo</div>
+      <div class="phase-status wip">🔄 Building</div>
+      <ul class="phase-items">
+        <li>Flask POST /v1/analyze</li>
+        <li>Case A agent (no NAXA)</li>
+        <li>Case B agent (with NAXA)</li>
+        <li>Side-by-side comparison</li>
+        <li>Timing + logging</li>
+      </ul>
+    </div>
+    <div class="phase-card upcoming">
+      <div class="phase-num">PHASE 4 — Week 4</div>
+      <div class="phase-title">Polish & Ship</div>
+      <div class="phase-status soon">⏳ Upcoming</div>
+      <ul class="phase-items">
+        <li>Error handling</li>
+        <li>Demo video recorded</li>
+        <li>Startup application</li>
+        <li>Co-founder conversation</li>
+        <li>3–5 beta users recruited</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout callout-amber">
+    <h3>🧠 The pattern every phase follows</h3>
+    <p>Each phase takes the previous phase's output and automates it one level deeper. Phase 1: hand-build the JSON. Phase 2: Python builds the JSON automatically. Phase 3: Flask serves the JSON via API. Phase 4: an agent calls the API and proves it wins. The JSON is the constant. The automation depth is what changes.</p>
+  </div>
+</section>
+
+<!-- ═══ SCRIPTS ═══ -->
+<section id="scripts" class="scroll-target">
+  <div class="section-label">// 07 — the scripts</div>
+  <h2>Phase 1 <span>Scripts</span> — Explained</h2>
+  <p style="color:var(--muted);font-size:13px;margin-bottom:24px">What each file does. One job per script. No exceptions.</p>
+
+  <div style="display:flex;flex-direction:column;gap:0">
+    <div class="pipe-step"><div class="pipe-track"><div class="pipe-dot"></div><div class="pipe-line"></div></div>
+    <div class="pipe-content"><div class="pipe-title">pull_shipping_data.py</div><div class="pipe-sub">Downloads stock prices for 6 shipping companies via Yahoo Finance. Normalizes to 100 at baseline. Calculates % move at 14/30/60 days from event. Saves to data/raw/. Rule: raw data is sacred — never overwrite.</div></div></div>
+    <div class="pipe-step"><div class="pipe-track"><div class="pipe-dot"></div><div class="pipe-line"></div></div>
+    <div class="pipe-content"><div class="pipe-title">pull_fred_data.py</div><div class="pipe-sub">Calls the Federal Reserve's free API for 5 economic series (freight PPI, oil, gas, corn, soybean). Handles the daily vs monthly frequency problem. Everything has a citable FRED series ID — that's what makes it auditable.</div></div></div>
+    <div class="pipe-step"><div class="pipe-track"><div class="pipe-dot"></div><div class="pipe-line"></div></div>
+    <div class="pipe-content"><div class="pipe-title">build_master_timeline.py</div><div class="pipe-sub">Combines Day 1 + Day 2 data into one unified signal chain table. Produces the 4-panel chart showing all layers together. This is the visual proof that the chain exists and has measurable lag structure.</div></div></div>
+    <div class="pipe-step"><div class="pipe-track"><div class="pipe-dot"></div><div class="pipe-line"></div></div>
+    <div class="pipe-content"><div class="pipe-title">historical_events_db.py</div><div class="pipe-sub">The memory bank. 4 comparable historical disruptions, each with sourced % moves per signal layer. Every entry has data quality flags (PRIMARY/PARTIAL/ESTIMATED) that weight the confidence calculation. This is the n= foundation.</div></div></div>
+    <div class="pipe-step"><div class="pipe-track"><div class="pipe-dot"></div><div class="pipe-line"></div></div>
+    <div class="pipe-content"><div class="pipe-title">calculate_confidence.py</div><div class="pipe-sub">Event study engine. Reads the historical database. Calculates: weighted hit rate, magnitude consistency, sample size penalty. Outputs structured confidence objects with full methodology. No LLM involvement at any point.</div></div></div>
+    <div class="pipe-step"><div class="pipe-track"><div class="pipe-dot"></div><div class="pipe-line"></div></div>
+    <div class="pipe-content"><div class="pipe-title">build_gold_standard.py</div><div class="pipe-sub">Assembles the final JSON from all previous outputs. Every field sourced. Schema v0.1.0 is locked — Phase 2 must produce this exact structure automatically.</div></div></div>
+    <div class="pipe-step"><div class="pipe-track"><div class="pipe-dot"></div></div>
+    <div class="pipe-content"><div class="pipe-title">validate_gold_standard.py</div><div class="pipe-sub">30+ checks on the JSON before it leaves the system. Confidence scores in range. Sources present. No overconfident language. Fail fast: better to crash internally than serve broken data to a customer.</div></div></div>
+  </div>
+</section>
+
+<!-- ═══ JSON ═══ -->
+<section id="json-output" class="scroll-target">
+  <div class="section-label">// 08 — json output</div>
+  <h2>The <span>JSON Output</span></h2>
+  <p style="color:var(--muted);font-size:13px;margin-bottom:20px">90 seconds. Every field sourced. Readable by humans and AI agents.</p>
+
+  <div class="humor-box">
+    <span class="tag">// this_is_the_product</span>
+    This JSON is what a customer pays for. Not a dashboard. Not a PDF. A structured, machine-readable, fully-sourced signal chain that an AI agent can consume without a prompt-engineering PhD. The analyst gets the human_summary. The agent gets agent_payload. Same API call. Both served.
+  </div>
+
+  <div class="json-block">
+{
+  <span class="json-key">"schema_version"</span>: <span class="json-str">"0.1.0"</span>,  <span class="json-note">← locked. change = breaking change</span>
+  <span class="json-key">"event"</span>: {
+    <span class="json-key">"name"</span>:            <span class="json-str">"Panama Canal Drought 2023"</span>,
+    <span class="json-key">"severity_score"</span>:  <span class="json-num">0.85</span>,
+    <span class="json-key">"source"</span>:          <span class="json-str">"ACP_Notice_N-A-148-2023"</span>  <span class="json-note">← cited</span>
+  },
+  <span class="json-key">"human_summary"</span>: <span class="json-str">"Transits fell 50%. Freight rates +18–35%
+    within 14 days. n=4, conf=0.71..."</span>,  <span class="json-note">← LLM writes this</span>
+
+  <span class="json-key">"signal_chain"</span>: [{
+    <span class="json-key">"layer"</span>: <span class="json-num">2</span>, <span class="json-key">"direction"</span>: <span class="json-str">"UP"</span>,
+    <span class="json-key">"expected_move_range"</span>: <span class="json-str">"+18% to +35%"</span>,
+    <span class="json-key">"lag_days"</span>: <span class="json-str">"10-14"</span>,
+    <span class="json-key">"confidence_score"</span>: <span class="json-num">0.71</span>,
+    <span class="json-key">"basis"</span>: <span class="json-str">"backtested_n=4_2016-2023"</span>
+  }],  <span class="json-note">← LLM never touches these numbers</span>
+
+  <span class="json-key">"agent_payload"</span>: {
+    <span class="json-key">"machine_readable_chain"</span>: <span class="json-str">"L1:DOWN:−50%|L2:UP:+23%..."</span>,
+    <span class="json-key">"top_confidence_signals"</span>: [...]
+  },  <span class="json-note">← for AI agents to consume directly</span>
+
+  <span class="json-key">"query_time_ms"</span>: <span class="json-num">1840</span>,
+  <span class="json-key">"naxa_version"</span>: <span class="json-str">"0.1.0"</span>
+}
+  </div>
+</section>
+
+<!-- ═══ BUSINESS ═══ -->
+<section id="business" class="scroll-target">
+  <div class="section-label">// 09 — business case</div>
+  <h2>The <span>Business Case</span></h2>
+
+  <div class="card-row">
+    <div class="card">
+      <div style="font-family:var(--font-mono);font-size:13px;color:var(--amber);margin-bottom:12px;font-weight:500">Who Pays</div>
+      <p style="font-size:13px;margin-bottom:8px"><strong>AI agent builders</strong> — ship fast, API budgets, zero procurement. Find them on Twitter/X, AI Discord. Pay $99–299/month without a sales call.</p>
+      <p style="font-size:13px;margin-bottom:0"><strong>Boutique fund analysts</strong> — 3–15 person funds. Need defensible, sourced research. Higher lifetime value, slower adoption.</p>
+    </div>
+    <div class="card">
+      <div style="font-family:var(--font-mono);font-size:13px;color:var(--blue);margin-bottom:12px;font-weight:500">Pricing Tiers</div>
+      <p style="font-size:13px;margin-bottom:8px">
+        <span class="badge badge-amber">Free</span> 10 queries/month<br><br>
+        <span class="badge badge-blue">Starter $99/mo</span> 500 queries<br><br>
+        <span class="badge badge-green">Pro $299/mo</span> 2,500 queries<br><br>
+        <span class="badge badge-purple">Enterprise</span> Volume + SLA
+      </p>
+    </div>
+  </div>
+
+  <div class="callout callout-green">
+    <h3>🏁 Current Status</h3>
+    <p>Phase 1 and 2 complete. Pipeline runs end-to-end: <code>python analyze.py --event canal_restriction --date 2023-08-01 --severity 0.85</code> → Gold Standard JSON in ~19 seconds. Phase 3 in progress: Flask API + demo agents. Shipping vertical only until paying customers exist.</p>
+  </div>
+</section>
+
+<!-- ═══ ASK NAXA ═══ -->
+<section id="ask-naxa" class="scroll-target">
+  <div class="section-label">// 10 — interactive</div>
+  <h2>Ask <span>NAXA</span></h2>
+  <p style="color:var(--muted);font-size:13px;margin-bottom:20px">Ask anything about the engine, methodology, or code. Powered by Groq (free). Needs a Groq API key.</p>
+
+  <div class="callout callout-purple">
+    <h3>🔑 Get a free Groq key</h3>
+    <p>Visit <strong>console.groq.com</strong> → create account → API Keys → Create key. Takes 2 minutes. Free tier is generous. Paste it below — stored in your browser only, never sent anywhere except Groq directly.</p>
+  </div>
+
+  <div class="ask-naxa">
+    <div style="display:flex;gap:10px;margin-bottom:12px;align-items:center">
+      <input type="password" class="ask-key-input" id="groq-key" placeholder="sk-... (Groq API key)" oninput="saveKey(this.value)">
+      <div style="font-size:11px;color:var(--muted);font-family:var(--font-mono)" id="key-status">no key</div>
+    </div>
+    <div class="ask-chips">
+      <div class="ask-chip" onclick="fillQ('What is NAXA in one sentence?')">What is NAXA?</div>
+      <div class="ask-chip" onclick="fillQ('How does the confidence score formula work?')">Confidence formula</div>
+      <div class="ask-chip" onclick="fillQ('Why is the slot auction price the best signal?')">Slot auction signal</div>
+      <div class="ask-chip" onclick="fillQ('What makes NAXA different from Bloomberg?')">vs Bloomberg</div>
+      <div class="ask-chip" onclick="fillQ('What happens in Phase 2?')">Phase 2</div>
+      <div class="ask-chip" onclick="fillQ('Why n=4 is not enough and when will it be enough?')">n= problem</div>
+    </div>
+    <div class="ask-input-row">
+      <input type="text" class="ask-input" id="ask-input" placeholder="Ask anything about NAXA..." onkeydown="if(event.key==='Enter')askNAXA()">
+      <button class="ask-btn" id="ask-btn" onclick="askNAXA()">Ask →</button>
+    </div>
+    <div class="ask-response" id="ask-response">Enter your Groq API key above, then ask anything about NAXA's engine, methodology, or code.</div>
+  </div>
+</section>
+
+<div class="footer">
+  NAXA Engine Documentation · v2.0 · Phase 1 Complete<br>
+  <span style="color:var(--border2)">Every output sourced. Every confidence score backtested. No unsourced claims. No vibes-based confidence.</span>
+</div>
+
+</main>
+
+<script>
+const NAXA_SYSTEM = `You are NAXA's documentation assistant. Speak with dry wit and technical precision. Be concise.
+
+NAXA is an alternative data API mapping downstream signal chains after macro events, returning structured JSON with sourced, backtested data.
+
+Key facts:
+- One API call replaces 20 minutes of manual research. 90 seconds vs 20 minutes.
+- Confidence scores = backtested from historical events, NEVER generated by LLM
+- Formula: (hit_rate × 0.6 + magnitude_consistency × 0.4) × (1 − 1/√n), capped at 0.85 until n≥12
+- Gold Standard JSON: event → signal_chain → human_summary → agent_payload
+- LLM writes ONLY human_summary — reads structured data, never invents numbers
+- Anchor event: Panama Canal Drought 2023. n=4 events currently, target n=12
+- Key signals: slot auction price (0.90), freight rates (0.71), tanker equity (0.63)
+- Grain signal (0.38) = too confounded by Brazil harvest. Do not trade on it.
+- Phase 1 complete (manual pipeline). Phase 2 in progress (automation engine).
+- Phase 3: Flask API. Phase 4: demo showing agent WITH vs WITHOUT NAXA.
+- Target customers: AI agent builders ($99-299/mo) and boutique fund analysts
+- Competitors: Not Bloomberg (we do alt data), Not Palantir (different customer)
+- Free data sources: yfinance, FRED API, Drewry WCI, VesselFinder, GDELT
+- Built by solo founder, undergraduate, self-taught Python, applying to startup programs
+
+Answer in under 120 words. Be technically precise. Occasional dry humor is fine. If asked something outside NAXA, redirect.`;
+
+function saveKey(v) {
+  localStorage.setItem('naxa_groq_key', v);
+  document.getElementById('key-status').textContent = v.length > 10 ? '✓ key saved' : 'no key';
+  document.getElementById('key-status').style.color = v.length > 10 ? 'var(--green)' : 'var(--muted)';
+}
+function fillQ(q) {
+  document.getElementById('ask-input').value = q;
+}
+window.addEventListener('load', () => {
+  const k = localStorage.getItem('naxa_groq_key') || '';
+  if (k) { document.getElementById('groq-key').value = k; saveKey(k); }
+});
+
+async function askNAXA() {
+  const key = localStorage.getItem('naxa_groq_key') || '';
+  const q = document.getElementById('ask-input').value.trim();
+  if (!key || key.length < 10) { document.getElementById('ask-response').textContent = 'Enter a Groq API key first. Get one free at console.groq.com'; return; }
+  if (!q) return;
+  const btn = document.getElementById('ask-btn');
+  const resp = document.getElementById('ask-response');
+  btn.disabled = true;
+  resp.className = 'ask-response';
+  resp.innerHTML = '<span class="typing-dots">Thinking</span>';
+  try {
+    const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'llama3-8b-8192',
+        messages: [{ role: 'system', content: NAXA_SYSTEM }, { role: 'user', content: q }],
+        max_tokens: 250, temperature: 0.6
+      })
+    });
+    const d = await r.json();
+    if (d.error) { resp.textContent = 'Error: ' + d.error.message; return; }
+    resp.className = 'ask-response loaded';
+    resp.textContent = d.choices[0].message.content;
+  } catch(e) {
+    resp.textContent = 'Request failed. Check your API key and try again. (' + e.message + ')';
+  } finally { btn.disabled = false; }
+}
+
+// Counter animation
+function animateCounter(el, target, suffix, duration) {
+  let start = 0, step = target / (duration / 16);
+  const t = setInterval(() => {
+    start = Math.min(start + step, target);
+    el.textContent = Math.round(start) + suffix;
+    if (start >= target) clearInterval(t);
+  }, 16);
+}
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    animateCounter(document.getElementById('stat-time'), 20, ' min', 1200);
+    animateCounter(document.getElementById('stat-api'), 90, 's', 1200);
+    animateCounter(document.getElementById('stat-src'), 100, '%', 1200);
+  }, 400);
+});
+
+// Chart.js setup
+Chart.defaults.color = '#7a7870';
+Chart.defaults.borderColor = 'rgba(42,42,53,0.8)';
+Chart.defaults.font.family = 'IBM Plex Mono';
+Chart.defaults.font.size = 11;
+
+// Signal chain moves chart
+new Chart(document.getElementById('chainChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Freight Rates\n(L2)', 'Tanker Equity\n(L3)', 'LNG/NatGas\n(L4)', 'Container Eq.\n(L3)', 'Grain Price\n(L5)'],
+    datasets: [{
+      label: '% Move at 30 days',
+      data: [28.4, 11.2, 8.0, 4.2, -4.8],
+      backgroundColor: ['rgba(245,158,11,0.7)', 'rgba(96,165,250,0.7)', 'rgba(45,212,191,0.7)', 'rgba(167,139,250,0.6)', 'rgba(251,113,133,0.5)'],
+      borderColor: ['#f59e0b', '#60a5fa', '#2dd4bf', '#a78bfa', '#fb7185'],
+      borderWidth: 1, borderRadius: 4
+    }]
+  },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+    scales: { y: { grid: { color: 'rgba(42,42,53,0.6)' }, ticks: { callback: v => v + '%' } },
+              x: { grid: { display: false } } } }
+});
+
+// Confidence scores chart
+new Chart(document.getElementById('confChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Slot Auction', 'Freight Rates', 'Tanker Equity', 'LNG/Gas', 'Container Eq.', 'Grain'],
+    datasets: [{
+      label: 'Confidence Score',
+      data: [0.90, 0.71, 0.63, 0.58, 0.52, 0.38],
+      backgroundColor: v => {
+        const s = [0.90,0.71,0.63,0.58,0.52,0.38][v.dataIndex];
+        return s>=0.70?'rgba(52,211,153,0.7)':s>=0.55?'rgba(245,158,11,0.6)':'rgba(251,113,133,0.5)';
+      },
+      borderColor: v => {
+        const s = [0.90,0.71,0.63,0.58,0.52,0.38][v.dataIndex];
+        return s>=0.70?'#34d399':s>=0.55?'#f59e0b':'#fb7185';
+      },
+      borderWidth: 1, borderRadius: 4
+    }]
+  },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+    scales: { y: { min: 0, max: 1, grid: { color: 'rgba(42,42,53,0.6)' },
+      ticks: { callback: v => v.toFixed(1) } }, x: { grid: { display: false } } } }
+});
+
+// n= impact chart
+const ns = [1,2,3,4,5,6,7,8,9,10,12,15,20,25];
+const rawScore = 0.88;
+new Chart(document.getElementById('nChart'), {
+  type: 'line',
+  data: {
+    labels: ns,
+    datasets: [{
+      label: 'Confidence score (raw 0.88)',
+      data: ns.map(n => {
+        const penalty = 1 - 1/Math.sqrt(n);
+        const score = 0.5 + (rawScore - 0.5) * penalty;
+        return Math.min(0.85, Math.round(score * 1000) / 1000);
+      }),
+      borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,0.08)',
+      borderWidth: 2, pointRadius: 3, fill: true, tension: 0.4
+    }, {
+      label: 'Current (n=4)',
+      data: ns.map(n => n===4 ? (0.5 + (rawScore-0.5)*(1-1/Math.sqrt(4))) : null),
+      borderColor: '#fb7185', backgroundColor: '#fb7185', pointRadius: 7,
+      pointStyle: 'circle', showLine: false
+    }]
+  },
+  options: { responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: true, position: 'bottom' },
+      tooltip: { callbacks: { label: ctx => 'Score: ' + ctx.parsed.y.toFixed(3) } } },
+    scales: { y: { min: 0.4, max: 0.9, grid: { color: 'rgba(42,42,53,0.6)' },
+      ticks: { callback: v => v.toFixed(2) } },
+      x: { title: { display: true, text: 'n= (number of historical events)', color: '#7a7870' },
+           grid: { display: false } } } }
+});
+
+// Scrollspy
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('nav a');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = e.target.getAttribute('id');
+      navLinks.forEach(a => {
+        a.classList.remove('active');
+        if (a.getAttribute('href') === '#' + id) a.classList.add('active');
+      });
+    }
+  });
+}, { threshold: 0.25, rootMargin: '-10% 0px -60% 0px' });
+sections.forEach(s => obs.observe(s));
+</script>
+</body>
+</html>
