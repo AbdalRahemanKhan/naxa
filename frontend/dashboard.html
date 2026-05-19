@@ -306,10 +306,11 @@ body{font-family:var(--font-sans);background:var(--canvas);color:var(--text-1);m
 
 <script>
 // ─── CONFIG ─────────────────────────────────────────────────────────────
+
 const CFG = {
   base: '',                         // empty = same origin (served by Flask)
   token: 'naxa_live_349497b06a2c8b1c0a7d26ac66fb9690',    // replace with your actual token
-  event: { event_type:'canal_restriction', date:'2023-08-01', severity:0.85 }
+  event: { event:'canal_restriction', date:'2023-08-01', severity:0.85 }
 };
 
 // ─── SOURCE MAP ──────────────────────────────────────────────────────────
