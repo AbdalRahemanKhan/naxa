@@ -3,11 +3,15 @@
 # Run from naxa/ with: python test_api.py
 # ============================================================
 
+import os
+from dotenv import load_dotenv
 import requests
 import json
 
+load_dotenv()
+
 BASE_URL = "http://localhost:5000"
-API_KEY  = "naxa_live_1fe5dda2e5fb6d37c9689d94f8656fd9"
+API_KEY  = os.getenv("NAXA_API_KEY")
 
 HEADERS = {
     "Content-Type":  "application/json",

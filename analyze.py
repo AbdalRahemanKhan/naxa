@@ -264,10 +264,13 @@ def assemble_gold_standard(
             "confidence_floor":      DB_METADATA["confidence_floor"],
             "confidence_ceiling":    DB_METADATA["confidence_ceiling"],
             "known_limitations": [
-                "n=4 is below target of n=12 for full confidence",
+                "n=14 events across 4 disruption types — confidence ceiling maintained at 0.85 "
+                "until 3 ESTIMATED events (2011, 2014, 2015) are verified with primary sources",
                 "Drewry WCI not available on free tier — using FRED proxy",
                 "Monthly FRED data limits precision for sub-30d lag analysis",
                 "Corn series PMAIZMTUSD unavailable — soybean used as proxy",
+                "Mixed event types (canal, route security, port) — directional signals valid, "
+                "magnitude comparisons should note event type differences",
             ]
         }
     }
