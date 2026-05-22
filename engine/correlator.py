@@ -35,6 +35,7 @@
 # ============================================================
 
 import pandas as pd
+import numpy as np
 from datetime import datetime, timedelta
 from typing import Optional
 
@@ -212,16 +213,44 @@ def _calculate_move(
 # precedent events from events_db.
 # This becomes the "expected" block in the signal chain step.
 
+# ============================================================
+# SECTION 3: HISTORICAL CONTEXT RETRIEVER
+# ============================================================
+
+import numpy as np   # add this with the other imports at the top of file
+
 def _get_historical_context(signal_id: str) -> dict:
     """
     Retrieves historical move ranges and precedent events
     for a given signal from the events database.
 
-    This is how we tell the user: "historically, when this
-    type of event occurred, this signal moved X% to Y%."
+    RANGE METHODOLOGY — P25 to P75 (interquartile range):
+        We use the 25th-to-75th percentile band, NOT min/max.
+
+        WHY:
+            min/max is dominated by outliers. With n=14 events
+            spanning armed conflicts, droughts, and labor
+            disputes, min/max produces a range so wide it
+            communicates nothing actionable.
+
+            P25-P75 shows where the MIDDLE 50% of comparable
+            events landed — the same convention used in
+            financial risk metrics, earnings guidance ranges,
+            and commodity price forecasting.
+
+        TRANSPARENCY:
+            The full min/max range is still stored as
+            move_range_full so analysts can see the extremes
+            if they need them. The precedents array also
+            shows every individual event.
+
+        QUANT PARALLEL:
+            A VaR (Value at Risk) model uses the 5th
+            percentile of loss distribution — not the worst
+            single loss ever recorded. Same principle here.
 
     Returns:
-        dict with expected_move_range, precedents, n_events
+        dict with expected_move_range (P25-P75), precedents, n_events
     """
     moves_30d  = []
     precedents = []
@@ -245,19 +274,34 @@ def _get_historical_context(signal_id: str) -> dict:
 
     if not moves_30d:
         return {
-            "expected_move_range": None,
-            "mean_move_pct":       None,
-            "precedents":          [],
-            "n_events":            0,
+            "expected_move_range":      None,
+            "expected_move_range_full": None,
+            "mean_move_pct":            None,
+            "range_methodology":        "insufficient_data",
+            "precedents":               [],
+            "n_events":                 0,
         }
 
-    return {
-        "expected_move_range": f"{min(moves_30d):+.1f}% to {max(moves_30d):+.1f}%",
-        "mean_move_pct":       round(sum(moves_30d) / len(moves_30d), 1),
-        "precedents":          precedents,
-        "n_events":            len(precedents),
-    }
+    # ── Percentile range (P25-P75) ─────────────────────────────
+    # Primary range shown to analyst.
+    # Robust to outliers. Shows where typical events resolve.
+    p25 = round(float(np.percentile(moves_30d, 25)), 1)
+    p75 = round(float(np.percentile(moves_30d, 75)), 1)
 
+    # ── Full range (min-max) ───────────────────────────────────
+    # Stored for transparency. Not shown as primary range.
+    # Analyst can audit the extremes via the precedents array.
+    full_min = round(min(moves_30d), 1)
+    full_max = round(max(moves_30d), 1)
+
+    return {
+        "expected_move_range":      f"{p25:+.1f}% to {p75:+.1f}%",
+        "expected_move_range_full": f"{full_min:+.1f}% to {full_max:+.1f}%",
+        "mean_move_pct":            round(sum(moves_30d) / len(moves_30d), 1),
+        "range_methodology":        "P25_to_P75_interquartile_range",
+        "precedents":               precedents,
+        "n_events":                 len(precedents),
+    }
 
 # ============================================================
 # SECTION 4: MEASURED MOVES CALCULATOR
@@ -470,11 +514,13 @@ def build_signal_chain(
             },
 
             "expected": {
-                "move_range":    historical["expected_move_range"],
-                "mean_move_pct": historical["mean_move_pct"],
-                "lag_days":      cfg["lag_days"],
-                "n_events":      historical["n_events"],
-                "precedents":    historical["precedents"],
+                "move_range":      historical["expected_move_range"],
+                "move_range_full": historical["expected_move_range_full"],
+                "range_method":    historical["range_methodology"],
+                "mean_move_pct":   historical["mean_move_pct"],
+                "lag_days":        cfg["lag_days"],
+                "n_events":        historical["n_events"],
+                "precedents":      historical["precedents"],
             },
 
             "confidence": {
