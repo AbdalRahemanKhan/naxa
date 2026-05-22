@@ -61,3 +61,25 @@ if r.status_code == 200:
     print(f"\n  SUMMARY:\n  {data['human_summary']}")
 else:
     print(f"  Error: {r.json()}")
+
+
+print("\n[4/4] Latest detected event...")
+r = requests.get(f"{BASE_URL}/v1/latest", headers=HEADERS)
+print(f"  Status: {r.status_code}")
+if r.status_code == 200:
+    d = r.json()
+    meta = d.get("detection_metadata", {})
+    print(f"  Detected: {meta.get('source_headline','')[:60]}")
+    print(f"  Severity: {d['event']['severity_score']}")
+elif r.status_code == 204:
+    print("  No events detected yet (expected if feeds are quiet)")
+
+    print("\n[5/5] New endpoints...")
+r = requests.get(f"{BASE_URL}/v1/history", headers=HEADERS)
+print(f"  /v1/history        → {r.status_code} | {r.json().get('count')} events")
+
+r = requests.get(f"{BASE_URL}/v1/history/panama_drought_2023", headers=HEADERS)
+print(f"  /v1/history/panama → {r.status_code} | {r.json().get('event_id')}")
+
+r = requests.get(f"{BASE_URL}/v1/demo/scenarios", headers=HEADERS)
+print(f"  /v1/demo/scenarios → {r.status_code} | {r.json().get('count')} scenarios")

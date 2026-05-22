@@ -1,0 +1,532 @@
+{
+  "schema_version": "0.2.0",
+  "naxa_version": "0.2.0",
+  "query_id": "7d6179db-8ce0-4e85-972d-d1a153026e6a",
+  "generated_at": "2026-05-22T16:40:51.071073+00:00",
+  "query_time_ms": 6552,
+  "event": {
+    "type": "canal_restriction",
+    "date": "2026-05-22",
+    "severity_score": 0.85,
+    "severity_basis": "transit_slot_reduction_pct_x_duration_weeks"
+  },
+  "human_summary": "A canal restriction event with a severity of 0.85 occurred on 2026-05-22, which has been analyzed based on 14 historical events from 2011-2024. The signal chain indicates that Deep Sea Freight PPI is expected to go up with a confidence of 0.608, and Tanker Shipping Equities are also expected to go up with a confidence of 0.68, both of which are high-confidence signals. In contrast, Container Shipping Equities and Global Soybean Price have lower confidence scores of 0.487 and 0.5, respectively, which are flagged as low-confidence signals. The analysis shows that Tanker Shipping Equities have a perfect hit rate of 1.0, while the other signals have hit rates of 0.912, 0.804, and 0.833, respectively, providing insights into historical patterns and relationships between these variables and canal restriction events.",
+  "signal_chain": [
+    {
+      "layer": 2,
+      "step_id": "container_freight_asia_usec",
+      "asset": "Deep Sea Freight PPI (Drewry WCI proxy)",
+      "asset_class": "freight_rate",
+      "direction": "UP",
+      "measured": {
+        "move_14d_pct": null,
+        "move_30d_pct": null,
+        "move_60d_pct": null,
+        "data_available": false,
+        "data_source": "fred_monthly",
+        "is_proxy": true,
+        "proxy_note": "Ideal source is Drewry WCI (paywalled). FRED PCU483111483111 is PPI: Deep Sea Freight — measures same cost signal, monthly frequency."
+      },
+      "expected": {
+        "move_range": "+14.7% to +30.6%",
+        "move_range_full": "-14.2% to +62.4%",
+        "range_method": "P25_to_P75_interquartile_range",
+        "mean_move_pct": 21.9,
+        "lag_days": 12,
+        "n_events": 14,
+        "precedents": [
+          {
+            "event": "panama_drought_2023",
+            "move_30d": 28.4,
+            "severity": 0.85
+          },
+          {
+            "event": "suez_blockage_2021",
+            "move_30d": 31.4,
+            "severity": 0.95
+          },
+          {
+            "event": "panama_drought_2019",
+            "move_30d": 18.7,
+            "severity": 0.45
+          },
+          {
+            "event": "panama_expansion_2016",
+            "move_30d": 14.2,
+            "severity": 0.35
+          },
+          {
+            "event": "red_sea_houthi_2024",
+            "move_30d": 62.4,
+            "severity": 0.8
+          },
+          {
+            "event": "suez_rerouting_sustained_2024",
+            "move_30d": 35.8,
+            "severity": 0.72
+          },
+          {
+            "event": "suez_war_risk_insurance_2024",
+            "move_30d": 24.8,
+            "severity": 0.7
+          },
+          {
+            "event": "panama_drought_2015",
+            "move_30d": 16.2,
+            "severity": 0.4
+          },
+          {
+            "event": "panama_drought_2011",
+            "move_30d": 11.4,
+            "severity": 0.32
+          },
+          {
+            "event": "panama_expansion_delays_2014",
+            "move_30d": 8.4,
+            "severity": 0.25
+          },
+          {
+            "event": "covid_port_congestion_la_2021",
+            "move_30d": 31.8,
+            "severity": 0.6
+          },
+          {
+            "event": "la_west_coast_labor_dispute_2022",
+            "move_30d": -14.2,
+            "severity": 0.45
+          },
+          {
+            "event": "black_sea_grain_corridor_2022",
+            "move_30d": 18.8,
+            "severity": 0.75
+          },
+          {
+            "event": "cape_of_good_hope_traffic_surge_2024",
+            "move_30d": 18.8,
+            "severity": 0.6
+          }
+        ]
+      },
+      "confidence": {
+        "score_14d": 0.61,
+        "score_30d": 0.608,
+        "score_60d": 0.579,
+        "n": 14,
+        "hit_rate": 0.912,
+        "basis": "backtested_n=14_events_2011-2024",
+        "methodology": "weighted_hit_rate_0.6_plus_magnitude_consistency_0.4_penalized_by_sample_size_factor"
+      }
+    },
+    {
+      "layer": 3,
+      "step_id": "shipping_equities_container",
+      "asset": "Container Shipping Equities",
+      "asset_class": "equity",
+      "direction": "MIXED",
+      "measured": {
+        "move_14d_pct": null,
+        "move_30d_pct": null,
+        "move_60d_pct": null,
+        "data_available": false,
+        "data_source": "equity",
+        "is_proxy": false,
+        "proxy_note": null
+      },
+      "expected": {
+        "move_range": "+2.8% to +14.1%",
+        "move_range_full": "-12.4% to +31.2%",
+        "range_method": "P25_to_P75_interquartile_range",
+        "mean_move_pct": 8.0,
+        "lag_days": 7,
+        "n_events": 14,
+        "precedents": [
+          {
+            "event": "panama_drought_2023",
+            "move_30d": -2.1,
+            "severity": 0.85
+          },
+          {
+            "event": "suez_blockage_2021",
+            "move_30d": 14.7,
+            "severity": 0.95
+          },
+          {
+            "event": "panama_drought_2019",
+            "move_30d": 3.4,
+            "severity": 0.45
+          },
+          {
+            "event": "panama_expansion_2016",
+            "move_30d": 7.8,
+            "severity": 0.35
+          },
+          {
+            "event": "red_sea_houthi_2024",
+            "move_30d": 31.2,
+            "severity": 0.8
+          },
+          {
+            "event": "suez_rerouting_sustained_2024",
+            "move_30d": 14.6,
+            "severity": 0.72
+          },
+          {
+            "event": "suez_war_risk_insurance_2024",
+            "move_30d": 12.4,
+            "severity": 0.7
+          },
+          {
+            "event": "panama_drought_2015",
+            "move_30d": 2.9,
+            "severity": 0.4
+          },
+          {
+            "event": "panama_drought_2011",
+            "move_30d": 2.1,
+            "severity": 0.32
+          },
+          {
+            "event": "panama_expansion_delays_2014",
+            "move_30d": 2.8,
+            "severity": 0.25
+          },
+          {
+            "event": "covid_port_congestion_la_2021",
+            "move_30d": 18.4,
+            "severity": 0.6
+          },
+          {
+            "event": "la_west_coast_labor_dispute_2022",
+            "move_30d": -12.4,
+            "severity": 0.45
+          },
+          {
+            "event": "black_sea_grain_corridor_2022",
+            "move_30d": 6.2,
+            "severity": 0.75
+          },
+          {
+            "event": "cape_of_good_hope_traffic_surge_2024",
+            "move_30d": 9.4,
+            "severity": 0.6
+          }
+        ]
+      },
+      "confidence": {
+        "score_14d": 0.53,
+        "score_30d": 0.487,
+        "score_60d": 0.401,
+        "n": 14,
+        "hit_rate": 0.804,
+        "basis": "backtested_n=14_events_2011-2024",
+        "methodology": "weighted_hit_rate_0.6_plus_magnitude_consistency_0.4_penalized_by_sample_size_factor"
+      }
+    },
+    {
+      "layer": 3,
+      "step_id": "shipping_equities_tanker",
+      "asset": "Tanker Shipping Equities",
+      "asset_class": "equity",
+      "direction": "UP",
+      "measured": {
+        "move_14d_pct": null,
+        "move_30d_pct": null,
+        "move_60d_pct": null,
+        "data_available": false,
+        "data_source": "equity",
+        "is_proxy": false,
+        "proxy_note": null
+      },
+      "expected": {
+        "move_range": "+5.6% to +10.8%",
+        "move_range_full": "+1.4% to +22.4%",
+        "range_method": "P25_to_P75_interquartile_range",
+        "mean_move_pct": 9.0,
+        "lag_days": 10,
+        "n_events": 14,
+        "precedents": [
+          {
+            "event": "panama_drought_2023",
+            "move_30d": 11.2,
+            "severity": 0.85
+          },
+          {
+            "event": "suez_blockage_2021",
+            "move_30d": 9.1,
+            "severity": 0.95
+          },
+          {
+            "event": "panama_drought_2019",
+            "move_30d": 6.2,
+            "severity": 0.45
+          },
+          {
+            "event": "panama_expansion_2016",
+            "move_30d": 6.8,
+            "severity": 0.35
+          },
+          {
+            "event": "red_sea_houthi_2024",
+            "move_30d": 19.4,
+            "severity": 0.8
+          },
+          {
+            "event": "suez_rerouting_sustained_2024",
+            "move_30d": 11.4,
+            "severity": 0.72
+          },
+          {
+            "event": "suez_war_risk_insurance_2024",
+            "move_30d": 9.8,
+            "severity": 0.7
+          },
+          {
+            "event": "panama_drought_2015",
+            "move_30d": 5.4,
+            "severity": 0.4
+          },
+          {
+            "event": "panama_drought_2011",
+            "move_30d": 4.1,
+            "severity": 0.32
+          },
+          {
+            "event": "panama_expansion_delays_2014",
+            "move_30d": 1.6,
+            "severity": 0.25
+          },
+          {
+            "event": "covid_port_congestion_la_2021",
+            "move_30d": 1.4,
+            "severity": 0.6
+          },
+          {
+            "event": "la_west_coast_labor_dispute_2022",
+            "move_30d": 8.8,
+            "severity": 0.45
+          },
+          {
+            "event": "black_sea_grain_corridor_2022",
+            "move_30d": 22.4,
+            "severity": 0.75
+          },
+          {
+            "event": "cape_of_good_hope_traffic_surge_2024",
+            "move_30d": 8.6,
+            "severity": 0.6
+          }
+        ]
+      },
+      "confidence": {
+        "score_14d": 0.655,
+        "score_30d": 0.68,
+        "score_60d": 0.689,
+        "n": 14,
+        "hit_rate": 1.0,
+        "basis": "backtested_n=14_events_2011-2024",
+        "methodology": "weighted_hit_rate_0.6_plus_magnitude_consistency_0.4_penalized_by_sample_size_factor"
+      }
+    },
+    {
+      "layer": 4,
+      "step_id": "grain_prices_corn",
+      "asset": "Global Soybean Price (grain proxy)",
+      "asset_class": "commodity_agricultural",
+      "direction": "MIXED",
+      "measured": {
+        "move_14d_pct": null,
+        "move_30d_pct": null,
+        "move_60d_pct": null,
+        "data_available": false,
+        "data_source": "fred_monthly",
+        "is_proxy": true,
+        "proxy_note": "Corn series PMAIZMTUSD unavailable via FRED free tier. Soybean (PSOYBUSDM) used as grain trade proxy — both commodities use the same shipping routes."
+      },
+      "expected": {
+        "move_range": "+0.7% to +4.5%",
+        "move_range_full": "-6.8% to +38.4%",
+        "range_method": "P25_to_P75_interquartile_range",
+        "mean_move_pct": 3.9,
+        "lag_days": 45,
+        "n_events": 14,
+        "precedents": [
+          {
+            "event": "panama_drought_2023",
+            "move_30d": -4.8,
+            "severity": 0.85
+          },
+          {
+            "event": "suez_blockage_2021",
+            "move_30d": 5.1,
+            "severity": 0.95
+          },
+          {
+            "event": "panama_drought_2019",
+            "move_30d": 1.2,
+            "severity": 0.45
+          },
+          {
+            "event": "panama_expansion_2016",
+            "move_30d": 1.4,
+            "severity": 0.35
+          },
+          {
+            "event": "red_sea_houthi_2024",
+            "move_30d": 4.8,
+            "severity": 0.8
+          },
+          {
+            "event": "suez_rerouting_sustained_2024",
+            "move_30d": 3.4,
+            "severity": 0.72
+          },
+          {
+            "event": "suez_war_risk_insurance_2024",
+            "move_30d": 2.8,
+            "severity": 0.7
+          },
+          {
+            "event": "panama_drought_2015",
+            "move_30d": 0.8,
+            "severity": 0.4
+          },
+          {
+            "event": "panama_drought_2011",
+            "move_30d": 0.6,
+            "severity": 0.32
+          },
+          {
+            "event": "panama_expansion_delays_2014",
+            "move_30d": 0.4,
+            "severity": 0.25
+          },
+          {
+            "event": "covid_port_congestion_la_2021",
+            "move_30d": 6.8,
+            "severity": 0.6
+          },
+          {
+            "event": "la_west_coast_labor_dispute_2022",
+            "move_30d": -6.8,
+            "severity": 0.45
+          },
+          {
+            "event": "black_sea_grain_corridor_2022",
+            "move_30d": 38.4,
+            "severity": 0.75
+          },
+          {
+            "event": "cape_of_good_hope_traffic_surge_2024",
+            "move_30d": 1.2,
+            "severity": 0.6
+          }
+        ]
+      },
+      "confidence": {
+        "score_14d": 0.39,
+        "score_30d": 0.5,
+        "score_60d": 0.5,
+        "n": 14,
+        "hit_rate": 0.833,
+        "basis": "backtested_n=14_events_2011-2024",
+        "methodology": "weighted_hit_rate_0.6_plus_magnitude_consistency_0.4_penalized_by_sample_size_factor"
+      }
+    }
+  ],
+  "agent_payload": {
+    "machine_readable_chain": "container_freight_asia_usec:UP:N/A:0.61 | shipping_equities_container:MIXED:N/A:0.49 | shipping_equities_tanker:UP:N/A:0.68 | grain_prices_corn:MIXED:N/A:0.50",
+    "top_confidence_signals": [
+      {
+        "step_id": "shipping_equities_tanker",
+        "confidence": 0.68,
+        "direction": "UP",
+        "lag_days": 10
+      },
+      {
+        "step_id": "container_freight_asia_usec",
+        "confidence": 0.608,
+        "direction": "UP",
+        "lag_days": 12
+      }
+    ],
+    "flagged_low_confidence": [
+      {
+        "step_id": "shipping_equities_container",
+        "confidence": 0.487,
+        "reason": "below_minimum_actionable_threshold"
+      }
+    ],
+    "structured_assets": [
+      {
+        "step_id": "container_freight_asia_usec",
+        "asset_class": "freight_rate",
+        "direction": "UP",
+        "confidence_30d": 0.608,
+        "lag_days": 12,
+        "move_range": "+14.7% to +30.6%",
+        "measured_30d": null,
+        "is_proxy": true
+      },
+      {
+        "step_id": "shipping_equities_container",
+        "asset_class": "equity",
+        "direction": "MIXED",
+        "confidence_30d": 0.487,
+        "lag_days": 7,
+        "move_range": "+2.8% to +14.1%",
+        "measured_30d": null,
+        "is_proxy": false
+      },
+      {
+        "step_id": "shipping_equities_tanker",
+        "asset_class": "equity",
+        "direction": "UP",
+        "confidence_30d": 0.68,
+        "lag_days": 10,
+        "move_range": "+5.6% to +10.8%",
+        "measured_30d": null,
+        "is_proxy": false
+      },
+      {
+        "step_id": "grain_prices_corn",
+        "asset_class": "commodity_agricultural",
+        "direction": "MIXED",
+        "confidence_30d": 0.5,
+        "lag_days": 45,
+        "move_range": "+0.7% to +4.5%",
+        "measured_30d": null,
+        "is_proxy": true
+      }
+    ],
+    "query_metadata": {
+      "event_type": "canal_restriction",
+      "n_comparable_events": 14,
+      "backtest_date_range": "2011-2024",
+      "confidence_methodology": "All move percentages measured from event trigger date. PRIMARY=direct measurement, PARTIAL=high confounder count, ESTIMATED=calculated from secondary sources.",
+      "confidence_ceiling": 0.85
+    }
+  },
+  "methodology": {
+    "confidence_scoring": "All move percentages measured from event trigger date. PRIMARY=direct measurement, PARTIAL=high confounder count, ESTIMATED=calculated from secondary sources.",
+    "backtesting_period": "2011-2024",
+    "n_comparable_events": 14,
+    "confidence_floor": 0.3,
+    "confidence_ceiling": 0.85,
+    "known_limitations": [
+      "n=14 events across 4 disruption types — confidence ceiling maintained at 0.85 until 3 ESTIMATED events (2011, 2014, 2015) are verified with primary sources",
+      "Drewry WCI not available on free tier — using FRED proxy",
+      "Monthly FRED data limits precision for sub-30d lag analysis",
+      "Corn series PMAIZMTUSD unavailable — soybean used as proxy",
+      "Mixed event types (canal, route security, port) — directional signals valid, magnitude comparisons should note event type differences"
+    ]
+  },
+  "detection_metadata": {
+    "detected_at": "2026-05-22T16:40:40.580946+00:00",
+    "source_headline": "Strait of Hormuz closure may trigger ‘severe’ food price crisis: FAO",
+    "source_url": "https://www.hellenicshippingnews.com/strait-of-hormuz-closure-may-trigger-severe-food-price-crisis-fao/",
+    "source_feed": "https://www.hellenicshippingnews.com/feed/",
+    "severity_note": "Severity estimated from keyword analysis. Analyst should verify before acting.",
+    "alerts_this_scan": 1,
+    "auto_detected": true
+  }
+}

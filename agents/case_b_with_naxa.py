@@ -28,9 +28,13 @@ NAXA_BASE_URL = os.getenv("NAXA_BASE_URL", "http://localhost:5000")
 NAXA_API_KEY  = os.getenv("NAXA_API_KEY")
 
 QUERY = (
-    "Panama Canal water levels dropped to historic lows in August 2023. "
+    "Houthi militant attacks on Red Sea shipping began Dec 19 2023. "
+    "Maersk and MSC suspended all Red Sea transits immediately. "
     "What happens next across commodities and equities? "
     "Give me specific assets, directions, magnitudes, and confidence scores."
+    #"Panama Canal water levels dropped to historic lows in August 2023. "
+    #"What happens next across commodities and equities? "
+    #"Give me specific assets, directions, magnitudes, and confidence scores."
 )
 
 
@@ -64,8 +68,11 @@ def run_case_b() -> dict:
         },
         json={
             "event":    "canal_restriction",
-            "date":     "2023-08-01",
-            "severity": 0.85,
+            "date":     "2023-12-19",
+            "severity": 0.80,
+            #"event":    "canal_restriction",
+            #"date":     "2023-08-01",
+            #"severity": 0.85,
         },
         timeout=60,
     )

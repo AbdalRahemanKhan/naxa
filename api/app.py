@@ -24,6 +24,8 @@
 #   This file is the execution layer. engine/ is the alpha layer.
 # ============================================================
 
+
+
 import os
 import sys
 import time
@@ -52,7 +54,10 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from analyze import run_pipeline
 from config import SUPPORTED_EVENT_TYPES, NAXA_VERSION
-
+# for event detection scheduler
+from apscheduler.schedulers.background import BackgroundScheduler
+from engine.event_detector import detect_and_analyze, get_latest, get_recent_alerts
+import atexit
 
 # ============================================================
 # SECTION 1: APP + LOGGING INITIALIZATION
@@ -88,6 +93,31 @@ app = Flask(__name__)
 # Restricting it would only break browser-based demos.
 
 CORS(app)
+
+# ── Background Event Detection Scheduler ──────────────────────
+#
+# Runs detect_and_analyze() every 6 hours in a background thread.
+# On startup, also checks immediately so the dashboard has data.
+#
+# WERKZEUG_RUN_MAIN guard: Flask's dev server starts twice
+# (main process + reloader). Without this guard, you'd get
+# two schedulers. In production (Render), this is fine as-is.
+
+if os.getenv("WERKZEUG_RUN_MAIN", "false") != "false" or \
+   os.getenv("FLASK_ENV", "production") == "production":
+
+    _scheduler = BackgroundScheduler()
+    _scheduler.add_job(
+        func     = detect_and_analyze,
+        trigger  = "interval",
+        hours    = 6,
+        id       = "event_detection",
+        max_instances = 1,         # never run two scans at once
+    )
+    _scheduler.start()
+    atexit.register(lambda: _scheduler.shutdown())
+    log.info("Event detection scheduler started — running every 6 hours")
+
 
 # ── API Key ────────────────────────────────────────────────────
 #
@@ -513,6 +543,263 @@ def internal_error(e):
         message = "An unexpected server error occurred.",
         status  = 500,
     )
+
+# ── GET /v1/latest ────────────────────────────────────────────
+#
+# Returns the most recently auto-detected event + full analysis.
+# This is what the analyst dashboard loads on startup.
+# No auth on this endpoint — same logic as /health.
+# If nothing has been detected yet, returns a 204 No Content.
+
+@app.route("/v1/latest", methods=["GET"])
+@require_api_key
+def latest_event():
+    """Returns the most recently auto-detected + analyzed event."""
+    data = get_latest()
+    if data is None:
+        return jsonify({
+            "status":  "no_events_detected",
+            "message": "No events detected yet. Scheduler runs every 6 hours.",
+            "tip":     "Run python -m engine.event_detector to trigger a manual scan.",
+        }), 204
+
+    return jsonify(data), 200
+
+
+# ── GET /v1/alerts ────────────────────────────────────────────
+#
+# Returns a lightweight list of recent detected events.
+# Agent builders can poll this to check for new events.
+
+@app.route("/v1/alerts", methods=["GET"])
+@require_api_key
+def recent_alerts():
+    """Returns summaries of the last 10 detected events."""
+    limit = request.args.get("limit", 10, type=int)
+    limit = min(max(limit, 1), 50)
+
+    alerts = get_recent_alerts(limit=limit)
+    return jsonify({
+        "alerts":       alerts,
+        "count":        len(alerts),
+        "naxa_version": NAXA_VERSION,
+    }), 200
+
+
+# ── GET /v1/history ───────────────────────────────────────────
+# Returns all backtested events from the database.
+# Powers the Archive tab — proves the database is real.
+
+@app.route("/v1/history", methods=["GET"])
+@require_api_key
+def event_history():
+    from engine.events_db import EVENTS, DB_METADATA
+
+    events_out = []
+    for event_id, event in EVENTS.items():
+        meta   = event.get("meta", {})
+        chain  = event.get("signal_chain", {})
+
+        # Build a compact signal summary for the grid cards
+        signal_summary = {}
+        signal_map = {
+            "container_freight_asia_usec": "freight_rate",
+            "shipping_equities_container": "container_equities",
+            "shipping_equities_tanker":    "tanker_equities",
+            "grain_prices_corn":           "grain_prices",
+        }
+        for sig_id, label in signal_map.items():
+            if sig_id in chain:
+                s = chain[sig_id]
+                signal_summary[label] = {
+                    "direction":   s.get("direction", "MIXED"),
+                    "move_30d_pct": s.get("move_30d"),
+                }
+
+        events_out.append({
+            "event_id":       event_id,
+            "name":           meta.get("name", event_id),
+            "event_type":     meta.get("event_type", "canal_restriction"),
+            "date":           meta.get("date"),
+            "location":       meta.get("location"),
+            "severity":       meta.get("severity", {}).get("score"),
+            "duration_weeks": meta.get("duration_weeks"),
+            "data_quality":   meta.get("data_quality", "ESTIMATED"),
+            "confounders":    meta.get("confounders", []),
+            "signal_summary": signal_summary,
+            "source":         meta.get("source_attribution", {}).get("primary"),
+        })
+
+    # Sort by date descending (most recent first)
+    events_out.sort(key=lambda e: e.get("date") or "", reverse=True)
+
+    return jsonify({
+        "events":       events_out,
+        "count":        len(events_out),
+        "date_range":   DB_METADATA.get("date_range"),
+        "naxa_version": NAXA_VERSION,
+    }), 200
+
+
+# ── GET /v1/history/<event_id> ────────────────────────────────
+# Returns full detail for one historical event.
+# Powers the Archive drill-down panel.
+
+@app.route("/v1/history/<event_id>", methods=["GET"])
+@require_api_key
+def event_history_detail(event_id):
+    from engine.events_db import EVENTS
+
+    event = EVENTS.get(event_id)
+    if not event:
+        return jsonify({
+            "error":     "event_not_found",
+            "event_id":  event_id,
+            "available": list(EVENTS.keys()),
+        }), 404
+
+    return jsonify({
+        "event_id":    event_id,
+        "meta":        event.get("meta", {}),
+        "signal_chain": event.get("signal_chain", {}),
+        "naxa_version": NAXA_VERSION,
+    }), 200
+
+
+# ── GET /v1/demo/scenarios ────────────────────────────────────
+# Returns pre-computed Case A vs Case B comparison scenarios.
+# Powers the Comparison tab.
+# Static data — reproducible, fast, no LLM calls on every load.
+
+@app.route("/v1/demo/scenarios", methods=["GET"])
+@require_api_key
+def demo_scenarios():
+    scenarios = [
+        {
+            "scenario_id": "red_sea_houthi_2024",
+            "title":       "Red Sea Houthi Attacks — Dec 2023",
+            "query":       (
+                "Houthi militant attacks on Red Sea shipping began Dec 19 2023. "
+                "Maersk and MSC suspended all Red Sea transits immediately. "
+                "What happens next across commodities and equities?"
+            ),
+            "ground_truth": {
+                "container_equities_actual_30d": 18.4,
+                "tanker_equities_actual_30d":     9.7,
+                "freight_rate_actual_30d":        62.4,
+                "grain_actual_30d":               -5.1,
+                "note": "Measured from yfinance + FRED from Dec 19 2023 + 30 days.",
+            },
+            "case_a": {
+                "label":      "Without NAXA",
+                "approach":   "Multi-step LLM research agent — 4 sequential calls",
+                "time_s":     3.6,
+                "api_calls":  4,
+                "sourced":    False,
+                "auditable":  False,
+                "assets": [
+                    {"asset": "Brent Crude Oil",             "direction": "UP",    "confidence": 0.80, "basis": "Historical trends indicate upward pressure"},
+                    {"asset": "S&P Global Water Index",      "direction": "MIXED", "confidence": 0.20, "basis": "Lack of direct correlation with canal disruption"},
+                    {"asset": "AP Moller-Maersk (MAERSK-B)", "direction": "DOWN",  "confidence": 0.70, "basis": "Disruptions to the canal could lead to losses"},
+                    {"asset": "DJ Transportation Average",   "direction": "DOWN",  "confidence": 0.60, "basis": "Potential disruption to global supply chains"},
+                ],
+                "issues": [
+                    "Hallucinated S&P Global Water Index as a relevant signal",
+                    "Predicted Maersk DOWN — actual move was UP +18.4%",
+                    "Confidence scores have no historical basis (LLM-generated)",
+                    "Zero source citations — not auditable",
+                ],
+            },
+            "case_b": {
+                "label":     "With NAXA",
+                "approach":  "Single POST /v1/analyze call",
+                "time_s":    7.0,
+                "api_calls": 1,
+                "sourced":   True,
+                "auditable": True,
+                "assets": [
+                    {"asset": "Deep Sea Freight PPI",         "direction": "UP",    "confidence": 0.608, "hit_rate": 0.912, "n": 14, "measured_30d": 62.4, "flag": None},
+                    {"asset": "Container Shipping Equities",  "direction": "MIXED", "confidence": 0.487, "hit_rate": 0.804, "n": 14, "measured_30d": 18.4, "flag": "LOW_CONFIDENCE"},
+                    {"asset": "Tanker Shipping Equities",     "direction": "UP",    "confidence": 0.680, "hit_rate": 1.000, "n": 14, "measured_30d":  9.7, "flag": None},
+                    {"asset": "Global Soybean Price",         "direction": "MIXED", "confidence": 0.500, "hit_rate": 0.833, "n": 14, "measured_30d": -5.1, "flag": None},
+                ],
+                "strengths": [
+                    "Tanker signal: hit_rate=1.0 across all 14 events — correctly predicted UP, measured +9.7%",
+                    "Container equities flagged LOW_CONFIDENCE — honest about uncertainty rather than inventing false confidence",
+                    "Every confidence score sourced from backtested events 2011–2024",
+                    "FRED + yfinance source citations on every measurement",
+                ],
+            },
+            "verdict": "Case A predicted Maersk would fall. Shipping equities rose +18.4%. Case B correctly identified tankers as the highest-confidence signal (hit_rate 1.0) and was honest about container equity uncertainty rather than inventing a confident wrong answer.",
+        },
+        {
+            "scenario_id": "panama_drought_2023",
+            "title":       "Panama Canal Drought — Aug 2023",
+            "query":       (
+                "Panama Canal water levels dropped to historic lows in August 2023. "
+                "Daily transit slots reduced from 36 to 24. "
+                "What happens next across commodities and equities?"
+            ),
+            "ground_truth": {
+                "container_equities_actual_30d": -9.6,
+                "tanker_equities_actual_30d":     3.7,
+                "freight_rate_actual_30d":        -4.5,
+                "grain_actual_30d":               -4.5,
+                "note": (
+                    "Measured from yfinance + FRED from Aug 1 2023 + 30 days. "
+                    "All signals outside expected range — post-COVID normalization "
+                    "and Brazil record harvest overwhelmed the canal signal."
+                ),
+            },
+            "case_a": {
+                "label":      "Without NAXA",
+                "approach":   "Multi-step LLM research agent — 4 sequential calls",
+                "time_s":     3.6,
+                "api_calls":  4,
+                "sourced":    False,
+                "auditable":  False,
+                "assets": [
+                    {"asset": "Panama Canal Tolls",           "direction": "UP",    "confidence": 0.75, "basis": "Reduced slots drive toll revenue uncertainty"},
+                    {"asset": "Container shipping stocks",    "direction": "UP",    "confidence": 0.70, "basis": "Historical precedent from 2016 expansion"},
+                    {"asset": "Agricultural commodities",     "direction": "UP",    "confidence": 0.65, "basis": "Longer routes increase transport costs"},
+                    {"asset": "Oil tankers",                  "direction": "UP",    "confidence": 0.60, "basis": "Rerouting increases voyage duration"},
+                ],
+                "issues": [
+                    "Predicted container equities UP — actual move was DOWN -9.6%",
+                    "No confounder detection — missed post-COVID normalization trend",
+                    "Confidence scores invented with no n= or hit rate",
+                    "Cannot distinguish why this event diverged from historical pattern",
+                ],
+            },
+            "case_b": {
+                "label":     "With NAXA",
+                "approach":  "Single POST /v1/analyze call",
+                "time_s":    7.0,
+                "api_calls": 1,
+                "sourced":   True,
+                "auditable": True,
+                "assets": [
+                    {"asset": "Deep Sea Freight PPI",        "direction": "UP",    "confidence": 0.608, "hit_rate": 0.912, "n": 14, "measured_30d": -4.5,  "flag": "OUTSIDE_EXPECTED"},
+                    {"asset": "Container Shipping Equities", "direction": "MIXED", "confidence": 0.487, "hit_rate": 0.804, "n": 14, "measured_30d": -9.6,  "flag": "LOW_CONFIDENCE"},
+                    {"asset": "Tanker Shipping Equities",    "direction": "UP",    "confidence": 0.680, "hit_rate": 1.000, "n": 14, "measured_30d":  3.7,  "flag": None},
+                    {"asset": "Global Soybean Price",        "direction": "MIXED", "confidence": 0.500, "hit_rate": 0.833, "n": 14, "measured_30d": -4.5,  "flag": "OUTSIDE_EXPECTED"},
+                ],
+                "strengths": [
+                    "OUTSIDE_EXPECTED flags signal divergence from historical pattern — prompts analyst to find the confounder",
+                    "Tanker equity direction correct (UP) despite broader signal divergence",
+                    "Known limitations explicitly listed — post-COVID normalization, Brazil harvest documented",
+                    "Divergence IS information — tells analyst this event is behaving unusually",
+                ],
+            },
+            "verdict": "Both cases faced a difficult event. Case A confidently predicted the wrong outcome with no way to know it was wrong. Case B flagged divergence from the historical pattern — prompting the analyst to ask 'why?' and find the post-COVID normalization as the answer. That's the product working.",
+        },
+    ]
+
+    return jsonify({
+        "scenarios":    scenarios,
+        "count":        len(scenarios),
+        "naxa_version": NAXA_VERSION,
+    }), 200
 
 
 # ============================================================

@@ -42,9 +42,13 @@ _client = Groq(api_key=GROQ_API_KEY)
 MODEL   = "llama-3.3-70b-versatile"
 
 QUERY = (
-    "Panama Canal water levels dropped to historic lows in August 2023. "
+    "Houthi militant attacks on Red Sea shipping began Dec 19 2023. "
+    "Maersk and MSC suspended all Red Sea transits immediately. "
     "What happens next across commodities and equities? "
     "Give me specific assets, directions, magnitudes, and confidence scores."
+    #"Panama Canal water levels dropped to historic lows in August 2023. "
+    #"What happens next across commodities and equities? "
+    #"Give me specific assets, directions, magnitudes, and confidence scores."
 )
 
 

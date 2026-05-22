@@ -26,7 +26,7 @@ def print_comparison(a: dict, b: dict):
     print("\n" + "=" * W)
     print("  NAXA DEMO — SIDE BY SIDE COMPARISON")
     print("=" * W)
-    print(f"  Query: Panama Canal historic low water levels, Aug 2023.")
+    print(f"  Query: Red Sea Houthi attacks — Maersk/MSC suspend transits, Dec 19 2023.")
     print(f"         What happens next across commodities and equities?")
     print("=" * W)
 
@@ -37,7 +37,7 @@ def print_comparison(a: dict, b: dict):
         ("Output format",    "Prose",                           "Structured JSON"),
         ("Auditable",        "No",                              "Yes"),
         ("Agent-readable",   "No",                              "Yes (machine_readable_chain)"),
-        ("Confidence basis", "LLM-generated",                   "Backtested n=4, 2016-2023"),
+        ("Confidence basis", "LLM-generated — no n=, no hit rate", "Backtested n=14, 2011-2024, hit rates sourced"),
         ("Source citations", "None",                            "FRED + yfinance + ACP"),
         ("Known limitations","Not flagged",                     "Explicitly listed"),
     ]
