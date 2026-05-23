@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>NAXA — Signal Chain Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -311,6 +311,72 @@ body{font-family:var(--font-sans);background:var(--canvas);color:var(--text-1);m
 .err-sub{font-family:var(--font-mono);font-size:12px;color:var(--text-3);margin-bottom:16px}
 .err-hint{font-size:12px;color:var(--text-3);line-height:1.9}
 .retry-btn{font-size:13px;font-weight:500;background:var(--text-1);color:white;border:none;padding:9px 20px;border-radius:var(--r-md);cursor:pointer;margin-top:18px}
+
+/* ── MOBILE ───────────────────────────────────────────── */
+@media(max-width:768px){
+  /* Header — logo row + scrollable nav row below */
+  .hdr{height:auto;flex-wrap:wrap;padding:10px 16px 0;gap:0}
+  .logo{width:100%;padding-bottom:8px}
+  .ver{display:none}
+  .nav{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:10px;gap:0;scrollbar-width:none}
+  .nav::-webkit-scrollbar{display:none}
+  .nav-btn{font-size:12px;padding:5px 11px;flex-shrink:0;white-space:nowrap}
+  .nav-btn.active::after{bottom:-10px}
+  .hdr-right{display:none}
+
+  /* Main padding */
+  .main{padding:0 16px 48px}
+
+  /* Analyze top bar */
+  .analyze-topbar{flex-direction:column;align-items:flex-start;gap:6px}
+  .evt-sel-row{flex-wrap:wrap;gap:6px}
+  .evt-strip{flex-direction:column;gap:16px;padding:16px 0 14px}
+  .evt-stats{text-align:left}
+  .sev-num{font-size:28px}
+  .stat-rows{text-align:left}
+  .page-title{font-size:18px}
+  .page-sub{font-size:13px}
+
+  /* Cascade chart — horizontal scroll so SVG stays readable */
+  .cascade-wrap{overflow-x:auto;padding:14px 14px 10px}
+  .cascade-wrap svg{min-width:640px}
+
+  /* Signal cards — single column */
+  .sig-grid{grid-template-columns:1fr}
+  .mv-num{font-size:20px}
+
+  /* Archive */
+  .arch-controls{flex-direction:column;align-items:stretch;gap:8px}
+  .arch-left{flex-direction:column;gap:8px}
+  .arch-search{width:100%}
+  .arch-right{justify-content:space-between}
+  .arch-grid{grid-template-columns:1fr 1fr;gap:10px}
+
+  /* Comparison */
+  .cmp-cols{grid-template-columns:1fr}
+  .cmp-truth-grid{grid-template-columns:1fr 1fr}
+  .cmp-scenario-btn{font-size:11px;padding:4px 10px}
+  .cmp-run-row{flex-direction:column;align-items:flex-start}
+
+  /* API */
+  .api-grid{grid-template-columns:1fr;gap:16px}
+  .api-nav{display:none}
+  .api-code{font-size:11px;padding:12px 14px}
+
+  /* Guide */
+  .guide-grid{grid-template-columns:1fr}
+
+  /* Drilldown panels — full width on mobile */
+  .dd-panel{width:100vw;right:-100vw}
+}
+
+@media(max-width:480px){
+  .arch-grid{grid-template-columns:1fr}
+  .cmp-truth-grid{grid-template-columns:1fr}
+  .evt-title{font-size:20px}
+  .cmp-metrics{gap:12px}
+  .cmp-metric-val{font-size:18px}
+}
 </style>
 </head>
 <body>
@@ -380,7 +446,11 @@ body{font-family:var(--font-sans);background:var(--canvas);color:var(--text-1);m
         <span id="evtLabel">Panama Canal Drought · Aug 2023</span>
         <span class="evt-live" id="liveTag" style="display:none">LIVE</span>
       </div>
-      <div style="display:flex;align-items:center;gap:16px">
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <div class="view-toggle" id="viewToggleMobile" style="display:none">
+          <button class="vbtn active" id="btnAm" onclick="setView('analyst')">Analyst</button>
+          <button class="vbtn" id="btnGm" onclick="setView('agent')">Agent · JSON</button>
+        </div>
         <span class="qbar-meta" id="qId">—</span>
         <span class="qbar-meta" id="qTime">—</span>
       </div>
@@ -683,7 +753,14 @@ const CMP_MOCK={scenarios:[
   {scenario_id:'panama_drought_2023',title:'Panama Canal — Aug 2023',query:'Panama Canal water levels dropped to historic lows in August 2023. Transit slots reduced from 36 to 24 per day. What happens next across commodities and equities?',ground_truth:{container_equities_actual_30d:-2.1,tanker_equities_actual_30d:11.2,freight_rate_actual_30d:28.4,note:'Measured across 30 days following Aug 1 2023 event.'},case_a:{label:'Without NAXA',approach:'Multi-step LLM research agent',time_seconds:4.1,api_calls:5,sources:0,assets_identified:[{asset:'Panama Canal Authority stock',direction:'DOWN',confidence:0.9,basis:'Reduced revenue from fewer transits'},{asset:'US Consumer Price Index',direction:'UP',confidence:0.7,basis:'Higher shipping costs will raise prices'},{asset:'Maersk (MAERSK-B)',direction:'DOWN',confidence:0.75,basis:'Disruption to operations'},{asset:'Corn futures',direction:'UP',confidence:0.65,basis:'Supply chain disruption may affect grain'}],issues:['Panama Canal Authority is not publicly traded — hallucinated asset','CPI is a macro indicator, not a tradeable near-term signal','Maersk predicted DOWN — tanker equities actually rose +11.2%','No mention of lag days — when do effects materialise?']},case_b:{label:'With NAXA',approach:'Single NAXA API call',time_seconds:8.1,api_calls:1,sources:14,assets_identified:[{asset:'Deep Sea Freight PPI (proxy)',direction:'UP',confidence:0.690,hit_rate:1.000,n_events:14,measured_30d:28.4},{asset:'Container Shipping Equities',direction:'MIXED',confidence:0.456,hit_rate:0.688,n_events:14,measured_30d:-2.1,flag:'LOW_CONFIDENCE'},{asset:'Tanker Shipping Equities',direction:'UP',confidence:0.702,hit_rate:1.000,n_events:14,measured_30d:11.2},{asset:'Global Soybean Price',direction:'MIXED',confidence:0.475,hit_rate:0.750,n_events:14,measured_30d:-4.8,flag:'LOW_CONFIDENCE'}],strengths:['Freight rate hit_rate=1.0 across 14 events — measured +28.4%, correct','Lag windows specified: freight 12d, equities 7–10d, grain 45d','Container equities correctly flagged MIXED and LOW_CONFIDENCE','Full source chain: FRED PCU483111483111 + yfinance STNG/INSW']},verdict:'Case A invented a non-existent publicly-traded asset. Case B mapped the correct signals with specific lag windows and accurately identified tanker equities as the high-confidence directional bet — backed by n=14 historical events.'}
 ]};
 
-document.addEventListener('DOMContentLoaded',()=>{startLoadingAnim();doFetch();});
+document.addEventListener('DOMContentLoaded',()=>{handleResize();startLoadingAnim();doFetch();});
+window.addEventListener('resize',handleResize);
+function handleResize(){
+  const isMobile=window.innerWidth<=768;
+  const mt=document.getElementById('viewToggleMobile'),dt=document.getElementById('viewToggle');
+  if(mt)mt.style.display=isMobile?'flex':'none';
+  if(dt)dt.style.display=isMobile?'none':'flex';
+}
 
 const LS=[{id:'ls0',t:0,p:8},{id:'ls1',t:1200,p:28},{id:'ls2',t:4000,p:46},{id:'ls3',t:7500,p:63},{id:'ls4',t:12000,p:80},{id:'ls5',t:15500,p:92}];
 function startLoadingAnim(){const bar=document.getElementById('lbar');LS.forEach(s=>setTimeout(()=>{document.getElementById(s.id).classList.add('active');bar.style.width=s.p+'%';},s.t));}
@@ -771,7 +848,7 @@ function buildPrecedentsChart(precs,measured,moveRange){
 function renderLims(lims){if(!lims||!lims.length)return;document.getElementById('limsList').innerHTML=lims.map(l=>`<span class="lims-item">${l}</span>`).join('');document.getElementById('limsBar').style.display='flex';}
 function renderAgent(d){const base=window.location.origin;document.getElementById('curlBlock').textContent=`curl -X POST ${base}/v1/analyze \\\n  -H "Authorization: Bearer <your-token>" \\\n  -H "Content-Type: application/json" \\\n  -d '{"event":"${d.event.type}","date":"${d.event.date}"}'`;document.getElementById('jsonFull').innerHTML=synHL(JSON.stringify(d,null,2));}
 function copyJson(){if(!DATA)return;navigator.clipboard.writeText(JSON.stringify(DATA,null,2)).then(()=>{const b=document.getElementById('copyBtn');b.textContent='copied \u2713';setTimeout(()=>b.textContent='copy JSON',2000);});}
-function setView(v){const isA=v==='analyst';document.getElementById('analystView').style.display=isA?'block':'none';document.getElementById('agentView').style.display=isA?'none':'block';document.getElementById('btnA').classList.toggle('active',isA);document.getElementById('btnG').classList.toggle('active',!isA);}
+function setView(v){const isA=v==='analyst';document.getElementById('analystView').style.display=isA?'block':'none';document.getElementById('agentView').style.display=isA?'none':'block';['btnA','btnAm'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle('active',isA);});['btnG','btnGm'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle('active',!isA);});}
 
 function openDrill(stepId){
   if(!DATA)return;const s=DATA.signal_chain.find(x=>x.step_id===stepId);if(!s)return;
