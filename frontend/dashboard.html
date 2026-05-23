@@ -533,6 +533,33 @@ body{font-family:var(--font-sans);background:var(--canvas);color:var(--text-1);m
 <div class="tab-content" id="tab-api">
   <div class="page-title">API Reference</div>
   <div class="page-sub">NAXA v0.3.0 — structured, sourced, auditable signal chain data for AI agents and analysts.</div>
+
+  <!-- KEY GENERATION -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px 24px;margin:20px 0;box-shadow:var(--shadow-sm)">
+    <div style="font-size:15px;font-weight:700;margin-bottom:4px">Generate your API key</div>
+    <div style="font-size:13px;color:var(--text-2);margin-bottom:16px">Keys are generated instantly. No account required. Store your key — it won't be shown again.</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+      <input id="keyLabel" type="text" placeholder="Label (e.g. my-agent, analysis-bot)" style="font-size:13px;background:var(--surface-alt);border:1px solid var(--border);border-radius:var(--r-md);padding:8px 12px;color:var(--text-1);width:280px;font-family:var(--font-sans)">
+      <button onclick="generateApiKey()" style="padding:8px 20px;background:var(--text-1);color:white;border:none;border-radius:var(--r-md);font-size:13px;font-weight:600;cursor:pointer" id="genKeyBtn">Generate key</button>
+    </div>
+    <div id="keyResult" style="display:none">
+      <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text-3);margin-bottom:6px">Your API key</div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <code id="keyDisplay" style="font-family:var(--font-mono);font-size:13px;background:var(--surface-alt);border:1px solid var(--border);padding:8px 14px;border-radius:var(--r-md);flex:1;min-width:200px;color:var(--text-1)">—</code>
+        <button onclick="copyKey()" id="copyKeyBtn" style="font-family:var(--font-mono);font-size:11px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:6px 12px;cursor:pointer;box-shadow:var(--shadow-sm)">copy</button>
+      </div>
+      <div style="font-size:11px;color:var(--warn-text);margin-top:8px">⚠ Copy this key now — it won't be shown again. Use it as your Authorization: Bearer token.</div>
+    </div>
+    <div id="keyUsageSection" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+      <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text-3);margin-bottom:8px">Check usage for an existing key</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <input id="usageKeyInput" type="text" placeholder="naxa_live_…" style="font-size:12px;font-family:var(--font-mono);background:var(--surface-alt);border:1px solid var(--border);border-radius:var(--r-md);padding:7px 12px;color:var(--text-1);width:340px">
+        <button onclick="checkUsage()" style="padding:7px 16px;background:var(--surface);color:var(--text-1);border:1px solid var(--border);border-radius:var(--r-md);font-size:12px;font-weight:500;cursor:pointer;box-shadow:var(--shadow-sm)">Check usage</button>
+      </div>
+      <div id="usageResult" style="display:none;margin-top:10px;font-family:var(--font-mono);font-size:12px;color:var(--text-2);background:var(--surface-alt);border:1px solid var(--border);padding:10px 14px;border-radius:var(--r-md)">—</div>
+    </div>
+    <button onclick="document.getElementById('keyUsageSection').style.display='block';this.style.display='none'" style="margin-top:12px;background:none;border:none;font-size:12px;color:var(--brand);cursor:pointer;font-family:var(--font-sans)">Already have a key? Check usage →</button>
+  </div>
   <div class="api-grid">
     <div class="api-nav">
       <a class="api-nav-item active" onclick="scrollApiSec('auth')">Authentication</a>
@@ -806,7 +833,9 @@ function buildCascadeChart(signals){
     svg+=`<circle cx="${lagX}" cy="${rowY+BAR_H/2}" r="3" fill="${c.stroke}"/>`;
     svg+=`<rect x="${lagX}" y="${rowY}" width="${barW}" height="${BAR_H}" fill="${divg?'#FEF2F2':c.fill}" stroke="${divg?'#FECACA':c.stroke}" stroke-width="1.5" rx="5"/>`;
     svg+=`<text x="${lagX+10}" y="${rowY+BAR_H/2+4}" font-size="11" font-weight="600" fill="${divg?'#DC2626':c.text}">${arrow} day ${lag}</text>`;
-    svg+=`<text x="${lagX+barW+8}" y="${rowY+BAR_H/2}" font-size="10" fill="#8792A2" dominant-baseline="middle">${s.expected.move_range}</text>`;
+    const rangeX=lagX+barW+8,measuredX=vW-PR-2;
+    if(rangeX+90<measuredX){svg+=`<text x="${rangeX}" y="${rowY+BAR_H/2}" font-size="10" fill="#8792A2" dominant-baseline="middle">${s.expected.move_range}</text>`;}
+    else{svg+=`<text x="${lagX+barW/2}" y="${rowY-3}" font-size="9" fill="#8792A2" text-anchor="middle">${s.expected.move_range}</text>`;}
     svg+=`<text x="${vW-PR+8}" y="${rowY+BAR_H/2}" font-size="12" font-weight="600" fill="${mCol}" dominant-baseline="middle" text-anchor="start">${mTxt}${divg?' \u26a0':''}</text>`;
   });
   const ly=vH-6;
@@ -885,6 +914,7 @@ function loadArchive(){
 }
 function getFilteredSortedEvents(){
   if(!ARCHIVE_DATA)return[];
+  ARCH_SORT=document.getElementById('archSort')?.value||ARCH_SORT;
   let evs=[...ARCHIVE_DATA.events];
   if(ARCH_FILTER){const q=ARCH_FILTER.toLowerCase();evs=evs.filter(e=>e.name.toLowerCase().includes(q)||e.event_type.toLowerCase().includes(q)||e.summary.toLowerCase().includes(q));}
   if(ARCH_SORT==='severity')evs.sort((a,b)=>b.severity-a.severity);
@@ -954,11 +984,19 @@ function openArchiveDrill(eventId){
 function closeArchiveDrill(evt){if(evt&&evt.target!==document.getElementById('archOverlay'))return;document.getElementById('archOverlay').classList.remove('open');}
 function loadEventInAnalyze(eventId){
   const ev=ARCHIVE_DATA&&ARCHIVE_DATA.events.find(e=>e.event_id===eventId);if(!ev)return;
-  CFG.event={event:ev.event_type,date:ev.date,severity:ev.severity};
+  const SUPPORTED=['canal_restriction'];
+  const eventType=SUPPORTED.includes(ev.event_type)?ev.event_type:'canal_restriction';
+  const isUnsupported=!SUPPORTED.includes(ev.event_type);
+  CFG.event={event:eventType,date:ev.date,severity:ev.severity};
   document.getElementById('evtLabel').textContent=ev.name+' · '+fmtDate(ev.date);
   setTab('analyze');
-  document.getElementById('signalChain').innerHTML='<div style="text-align:center;padding:60px 0;font-family:var(--font-mono);font-size:12px;color:var(--text-3)">Running analysis…</div>';
-  DATA=null;doFetch();
+  if(isUnsupported){
+    document.getElementById('signalChain').innerHTML=`<div style="background:var(--warn-bg);border:1px solid #FDE68A;border-radius:var(--r-md);padding:14px 18px;margin-top:16px;font-size:13px;color:var(--warn-text)">⚠ <strong>${ev.event_type.replace(/_/g,' ')}</strong> events are not yet supported by the pipeline. Running nearest comparable analysis (canal_restriction) against this date instead.</div>`;
+    setTimeout(()=>{DATA=null;doFetch();},1200);
+  } else {
+    document.getElementById('signalChain').innerHTML='<div style="text-align:center;padding:60px 0;font-family:var(--font-mono);font-size:12px;color:var(--text-3)">Running analysis…</div>';
+    DATA=null;doFetch();
+  }
 }
 
 /* COMPARISON */
@@ -1021,6 +1059,37 @@ function renderCmpBody(s,isLive){
   }
   const gt=s.ground_truth,ca=s.case_a,cb=s.case_b;
   document.getElementById('cmpBody').innerHTML=`<div class="cmp-cols">${colHTML(ca,'a')}${colHTML(cb,'b')}</div><div class="cmp-truth"><div class="cmp-truth-label">Ground Truth — What Actually Happened (30 days)</div><div class="cmp-truth-grid"><div><div class="cmp-truth-val">+${gt.freight_rate_actual_30d}%</div><div class="cmp-truth-lbl">Freight Rates</div></div><div><div class="cmp-truth-val">+${gt.container_equities_actual_30d}%</div><div class="cmp-truth-lbl">Container Equities</div></div><div><div class="cmp-truth-val">+${gt.tanker_equities_actual_30d}%</div><div class="cmp-truth-lbl">Tanker Equities</div></div></div><div class="cmp-truth-note">${gt.note}</div></div><div class="cmp-verdict"><div class="cmp-verdict-label">Verdict</div><div class="cmp-verdict-text">${s.verdict}</div></div>`;
+}
+
+/* API KEY GENERATION */
+function generateApiKey(){
+  const label=document.getElementById('keyLabel').value.trim()||'My API Key';
+  const btn=document.getElementById('genKeyBtn');
+  btn.textContent='Generating…';btn.disabled=true;
+  fetch(CFG.base+'/v1/auth/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({label})})
+  .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+  .then(data=>{
+    document.getElementById('keyDisplay').textContent=data.api_key;
+    document.getElementById('keyResult').style.display='block';
+    btn.textContent='Generate another';btn.disabled=false;
+  })
+  .catch(err=>{btn.textContent='Generate key';btn.disabled=false;alert('Could not generate key: '+err.message+'\n\nMake sure you have added POST /v1/auth/generate to api/app.py (see below).');});
+}
+function copyKey(){
+  const key=document.getElementById('keyDisplay').textContent;
+  navigator.clipboard.writeText(key).then(()=>{const b=document.getElementById('copyKeyBtn');b.textContent='copied \u2713';setTimeout(()=>b.textContent='copy',2000);});
+}
+function checkUsage(){
+  const key=document.getElementById('usageKeyInput').value.trim();
+  if(!key){alert('Enter your API key first.');return;}
+  fetch(CFG.base+'/v1/auth/usage',{headers:{'Authorization':'Bearer '+key}})
+  .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+  .then(data=>{
+    const el=document.getElementById('usageResult');
+    el.style.display='block';
+    el.textContent=`label: ${data.label||'—'} | queries used: ${data.usage_count} | last used: ${data.last_used||'never'} | created: ${data.created_at||'—'}`;
+  })
+  .catch(err=>{const el=document.getElementById('usageResult');el.style.display='block';el.textContent='Error: '+err.message;});
 }
 
 /* GUIDE FAQS */
