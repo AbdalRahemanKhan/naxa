@@ -181,13 +181,19 @@ def require_api_key(f):
 
         token = auth_header[7:]   # strip "Bearer " prefix (7 characters)
 
-        if token != NAXA_API_KEY:
+        keys = _load_keys()
+        if token != NAXA_API_KEY and token not in keys:
             return _error_response(
                 code    = "FORBIDDEN",
                 message = "Invalid API key.",
                 detail  = "Verify the NAXA_API_KEY value you were issued.",
                 status  = 403,
             )
+
+        if token in keys:
+            keys[token]['usage_count'] = keys[token].get('usage_count', 0) + 1
+            keys[token]['last_used'] = datetime.utcnow().isoformat() + 'Z'
+            _save_keys(keys)
 
         return f(*args, **kwargs)
     return decorated
@@ -361,6 +367,36 @@ def demo_compare():
     return jsonify({"case_a": results.get('a', {}), "case_b": results.get('b', {})})
 
 
+@app.route("/v1/auth/generate", methods=["POST"])
+def generate_key():
+    import secrets
+    body = request.get_json(silent=True) or {}
+    label = str(body.get("label", "My API Key"))[:50]
+    new_key = "naxa_live_" + secrets.token_hex(16)
+    keys = _load_keys()
+    keys[new_key] = {
+        "label": label,
+        "created_at": datetime.utcnow().isoformat() + "Z",
+        "usage_count": 0,
+        "last_used": None
+    }
+    _save_keys(keys)
+    log.info(f"New key generated — label: {label}")
+    return jsonify({"api_key": new_key, "label": label,
+                    "created_at": keys[new_key]["created_at"]}), 201
+
+@app.route("/v1/auth/usage", methods=["GET"])
+@require_api_key
+def key_usage():
+    token = request.headers.get("Authorization","")[7:]
+    keys = _load_keys()
+    if token in keys:
+        info = keys[token]
+        return jsonify({"label": info.get("label"), "usage_count": info.get("usage_count", 0),
+                        "last_used": info.get("last_used"), "created_at": info.get("created_at")}), 200
+    return jsonify({"label": "env key", "usage_count": "not tracked"}), 200
+
+
 # ── POST /v1/analyze ──────────────────────────────────────────
 #
 # THE CORE ENDPOINT. NAXA's entire value proposition
@@ -531,6 +567,23 @@ def analyze():
     response.headers["X-Query-Time-Ms"] = str(wall_clock_ms)
 
     return response
+
+
+# ── Key storage helpers ────────────────────────────────────────
+import json as _json
+from pathlib import Path as _Path
+
+_KEYS_FILE = _Path(__file__).parent.parent / 'data' / 'api_keys.json'
+
+def _load_keys():
+    if _KEYS_FILE.exists():
+        try: return _json.loads(_KEYS_FILE.read_text())
+        except: return {}
+    return {}
+
+def _save_keys(keys):
+    _KEYS_FILE.parent.mkdir(parents=True, exist_ok=True)
+    _KEYS_FILE.write_text(_json.dumps(keys, indent=2))
 
 
 # ============================================================
