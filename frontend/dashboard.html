@@ -16,7 +16,7 @@
   --shadow-md:0 4px 6px rgba(50,50,93,.11),0 1px 3px rgba(0,0,0,.08);
   --up-bg:#EEF2FF;--up-text:#3730A3;--up-bar:#6366F1;
   --down-bg:#FFF7ED;--down-text:#C2410C;--down-bar:#F97316;
-  --mixed-bg:#F8FAFC;--mixed-text:#475569;--mixed-bar:#94A3B8;
+  --mixed-bg:#F8FAFC;--mixed-text:#475569;
   --warn-bg:#FFFBEB;--warn-text:#B45309;
   --low-bg:#FEF2F2;--low-text:#DC2626;
   --brand:#4F46E5;
@@ -26,10 +26,10 @@
 }
 body{font-family:var(--font-sans);background:var(--canvas);color:var(--text-1);min-height:100vh;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
 
-/* ── LOADING ──────────────────────────────────────────── */
+/* LOADING */
 .loading-overlay{position:fixed;inset:0;background:var(--canvas);z-index:300;display:flex;align-items:center;padding:0 0 0 48px}
-.loading-inner{max-width:480px;width:100%}
-.loading-logo{font-size:14px;font-weight:600;letter-spacing:-.03em;color:var(--text-1);margin-bottom:32px}
+.loading-inner{max-width:480px}
+.loading-logo{font-size:14px;font-weight:600;letter-spacing:-.03em;margin-bottom:32px}
 .loading-title{font-size:18px;font-weight:500;color:var(--text-2);margin-bottom:24px}
 .loading-steps{display:flex;flex-direction:column;gap:12px;margin-bottom:28px}
 .loading-step{display:flex;align-items:center;gap:12px;font-family:var(--font-mono);font-size:12px;color:var(--text-3);transition:color .25s}
@@ -39,13 +39,13 @@ body{font-family:var(--font-sans);background:var(--canvas);color:var(--text-1);m
 .loading-bar-track{height:2px;background:var(--border);border-radius:1px;width:320px;overflow:hidden}
 .loading-bar-fill{height:100%;background:var(--text-1);width:0;transition:width .45s ease}
 
-/* ── DRILLDOWN PANEL ──────────────────────────────────── */
+/* DRILLDOWN */
 .dd-overlay{position:fixed;inset:0;background:rgba(26,31,54,.12);z-index:200;opacity:0;pointer-events:none;transition:opacity .2s}
 .dd-overlay.open{opacity:1;pointer-events:all}
 .dd-panel{position:fixed;right:-520px;top:0;width:480px;height:100vh;background:var(--surface);border-left:1px solid var(--border);z-index:201;overflow-y:auto;transition:right .25s ease;padding:24px}
 .dd-overlay.open .dd-panel{right:0}
 .dd-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
-.dd-title{font-size:15px;font-weight:600;color:var(--text-1)}
+.dd-title{font-size:15px;font-weight:600}
 .dd-sub{font-family:var(--font-mono);font-size:11px;color:var(--text-3);margin-top:3px}
 .dd-close{background:none;border:1px solid var(--border);border-radius:var(--r-md);padding:5px 12px;font-size:12px;color:var(--text-2);cursor:pointer}
 .dd-close:hover{background:var(--surface-alt)}
@@ -56,50 +56,50 @@ body{font-family:var(--font-sans);background:var(--canvas);color:var(--text-1);m
 .dd-prec-table td{font-family:var(--font-mono);font-size:12px;padding:8px;border-bottom:1px solid var(--border);color:var(--text-2);font-variant-numeric:tabular-nums}
 .dd-chart-wrap{background:var(--surface-alt);border:1px solid var(--border);border-radius:var(--r-md);padding:12px;margin-bottom:4px}
 .dd-method{background:var(--surface-alt);border:1px solid var(--border);border-radius:var(--r-md);padding:12px 14px;font-family:var(--font-mono);font-size:11px;color:var(--text-2);line-height:1.75;white-space:pre-wrap}
-.dd-src-item{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;gap:8px}
-.dd-src-name{color:var(--text-2);line-height:1.5}
+.dd-src-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;gap:8px}
 .dd-src-link{font-family:var(--font-mono);font-size:11px;color:var(--brand);text-decoration:none;flex-shrink:0}
 .dd-json{background:var(--surface-alt);border:1px solid var(--border);border-radius:var(--r-md);padding:14px;font-family:var(--font-mono);font-size:11px;line-height:1.65;overflow:auto;white-space:pre;max-height:260px}
 .json-k{color:#4338CA}.json-s{color:#0D7A5F}.json-n{color:#C2410C}.json-b{color:#7C3AED}.json-null{color:var(--text-3)}
 
-/* ── HEADER ───────────────────────────────────────────── */
-.hdr{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 36px;height:56px}
+/* HEADER */
+.hdr{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 36px;height:56px;gap:16px}
 .logo{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.logo-text{font-size:15px;font-weight:600;letter-spacing:-.03em;color:var(--text-1)}
+.logo-text{font-size:15px;font-weight:600;letter-spacing:-.03em}
 .ver{font-family:var(--font-mono);font-size:11px;color:var(--text-3);border:1px solid var(--border);padding:2px 7px;border-radius:var(--r-sm)}
 .nav{display:flex;align-items:center;gap:2px}
-.nav-btn{padding:6px 16px;font-size:13px;font-weight:500;border:none;cursor:pointer;background:transparent;color:var(--text-3);border-radius:var(--r-md);transition:all .15s;position:relative}
+.nav-btn{padding:6px 14px;font-size:13px;font-weight:500;border:none;cursor:pointer;background:transparent;color:var(--text-3);border-radius:var(--r-md);transition:all .15s;white-space:nowrap;position:relative}
 .nav-btn:hover{color:var(--text-1);background:var(--surface-alt)}
 .nav-btn.active{color:var(--text-1)}
-.nav-btn.active::after{content:'';position:absolute;bottom:-13px;left:50%;transform:translateX(-50%);width:24px;height:2px;background:var(--text-1);border-radius:1px}
-.hdr-right{display:flex;align-items:center;gap:8px;flex-shrink:0;min-width:180px;justify-content:flex-end}
+.nav-btn.active::after{content:'';position:absolute;bottom:-13px;left:50%;transform:translateX(-50%);width:20px;height:2px;background:var(--text-1);border-radius:1px}
+.hdr-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .view-toggle{display:flex;border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;box-shadow:var(--shadow-sm)}
-.vbtn{padding:6px 14px;font-size:12px;font-weight:500;border:none;cursor:pointer;background:transparent;color:var(--text-3);transition:all .15s}
+.vbtn{padding:6px 13px;font-size:12px;font-weight:500;border:none;cursor:pointer;background:transparent;color:var(--text-3);transition:all .15s}
 .vbtn.active{background:var(--text-1);color:white}
 
-/* ── MAIN ─────────────────────────────────────────────── */
+/* MAIN */
 .main{max-width:1300px;margin:0 auto;padding:0 36px 64px}
-.tab-content{display:none}
-.tab-content.active{display:block}
+.tab-content{display:none}.tab-content.active{display:block}
+.page-title{font-size:22px;font-weight:700;letter-spacing:-.02em;padding:18px 0 4px}
+.page-sub{font-size:14px;color:var(--text-2);padding-bottom:14px;border-bottom:1px solid var(--border)}
 
-/* ── ANALYZE TAB ──────────────────────────────────────── */
-.analyze-topbar{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:12px}
-.evt-sel{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-2)}
+/* ANALYZE */
+.analyze-topbar{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:10px}
+.evt-sel-row{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-2)}
 .evt-live{display:inline-flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:10px;font-weight:500;color:#059669;background:#ECFDF5;border:1px solid #A7F3D0;padding:2px 8px;border-radius:10px}
 .evt-live::before{content:'';width:6px;height:6px;border-radius:50%;background:#059669;display:inline-block}
 .qbar-meta{font-family:var(--font-mono);font-size:11px;color:var(--text-3)}
 .evt-strip{border-bottom:1px solid var(--border);padding:22px 0 20px;display:flex;justify-content:space-between;align-items:flex-start;gap:28px}
-.evt-title{font-size:26px;font-weight:700;color:var(--text-1);margin-bottom:10px;letter-spacing:-.02em;line-height:1.2}
+.evt-title{font-size:26px;font-weight:700;letter-spacing:-.02em;line-height:1.2;margin-bottom:10px}
 .tag-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
 .tag{font-family:var(--font-mono);font-size:11px;color:var(--text-2);background:var(--surface);border:1px solid var(--border);padding:3px 9px;border-radius:var(--r-sm)}
 .evt-summary{font-size:14px;color:var(--text-2);line-height:1.7;max-width:600px}
 .evt-stats{text-align:right;flex-shrink:0}
-.sev-num{font-size:40px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--text-1);line-height:1}
+.sev-num{font-size:40px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1}
 .sev-lbl{font-size:11px;font-weight:500;color:var(--text-3);margin-top:3px;text-transform:uppercase;letter-spacing:.07em}
 .stat-rows{font-family:var(--font-mono);font-size:11px;color:var(--text-3);line-height:2.1;margin-top:12px;text-align:right}
 .stat-rows a{color:var(--brand);text-decoration:none}
-.overview-section{padding:20px 0 18px;border-bottom:1px solid var(--border)}
 .section-label{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3);margin-bottom:14px}
+.overview-section{padding:20px 0 18px;border-bottom:1px solid var(--border)}
 .cascade-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px 20px 14px;box-shadow:var(--shadow-sm)}
 .layer-sec{padding-top:20px}
 .layer-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px}
@@ -112,7 +112,7 @@ body{font-family:var(--font-sans);background:var(--canvas);color:var(--text-1);m
 .sig-card:hover{box-shadow:var(--shadow-md);border-color:var(--border-strong)}
 .sig-card.low-conf{border-color:#FECACA}
 .card-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
-.asset-name{font-size:14px;font-weight:600;color:var(--text-1);line-height:1.3;padding-right:10px}
+.asset-name{font-size:14px;font-weight:600;line-height:1.3;padding-right:10px}
 .asset-cls{font-size:11px;color:var(--text-3);margin-top:3px;font-family:var(--font-mono)}
 .dir-badge{font-size:11px;font-weight:500;padding:4px 10px;border-radius:var(--r-sm);white-space:nowrap;flex-shrink:0}
 .dir-badge.UP{background:var(--up-bg);color:var(--up-text)}
@@ -142,7 +142,7 @@ body{font-family:var(--font-sans);background:var(--canvas);color:var(--text-1);m
 .lims-item{font-family:var(--font-mono);font-size:11px;color:var(--text-3);background:var(--surface-alt);border:1px solid var(--border);padding:2px 9px;border-radius:var(--r-sm)}
 .agent-view-inner{display:none}
 .agent-hdr{display:flex;justify-content:space-between;align-items:center;padding:18px 0 12px;border-bottom:1px solid var(--border);margin-bottom:14px}
-.agent-title{font-size:14px;font-weight:600;color:var(--text-1)}
+.agent-title{font-size:14px;font-weight:600}
 .agent-sub{font-family:var(--font-mono);font-size:11px;color:var(--text-3);margin-top:3px}
 .curl-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 18px;font-family:var(--font-mono);font-size:12px;color:var(--text-2);line-height:1.8;white-space:pre-wrap;margin-bottom:12px;box-shadow:var(--shadow-sm)}
 .copy-btn{font-family:var(--font-mono);font-size:11px;color:var(--text-2);background:var(--surface);border:1px solid var(--border);padding:5px 12px;border-radius:var(--r-md);cursor:pointer;box-shadow:var(--shadow-sm)}
@@ -150,20 +150,23 @@ body{font-family:var(--font-sans);background:var(--canvas);color:var(--text-1);m
 .json-full{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;font-family:var(--font-mono);font-size:12px;line-height:1.7;overflow-x:auto;white-space:pre;box-shadow:var(--shadow-sm)}
 .agent-tagline{text-align:center;margin-top:14px;font-family:var(--font-mono);font-size:11px;color:var(--text-3)}
 
-/* ── ARCHIVE TAB ──────────────────────────────────────── */
-.arch-bar{display:flex;align-items:center;justify-content:space-between;padding:16px 0 14px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:10px}
-.arch-meta{font-family:var(--font-mono);font-size:12px;color:var(--text-3)}
-.arch-meta span{color:var(--text-1);font-weight:500}
-.arch-controls{display:flex;align-items:center;gap:8px}
-.arch-sort{font-size:12px;font-family:var(--font-sans);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:5px 10px;color:var(--text-2);cursor:pointer;box-shadow:var(--shadow-sm)}
+/* ARCHIVE */
+.arch-controls{display:flex;align-items:center;justify-content:space-between;padding:14px 0;flex-wrap:wrap;gap:10px}
+.arch-left{display:flex;align-items:center;gap:10px}
+.arch-search{font-size:13px;font-family:var(--font-sans);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:7px 12px;color:var(--text-1);width:240px;box-shadow:var(--shadow-sm)}
+.arch-search:focus{outline:none;border-color:var(--border-strong)}
+.arch-search::placeholder{color:var(--text-3)}
+.arch-sort{font-size:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:6px 10px;color:var(--text-2);cursor:pointer;box-shadow:var(--shadow-sm)}
+.arch-meta{font-family:var(--font-mono);font-size:11px;color:var(--text-3)}
+.arch-right{display:flex;align-items:center;gap:8px}
 .arch-toggle{display:flex;border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;box-shadow:var(--shadow-sm)}
-.arch-tbtn{padding:4px 12px;font-size:11px;font-weight:500;border:none;cursor:pointer;background:transparent;color:var(--text-3);transition:all .15s}
+.arch-tbtn{padding:5px 12px;font-size:11px;font-weight:500;border:none;cursor:pointer;background:transparent;color:var(--text-3);transition:all .15s}
 .arch-tbtn.active{background:var(--text-1);color:white}
-.arch-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:16px 0}
+.arch-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:4px 0 16px}
 .arch-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px;cursor:pointer;box-shadow:var(--shadow-sm);transition:box-shadow .15s,border-color .15s}
 .arch-card:hover{box-shadow:var(--shadow-md);border-color:var(--border-strong)}
-.arch-card.estimated{border-style:dashed}
-.arch-card-name{font-size:13px;font-weight:600;color:var(--text-1);margin-bottom:3px;line-height:1.3}
+.arch-card.estimated{border-style:dashed;opacity:.85}
+.arch-card-name{font-size:13px;font-weight:600;line-height:1.3;margin-bottom:3px}
 .arch-card-date{font-family:var(--font-mono);font-size:10px;color:var(--text-3);margin-bottom:10px}
 .arch-sev-wrap{display:flex;align-items:center;gap:6px;margin-bottom:10px}
 .arch-sev-bar{flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden}
@@ -174,25 +177,47 @@ body{font-family:var(--font-sans);background:var(--canvas);color:var(--text-1);m
 .arch-chip.UP{background:var(--up-bg);color:var(--up-text)}
 .arch-chip.DOWN{background:var(--down-bg);color:var(--down-text)}
 .arch-chip.MIXED{background:var(--mixed-bg);color:var(--mixed-text)}
-.arch-quality{font-family:var(--font-mono);font-size:9px;font-weight:500;padding:2px 7px;border-radius:var(--r-sm);letter-spacing:.04em;border:1px solid}
+.arch-quality{font-family:var(--font-mono);font-size:9px;font-weight:500;padding:2px 7px;border-radius:var(--r-sm);border:1px solid;letter-spacing:.04em}
 .arch-quality.PRIMARY{background:#ECFDF5;color:#065F46;border-color:#A7F3D0}
 .arch-quality.PARTIAL{background:var(--warn-bg);color:var(--warn-text);border-color:#FDE68A}
 .arch-quality.ESTIMATED{background:var(--surface-alt);color:var(--text-3);border-color:var(--border)}
-.arch-table-wrap{padding:12px 0}
+.arch-empty{text-align:center;padding:48px 0;font-size:14px;color:var(--text-3)}
+.arch-table-wrap{padding:4px 0 16px}
 .arch-table{width:100%;border-collapse:collapse}
 .arch-table th{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);padding:8px 12px;border-bottom:1px solid var(--border);text-align:left;cursor:pointer;user-select:none;white-space:nowrap}
 .arch-table th:hover{color:var(--text-2)}
 .arch-table td{font-size:13px;padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text-2);vertical-align:middle}
 .arch-table tr:hover td{background:var(--surface-alt);cursor:pointer}
 
-/* ── COMPARISON TAB ───────────────────────────────────── */
-.cmp-scenario-bar{padding:16px 0 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+/* ARCHIVE DRILLDOWN PANEL */
+.arch-signal-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
+.arch-signal-row:last-child{border-bottom:none}
+.arch-signal-name{font-size:13px;font-weight:500;text-transform:capitalize}
+.arch-signal-right{display:flex;align-items:center;gap:10px}
+.arch-run-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;background:var(--text-1);color:white;border:none;border-radius:var(--r-md);font-size:13px;font-weight:500;cursor:pointer;margin-top:14px;width:100%}
+.arch-run-btn:hover{opacity:.9}
+
+/* COMPARISON */
+.cmp-query-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px 20px;margin:16px 0;box-shadow:var(--shadow-sm)}
+.cmp-query-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:8px}
+.cmp-query-text{font-size:14px;color:var(--text-1);line-height:1.65;font-style:italic;margin-bottom:14px}
+.cmp-run-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cmp-run-btn{display:flex;align-items:center;gap:7px;padding:9px 20px;background:var(--text-1);color:white;border:none;border-radius:var(--r-md);font-size:13px;font-weight:600;cursor:pointer;transition:opacity .15s}
+.cmp-run-btn:hover{opacity:.85}
+.cmp-run-btn:disabled{opacity:.4;cursor:not-allowed}
+.cmp-status{font-family:var(--font-mono);font-size:11px;color:var(--text-3)}
+.cmp-progress{margin:12px 0;padding:12px 16px;background:var(--surface-alt);border:1px solid var(--border);border-radius:var(--r-md);display:none}
+.cmp-prog-row{display:flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:11px;color:var(--text-3);padding:4px 0}
+.cmp-prog-row.running{color:var(--text-1)}
+.cmp-prog-row.done{color:#059669}
+.cmp-prog-dot{width:6px;height:6px;border-radius:50%;background:var(--border);flex-shrink:0}
+.cmp-prog-row.running .cmp-prog-dot{background:var(--brand);animation:pulse .8s infinite}
+.cmp-prog-row.done .cmp-prog-dot{background:#059669}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.cmp-scenario-bar{display:flex;align-items:center;gap:8px;padding:14px 0;border-bottom:1px solid var(--border);flex-wrap:wrap}
 .cmp-scenario-label{font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.07em;margin-right:4px}
 .cmp-scenario-btn{padding:5px 14px;font-size:12px;font-weight:500;border:1px solid var(--border);border-radius:20px;cursor:pointer;background:var(--surface);color:var(--text-2);transition:all .15s;box-shadow:var(--shadow-sm)}
 .cmp-scenario-btn.active{background:var(--text-1);color:white;border-color:var(--text-1)}
-.cmp-query{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 20px;margin:16px 0;box-shadow:var(--shadow-sm)}
-.cmp-query-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:6px}
-.cmp-query-text{font-size:14px;color:var(--text-1);line-height:1.65;font-style:italic}
 .cmp-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
 .cmp-col{border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow-sm)}
 .cmp-col-hdr{padding:14px 18px;border-bottom:1px solid var(--border)}
@@ -201,8 +226,8 @@ body{font-family:var(--font-sans);background:var(--canvas);color:var(--text-1);m
 .cmp-col-label{font-size:13px;font-weight:700;margin-bottom:2px}
 .cmp-col.case-a .cmp-col-label{color:#C2410C}
 .cmp-col.case-b .cmp-col-label{color:#3730A3}
-.cmp-col-approach{font-size:11px;color:var(--text-3);margin-top:2px}
-.cmp-metrics{display:flex;gap:20px;margin-top:12px;flex-wrap:wrap}
+.cmp-col-approach{font-size:11px;color:var(--text-3)}
+.cmp-metrics{display:flex;gap:20px;margin-top:10px;flex-wrap:wrap}
 .cmp-metric-val{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
 .cmp-col.case-a .cmp-metric-val{color:#C2410C}
 .cmp-col.case-b .cmp-metric-val{color:#3730A3}
@@ -211,8 +236,8 @@ body{font-family:var(--font-sans);background:var(--canvas);color:var(--text-1);m
 .cmp-section-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text-3);margin-bottom:10px}
 .cmp-asset-row{display:flex;justify-content:space-between;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--border)}
 .cmp-asset-row:last-child{border-bottom:none}
-.cmp-asset-name{font-size:13px;font-weight:500;color:var(--text-1);flex:1;padding-right:8px}
-.cmp-asset-basis{font-size:11px;color:var(--text-3);margin-top:2px;line-height:1.4;font-style:italic}
+.cmp-asset-name{font-size:13px;font-weight:500;flex:1;padding-right:8px}
+.cmp-asset-basis{font-size:11px;color:var(--text-3);margin-top:2px;font-style:italic}
 .cmp-asset-right{text-align:right;flex-shrink:0}
 .cmp-asset-dir{font-size:11px;font-weight:500;padding:2px 8px;border-radius:var(--r-sm);display:inline-block;margin-bottom:3px}
 .cmp-asset-dir.UP{background:var(--up-bg);color:var(--up-text)}
@@ -222,7 +247,7 @@ body{font-family:var(--font-sans);background:var(--canvas);color:var(--text-1);m
 .cmp-asset-flag{font-family:var(--font-mono);font-size:9px;background:var(--low-bg);color:var(--low-text);padding:1px 5px;border-radius:3px;display:inline-block;margin-top:2px}
 .cmp-item-list{margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
 .cmp-item{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12px;color:var(--text-2);line-height:1.5}
-.cmp-item-icon{flex-shrink:0;font-size:13px;margin-top:0px}
+.cmp-item-icon{flex-shrink:0;font-size:12px}
 .cmp-col.case-a .cmp-item-icon{color:#DC2626}
 .cmp-col.case-b .cmp-item-icon{color:#059669}
 .cmp-truth{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 20px;margin-bottom:16px;box-shadow:var(--shadow-sm)}
@@ -231,11 +256,52 @@ body{font-family:var(--font-sans);background:var(--canvas);color:var(--text-1);m
 .cmp-truth-val{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--up-text)}
 .cmp-truth-lbl{font-size:11px;color:var(--text-3);margin-top:2px}
 .cmp-truth-note{font-size:12px;color:var(--text-3);font-style:italic;padding-top:10px;border-top:1px solid var(--border)}
-.cmp-verdict{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--text-1);border-radius:0 var(--r-lg) var(--r-lg) 0;padding:18px 22px;margin-bottom:32px;box-shadow:var(--shadow-sm)}
+.cmp-verdict{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--text-1);border-radius:0 var(--r-lg) var(--r-lg) 0;padding:18px 22px;margin-bottom:20px;box-shadow:var(--shadow-sm)}
 .cmp-verdict-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:8px}
-.cmp-verdict-text{font-size:15px;font-weight:500;color:var(--text-1);line-height:1.7}
+.cmp-verdict-text{font-size:15px;font-weight:500;line-height:1.7}
+.live-badge{font-family:var(--font-mono);font-size:9px;font-weight:600;background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0;padding:2px 7px;border-radius:3px;letter-spacing:.05em;margin-left:8px}
 
-/* ── SHARED ───────────────────────────────────────────── */
+/* API TAB */
+.api-grid{display:grid;grid-template-columns:240px 1fr;gap:32px;padding:20px 0}
+.api-nav{position:sticky;top:76px;align-self:start}
+.api-nav-item{display:block;font-size:13px;color:var(--text-2);padding:6px 0;border-left:2px solid var(--border);padding-left:12px;cursor:pointer;text-decoration:none;transition:all .15s}
+.api-nav-item:hover,.api-nav-item.active{color:var(--text-1);border-left-color:var(--text-1)}
+.api-section{margin-bottom:40px}
+.api-section-title{font-size:18px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px}
+.api-section-sub{font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:18px}
+.api-code{background:var(--text-1);color:#E2E8F0;border-radius:var(--r-lg);padding:16px 20px;font-family:var(--font-mono);font-size:12px;line-height:1.75;margin-bottom:16px;overflow-x:auto;white-space:pre}
+.api-code .cm{color:#94A3B8}.api-code .kw{color:#93C5FD}.api-code .str{color:#86EFAC}.api-code .fn{color:#FCA5A5}
+.api-endpoint{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow-sm)}
+.api-ep-hdr{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border);background:var(--surface-alt)}
+.api-method{font-family:var(--font-mono);font-size:11px;font-weight:700;padding:3px 8px;border-radius:var(--r-sm)}
+.api-method.GET{background:#DCFCE7;color:#166534}
+.api-method.POST{background:#DBEAFE;color:#1E40AF}
+.api-ep-path{font-family:var(--font-mono);font-size:13px;font-weight:500}
+.api-ep-desc{font-size:12px;color:var(--text-3);margin-left:auto}
+.api-ep-body{padding:14px 18px}
+.api-param-table{width:100%;border-collapse:collapse}
+.api-param-table th{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--text-3);padding:5px 8px;border-bottom:1px solid var(--border);text-align:left}
+.api-param-table td{font-family:var(--font-mono);font-size:12px;padding:8px;border-bottom:1px solid var(--border);color:var(--text-2);vertical-align:top}
+.api-param-table td:first-child{color:var(--text-1);font-weight:500}
+.api-alert{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:var(--r-md);padding:12px 16px;font-size:13px;color:#1E40AF;line-height:1.7;margin-bottom:16px}
+
+/* GUIDE TAB */
+.guide-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;padding:20px 0}
+.guide-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;box-shadow:var(--shadow-sm)}
+.guide-icon{font-size:22px;margin-bottom:10px}
+.guide-term{font-size:15px;font-weight:700;margin-bottom:6px}
+.guide-def{font-size:13px;color:var(--text-2);line-height:1.7;margin-bottom:12px}
+.guide-example{background:var(--surface-alt);border:1px solid var(--border);border-radius:var(--r-md);padding:10px 12px;font-family:var(--font-mono);font-size:11px;color:var(--text-2);line-height:1.7}
+.guide-example .hl{color:var(--text-1);font-weight:500}
+.guide-section-title{font-size:13px;font-weight:700;color:var(--text-1);margin:28px 0 14px;padding-top:20px;border-top:1px solid var(--border)}
+.guide-faq{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:0;margin-bottom:8px;box-shadow:var(--shadow-sm);overflow:hidden}
+.guide-faq-q{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;cursor:pointer;font-size:14px;font-weight:500;user-select:none}
+.guide-faq-q:hover{background:var(--surface-alt)}
+.guide-faq-a{display:none;padding:0 18px 14px;font-size:13px;color:var(--text-2);line-height:1.75}
+.guide-faq.open .guide-faq-a{display:block}
+.guide-faq.open .guide-faq-q{border-bottom:1px solid var(--border)}
+
+/* SHARED */
 .footer{text-align:center;padding:24px 0 0;margin-top:32px;border-top:1px solid var(--border)}
 .footer-row{font-family:var(--font-mono);font-size:11px;color:var(--text-3);display:flex;justify-content:center;gap:24px}
 .footer-row a{color:var(--text-3);text-decoration:none}
@@ -245,13 +311,11 @@ body{font-family:var(--font-sans);background:var(--canvas);color:var(--text-1);m
 .err-sub{font-family:var(--font-mono);font-size:12px;color:var(--text-3);margin-bottom:16px}
 .err-hint{font-size:12px;color:var(--text-3);line-height:1.9}
 .retry-btn{font-size:13px;font-weight:500;background:var(--text-1);color:white;border:none;padding:9px 20px;border-radius:var(--r-md);cursor:pointer;margin-top:18px}
-.tab-page-title{font-size:22px;font-weight:700;color:var(--text-1);margin-bottom:4px;letter-spacing:-.02em;padding:18px 0 0}
-.tab-page-sub{font-size:14px;color:var(--text-2);margin-bottom:0;padding-bottom:14px;border-bottom:1px solid var(--border)}
 </style>
 </head>
 <body>
 
-<!-- ── LOADING ─────────────────────────────────────────── -->
+<!-- LOADING -->
 <div class="loading-overlay" id="loadingOverlay">
   <div class="loading-inner">
     <div class="loading-logo">NAXA</div>
@@ -268,48 +332,34 @@ body{font-family:var(--font-sans);background:var(--canvas);color:var(--text-1);m
   </div>
 </div>
 
-<!-- ── DRILLDOWN PANEL ─────────────────────────────────── -->
+<!-- DRILLDOWN: ANALYZE -->
 <div class="dd-overlay" id="ddOverlay" onclick="closeDrilldown(event)">
   <div class="dd-panel" onclick="event.stopPropagation()">
-    <div class="dd-hdr">
-      <div><div class="dd-title" id="ddTitle">—</div><div class="dd-sub" id="ddSub">—</div></div>
-      <button class="dd-close" onclick="closeDrilldown()">close ✕</button>
-    </div>
-    <div class="dd-sec">
-      <div class="dd-sec-title">Historical Precedents</div>
-      <div class="dd-chart-wrap" id="ddChart"></div>
-      <table class="dd-prec-table">
-        <thead><tr><th>Event</th><th>Year</th><th>Severity</th><th>30d Move</th></tr></thead>
-        <tbody id="ddPrec"></tbody>
-      </table>
-    </div>
+    <div class="dd-hdr"><div><div class="dd-title" id="ddTitle">—</div><div class="dd-sub" id="ddSub">—</div></div><button class="dd-close" onclick="closeDrilldown()">close ✕</button></div>
+    <div class="dd-sec"><div class="dd-sec-title">Historical Precedents</div><div class="dd-chart-wrap" id="ddChart"></div><table class="dd-prec-table"><thead><tr><th>Event</th><th>Year</th><th>Severity</th><th>30d Move</th></tr></thead><tbody id="ddPrec"></tbody></table></div>
     <div class="dd-sec"><div class="dd-sec-title">Confidence Methodology</div><div class="dd-method" id="ddMethod">—</div></div>
     <div class="dd-sec"><div class="dd-sec-title">Data Sources</div><div id="ddSrcs"></div></div>
     <div class="dd-sec"><div class="dd-sec-title">Raw JSON — this signal</div><div class="dd-json" id="ddJson"></div></div>
   </div>
 </div>
 
-<!-- ── ARCHIVE DRILLDOWN ───────────────────────────────── -->
+<!-- DRILLDOWN: ARCHIVE -->
 <div class="dd-overlay" id="archOverlay" onclick="closeArchiveDrill(event)">
   <div class="dd-panel" onclick="event.stopPropagation()">
-    <div class="dd-hdr">
-      <div><div class="dd-title" id="archDdTitle">—</div><div class="dd-sub" id="archDdSub">—</div></div>
-      <button class="dd-close" onclick="closeArchiveDrill()">close ✕</button>
-    </div>
-    <div id="archDdBody"><div style="padding:40px 0;text-align:center;font-family:var(--font-mono);font-size:12px;color:var(--text-3)">Loading event data…</div></div>
+    <div class="dd-hdr"><div><div class="dd-title" id="archDdTitle">—</div><div class="dd-sub" id="archDdSub">—</div></div><button class="dd-close" onclick="closeArchiveDrill()">close ✕</button></div>
+    <div id="archDdBody"><div style="padding:40px 0;text-align:center;font-family:var(--font-mono);font-size:12px;color:var(--text-3)">Loading…</div></div>
   </div>
 </div>
 
-<!-- ── HEADER ──────────────────────────────────────────── -->
+<!-- HEADER -->
 <header class="hdr">
-  <div class="logo">
-    <span class="logo-text">NAXA</span>
-    <span class="ver" id="verTag">v0.3.0</span>
-  </div>
+  <div class="logo"><span class="logo-text">NAXA</span><span class="ver" id="verTag">v0.3.0</span></div>
   <nav class="nav">
     <button class="nav-btn active" id="nav-analyze" onclick="setTab('analyze')">Analyze</button>
     <button class="nav-btn" id="nav-archive" onclick="setTab('archive')">Archive</button>
     <button class="nav-btn" id="nav-comparison" onclick="setTab('comparison')">Comparison</button>
+    <button class="nav-btn" id="nav-api" onclick="setTab('api')">API</button>
+    <button class="nav-btn" id="nav-guide" onclick="setTab('guide')">Guide</button>
   </nav>
   <div class="hdr-right">
     <div class="view-toggle" id="viewToggle">
@@ -319,331 +369,394 @@ body{font-family:var(--font-sans);background:var(--canvas);color:var(--text-1);m
   </div>
 </header>
 
-<!-- ── MAIN ────────────────────────────────────────────── -->
 <main class="main">
 
-  <!-- ── TAB: ANALYZE ──────────────────────────────────── -->
-  <div class="tab-content active" id="tab-analyze">
-    <div id="analystView">
-      <div class="analyze-topbar">
-        <div class="evt-sel">
-          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-          <span id="evtLabel">Panama Canal Drought · Aug 2023</span>
-          <span class="evt-live" id="liveTag" style="display:none">LIVE</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:16px">
-          <span class="qbar-meta" id="qId">—</span>
-          <span class="qbar-meta" id="qTime">—</span>
-        </div>
+<!-- ── TAB: ANALYZE ── -->
+<div class="tab-content active" id="tab-analyze">
+  <div id="analystView">
+    <div class="analyze-topbar">
+      <div class="evt-sel-row">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        <span id="evtLabel">Panama Canal Drought · Aug 2023</span>
+        <span class="evt-live" id="liveTag" style="display:none">LIVE</span>
       </div>
-      <div class="evt-strip">
-        <div>
-          <h1 class="evt-title" id="evtTitle">—</h1>
-          <div class="tag-row">
-            <span class="tag" id="evtTypeTag">—</span>
-            <span class="tag" id="evtDateTag">—</span>
-            <span class="tag" id="evtNTag">—</span>
-          </div>
-          <p class="evt-summary" id="evtSummary">—</p>
-        </div>
-        <div class="evt-stats">
-          <div class="sev-num" id="sevNum">—</div>
-          <div class="sev-lbl">Severity Index</div>
-          <div class="stat-rows" id="statRows">—</div>
-        </div>
-      </div>
-      <div class="overview-section">
-        <div class="section-label">Signal Cascade — Days After Event</div>
-        <div class="cascade-wrap" id="cascadeChart"></div>
-      </div>
-      <div id="signalChain"></div>
-      <div class="lims" id="limsBar" style="display:none">
-        <span style="font-size:13px;color:var(--warn-text);flex-shrink:0;margin-top:1px">⚠</span>
-        <div style="flex:1">
-          <div class="lims-title">Known limitations</div>
-          <div class="lims-list" id="limsList"></div>
-        </div>
-        <a href="#" style="font-family:var(--font-mono);font-size:11px;color:var(--brand);text-decoration:none;flex-shrink:0;align-self:center;margin-left:auto">methodology ↗</a>
+      <div style="display:flex;align-items:center;gap:16px">
+        <span class="qbar-meta" id="qId">—</span>
+        <span class="qbar-meta" id="qTime">—</span>
       </div>
     </div>
-    <div class="agent-view-inner" id="agentView">
-      <div class="agent-hdr">
-        <div><div class="agent-title">Agent Payload — Raw JSON Response</div><div class="agent-sub">POST /v1/analyze → application/json</div></div>
-        <button class="copy-btn" id="copyBtn" onclick="copyJson()">copy JSON</button>
+    <div class="evt-strip">
+      <div>
+        <h1 class="evt-title" id="evtTitle">—</h1>
+        <div class="tag-row"><span class="tag" id="evtTypeTag">—</span><span class="tag" id="evtDateTag">—</span><span class="tag" id="evtNTag">—</span></div>
+        <p class="evt-summary" id="evtSummary">—</p>
       </div>
-      <div class="curl-block" id="curlBlock">—</div>
-      <div class="json-full" id="jsonFull">—</div>
-      <div class="agent-tagline">Same data. Different surface. One API call.</div>
+      <div class="evt-stats">
+        <div class="sev-num" id="sevNum">—</div>
+        <div class="sev-lbl">Severity Index</div>
+        <div class="stat-rows" id="statRows">—</div>
+      </div>
     </div>
-    <footer class="footer"><div class="footer-row"><span>NAXA Signal Intelligence</span><a href="#">methodology</a><a href="https://github.com" target="_blank">github</a><span id="footerVer">—</span></div></footer>
+    <div class="overview-section"><div class="section-label">Signal Cascade — Days After Event</div><div class="cascade-wrap" id="cascadeChart"></div></div>
+    <div id="signalChain"></div>
+    <div class="lims" id="limsBar" style="display:none">
+      <span style="font-size:13px;color:var(--warn-text);flex-shrink:0">⚠</span>
+      <div style="flex:1"><div class="lims-title">Known limitations</div><div class="lims-list" id="limsList"></div></div>
+      <a href="#" style="font-family:var(--font-mono);font-size:11px;color:var(--brand);text-decoration:none;flex-shrink:0;align-self:center;margin-left:auto">methodology ↗</a>
+    </div>
   </div>
+  <div class="agent-view-inner" id="agentView">
+    <div class="agent-hdr"><div><div class="agent-title">Agent Payload — Raw JSON Response</div><div class="agent-sub">POST /v1/analyze → application/json</div></div><button class="copy-btn" id="copyBtn" onclick="copyJson()">copy JSON</button></div>
+    <div class="curl-block" id="curlBlock">—</div>
+    <div class="json-full" id="jsonFull">—</div>
+    <div class="agent-tagline">Same data. Different surface. One API call.</div>
+  </div>
+  <footer class="footer"><div class="footer-row"><span>NAXA Signal Intelligence</span><a href="#">methodology</a><a href="https://github.com" target="_blank">github</a><span id="footerVer">—</span></div></footer>
+</div>
 
-  <!-- ── TAB: ARCHIVE ──────────────────────────────────── -->
-  <div class="tab-content" id="tab-archive">
-    <div class="tab-page-title">Archive</div>
-    <div class="tab-page-sub">Historical events powering every confidence score. Click any event to inspect its full signal chain.</div>
-    <div class="arch-bar">
-      <div class="arch-meta">
-        <span id="archCount">—</span> events · <span id="archRange">—</span>
+<!-- ── TAB: ARCHIVE ── -->
+<div class="tab-content" id="tab-archive">
+  <div class="page-title">Archive</div>
+  <div class="page-sub">14 historical events powering every confidence score. Click any event to inspect its complete signal picture.</div>
+  <div class="arch-controls">
+    <div class="arch-left">
+      <input class="arch-search" type="text" placeholder="Search events…" id="archSearch" oninput="filterArchive()" />
+      <select class="arch-sort" id="archSort" onchange="renderCurrentArchiveView()"><option value="date">Date (newest)</option><option value="severity">Severity (highest)</option><option value="type">Event type</option></select>
+    </div>
+    <div class="arch-right">
+      <span class="arch-meta" id="archMeta">— events</span>
+      <div class="arch-toggle"><button class="arch-tbtn active" id="archBtnGrid" onclick="setArchiveView('grid')">Grid</button><button class="arch-tbtn" id="archBtnTable" onclick="setArchiveView('table')">Table</button></div>
+    </div>
+  </div>
+  <div id="archGrid" class="arch-grid"></div>
+  <div id="archTable" class="arch-table-wrap" style="display:none"></div>
+</div>
+
+<!-- ── TAB: COMPARISON ── -->
+<div class="tab-content" id="tab-comparison">
+  <div class="page-title">Comparison</div>
+  <div class="page-sub">One agent without NAXA. One with. The same question. Measurably different answers.</div>
+  <div class="cmp-scenario-bar">
+    <span class="cmp-scenario-label">Scenario</span>
+    <div id="cmpScenarioBtns"></div>
+  </div>
+  <div id="cmpRunSection">
+    <div class="cmp-query-box">
+      <div class="cmp-query-label">Active query</div>
+      <div class="cmp-query-text" id="cmpQueryText">—</div>
+      <div class="cmp-run-row">
+        <button class="cmp-run-btn" id="cmpRunBtn" onclick="runLiveComparison()">
+          <span>▶</span> Run Live Comparison
+        </button>
+        <span class="cmp-status" id="cmpStatus">Showing cached results — click to run live agents</span>
       </div>
-      <div class="arch-controls">
-        <select class="arch-sort" id="archSort" onchange="sortArchive(this.value)">
-          <option value="date">Sort: Date (newest)</option>
-          <option value="severity">Sort: Severity (highest)</option>
-          <option value="type">Sort: Event type</option>
-        </select>
-        <div class="arch-toggle">
-          <button class="arch-tbtn active" id="archBtnGrid" onclick="setArchiveView('grid')">Grid</button>
-          <button class="arch-tbtn" id="archBtnTable" onclick="setArchiveView('table')">Table</button>
+      <div class="cmp-progress" id="cmpProgress">
+        <div class="cmp-prog-row" id="cpA"><span class="cmp-prog-dot"></span>Case A: Multi-step LLM agent (4 calls)…</div>
+        <div class="cmp-prog-row" id="cpB"><span class="cmp-prog-dot"></span>Case B: Single NAXA API call…</div>
+      </div>
+    </div>
+  </div>
+  <div id="cmpBody"></div>
+</div>
+
+<!-- ── TAB: API ── -->
+<div class="tab-content" id="tab-api">
+  <div class="page-title">API Reference</div>
+  <div class="page-sub">NAXA v0.3.0 — structured, sourced, auditable signal chain data for AI agents and analysts.</div>
+  <div class="api-grid">
+    <div class="api-nav">
+      <a class="api-nav-item active" onclick="scrollApiSec('auth')">Authentication</a>
+      <a class="api-nav-item" onclick="scrollApiSec('endpoints')">Endpoints</a>
+      <a class="api-nav-item" onclick="scrollApiSec('examples')">Code examples</a>
+      <a class="api-nav-item" onclick="scrollApiSec('schema')">Response schema</a>
+    </div>
+    <div>
+      <div class="api-section" id="api-auth">
+        <div class="api-section-title">Authentication</div>
+        <div class="api-section-sub">All <code>/v1/*</code> endpoints require a Bearer token in the Authorization header. The <code>/health</code> endpoint is unauthenticated.</div>
+        <div class="api-alert">To generate a key, run this once in your terminal:<br><code>python -c "import secrets; print('naxa_live_' + secrets.token_hex(16))"</code><br>Then set it as your <code>NAXA_API_KEY</code> environment variable.</div>
+        <div class="api-code"><span class="cm"># Every authenticated request</span>
+curl -X POST https://naxa.onrender.com/v1/analyze \
+  -H <span class="str">"Authorization: Bearer naxa_live_&lt;your_key&gt;"</span> \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{"event":"canal_restriction","date":"2023-08-01"}'</span></div>
+      </div>
+      <div class="api-section" id="api-endpoints">
+        <div class="api-section-title">Endpoints</div>
+        <div class="api-endpoint">
+          <div class="api-ep-hdr"><span class="api-method POST">POST</span><span class="api-ep-path">/v1/analyze</span><span class="api-ep-desc">Run full signal chain pipeline</span></div>
+          <div class="api-ep-body"><table class="api-param-table"><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+            <tr><td>event</td><td>string</td><td>yes</td><td>Event type. Currently: canal_restriction</td></tr>
+            <tr><td>date</td><td>YYYY-MM-DD</td><td>yes</td><td>Event trigger date</td></tr>
+            <tr><td>severity</td><td>float 0–1</td><td>no</td><td>Proportion of normal capacity lost. Default 0.75</td></tr>
+            <tr><td>no_synthesis</td><td>boolean</td><td>no</td><td>Skip LLM summary. ~3s instead of ~22s</td></tr>
+          </tbody></table></div>
+        </div>
+        <div class="api-endpoint">
+          <div class="api-ep-hdr"><span class="api-method GET">GET</span><span class="api-ep-path">/v1/events</span><span class="api-ep-desc">List supported event types</span></div>
+          <div class="api-ep-body" style="font-size:13px;color:var(--text-2)">Returns all supported event types with their parameter schemas and confidence basis metadata. Use for agent capability discovery.</div>
+        </div>
+        <div class="api-endpoint">
+          <div class="api-ep-hdr"><span class="api-method GET">GET</span><span class="api-ep-path">/v1/history</span><span class="api-ep-desc">Browse backtested event database</span></div>
+          <div class="api-ep-body" style="font-size:13px;color:var(--text-2)">Returns all 14 historical events used in backtesting, with signal summaries and data quality ratings.</div>
+        </div>
+        <div class="api-endpoint">
+          <div class="api-ep-hdr"><span class="api-method GET">GET</span><span class="api-ep-path">/v1/history/:event_id</span><span class="api-ep-desc">Full event record</span></div>
+          <div class="api-ep-body" style="font-size:13px;color:var(--text-2)">Returns the complete event record including confounders, source attribution, and all signal moves.</div>
+        </div>
+        <div class="api-endpoint">
+          <div class="api-ep-hdr"><span class="api-method GET">GET</span><span class="api-ep-path">/health</span><span class="api-ep-desc">No auth required</span></div>
+          <div class="api-ep-body" style="font-size:13px;color:var(--text-2)">Server liveness check. Used by Render health monitor and UptimeRobot.</div>
         </div>
       </div>
-    </div>
-    <div id="archGrid" class="arch-grid"></div>
-    <div id="archTable" class="arch-table-wrap" style="display:none"></div>
-  </div>
+      <div class="api-section" id="api-examples">
+        <div class="api-section-title">Code examples</div>
+        <div style="font-size:12px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Python</div>
+        <div class="api-code"><span class="kw">import</span> requests
 
-  <!-- ── TAB: COMPARISON ───────────────────────────────── -->
-  <div class="tab-content" id="tab-comparison">
-    <div class="tab-page-title">Comparison</div>
-    <div class="tab-page-sub">One agent without NAXA. One with. The same question. Measurably different answers.</div>
-    <div class="cmp-scenario-bar">
-      <span class="cmp-scenario-label">Scenario</span>
-      <div id="cmpScenarioBtns"></div>
+response = requests.post(
+    <span class="str">"https://naxa.onrender.com/v1/analyze"</span>,
+    headers={<span class="str">"Authorization"</span>: <span class="str">"Bearer naxa_live_&lt;key&gt;"</span>},
+    json={<span class="str">"event"</span>: <span class="str">"canal_restriction"</span>, <span class="str">"date"</span>: <span class="str">"2023-08-01"</span>}
+)
+data = response.json()
+
+<span class="cm"># Machine-readable chain for downstream agents</span>
+chain = data[<span class="str">"agent_payload"</span>][<span class="str">"machine_readable_chain"</span>]
+
+<span class="cm"># Highest-confidence signals only</span>
+top = data[<span class="str">"agent_payload"</span>][<span class="str">"top_confidence_signals"</span>]</div>
+        <div style="font-size:12px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">JavaScript / Node</div>
+        <div class="api-code"><span class="kw">const</span> res = <span class="kw">await</span> fetch(<span class="str">"https://naxa.onrender.com/v1/analyze"</span>, {
+  method: <span class="str">"POST"</span>,
+  headers: {
+    <span class="str">"Authorization"</span>: <span class="str">"Bearer naxa_live_&lt;key&gt;"</span>,
+    <span class="str">"Content-Type"</span>: <span class="str">"application/json"</span>
+  },
+  body: JSON.stringify({ event: <span class="str">"canal_restriction"</span>, date: <span class="str">"2023-08-01"</span> })
+});
+<span class="kw">const</span> data = <span class="kw">await</span> res.json();</div>
+      </div>
+      <div class="api-section" id="api-schema">
+        <div class="api-section-title">Response schema</div>
+        <div class="api-section-sub">Every field in the response is sourced and auditable. Confidence scores always show their basis.</div>
+        <div class="api-code">{
+  <span class="str">"event"</span>: { <span class="str">"type"</span>: <span class="str">"canal_restriction"</span>, <span class="str">"severity_score"</span>: 0.85 },
+  <span class="str">"human_summary"</span>: <span class="str">"Plain English synthesis for analysts."</span>,
+  <span class="str">"signal_chain"</span>: [{
+    <span class="str">"asset"</span>: <span class="str">"Tanker Shipping Equities"</span>,
+    <span class="str">"direction"</span>: <span class="str">"UP"</span>,
+    <span class="str">"layer"</span>: 3,
+    <span class="str">"measured"</span>: { <span class="str">"move_30d_pct"</span>: 3.66, <span class="str">"is_proxy"</span>: <span class="kw">false</span> },
+    <span class="str">"expected"</span>: { <span class="str">"move_range"</span>: <span class="str">"+6.2% to +11.2%"</span>, <span class="str">"lag_days"</span>: 10 },
+    <span class="str">"confidence"</span>: {
+      <span class="str">"score_30d"</span>: 0.702,
+      <span class="str">"n"</span>: 14, <span class="cm">← sample size</span>
+      <span class="str">"hit_rate"</span>: 1.0, <span class="cm">← % events moved correctly</span>
+      <span class="str">"basis"</span>: <span class="str">"backtested_n=14_events_2011-2024"</span>
+    }
+  }],
+  <span class="str">"agent_payload"</span>: {
+    <span class="str">"machine_readable_chain"</span>: <span class="str">"step:dir:move:conf | ..."</span>,
+    <span class="str">"top_confidence_signals"</span>: [...],
+    <span class="str">"flagged_low_confidence"</span>: [...]
+  },
+  <span class="str">"methodology"</span>: { <span class="str">"known_limitations"</span>: [...] }
+}</div>
+      </div>
     </div>
-    <div id="cmpBody"></div>
   </div>
+</div>
+
+<!-- ── TAB: GUIDE ── -->
+<div class="tab-content" id="tab-guide">
+  <div class="page-title">Guide</div>
+  <div class="page-sub">New to NAXA? Everything explained — from signal chains to confidence receipts.</div>
+  <div class="guide-grid">
+    <div class="guide-card">
+      <div class="guide-icon">⛓</div>
+      <div class="guide-term">Signal Chain</div>
+      <div class="guide-def">When a macro event happens — a canal drought, a port blockage — it doesn't affect just one market. It triggers a cascade: first freight rates move, then shipping equities react, then agricultural commodities adjust weeks later. NAXA maps this whole chain from a single event.</div>
+      <div class="guide-example">Panama drought → <span class="hl">freight rates ↑</span> (day 12) → <span class="hl">tanker equities ↑</span> (day 10) → <span class="hl">grain prices ↔</span> (day 45)</div>
+    </div>
+    <div class="guide-card">
+      <div class="guide-icon">🎯</div>
+      <div class="guide-term">Confidence Score</div>
+      <div class="guide-def">A number between 0 and 1 showing how much to trust a signal. Unlike an LLM saying "I'm 70% confident," NAXA confidence scores are calculated from real historical data — how often this exact type of event moved this exact asset in the predicted direction.</div>
+      <div class="guide-example">Score <span class="hl">0.702</span> = weighted hit rate (0.6) + magnitude consistency (0.4), penalized for small sample size</div>
+    </div>
+    <div class="guide-card">
+      <div class="guide-icon">📊</div>
+      <div class="guide-term">Hit Rate</div>
+      <div class="guide-def">The percentage of historical events where an asset moved in the predicted direction. A hit rate of 1.0 means every comparable historical event moved this way. A hit rate of 0.5 means it's a coin flip — we flag those as low confidence.</div>
+      <div class="guide-example">Tanker equities: <span class="hl">hit_rate 1.0</span> — all 14 historical disruptions moved tanker stocks upward</div>
+    </div>
+    <div class="guide-card">
+      <div class="guide-icon">🔢</div>
+      <div class="guide-term">n= (Sample Size)</div>
+      <div class="guide-def">How many historical events were used to calculate the confidence score. A score based on n=14 is far more trustworthy than n=3. NAXA always shows you the n= so you know exactly how much weight to give the signal. We never hide it.</div>
+      <div class="guide-example">Current database: <span class="hl">n=14 events</span> from 2011–2024. Target: n=20+ for higher confidence ceiling</div>
+    </div>
+    <div class="guide-card">
+      <div class="guide-icon">📐</div>
+      <div class="guide-term">Severity Index</div>
+      <div class="guide-def">A 0–1 score for how severe the disruption is. Calculated as: (% capacity reduction) × (duration factor). The Panama Canal drought scored 0.85 — a 30% reduction sustained for 32 weeks. Severity feeds directly into confidence weighting.</div>
+      <div class="guide-example">Suez blockage 2021: <span class="hl">0.95</span> (100% blocked, 6 days) · Panama drought 2023: <span class="hl">0.85</span></div>
+    </div>
+    <div class="guide-card">
+      <div class="guide-icon">🔄</div>
+      <div class="guide-term">Proxy Data</div>
+      <div class="guide-def">When the ideal data source isn't freely available, NAXA uses a substitute that measures the same underlying signal. We always flag proxies visibly and explain exactly what was substituted and why. Transparency is the product.</div>
+      <div class="guide-example">Drewry WCI (paywalled) → <span class="hl">FRED PPI Deep Sea Freight</span> as proxy. Same signal, monthly frequency</div>
+    </div>
+    <div class="guide-card">
+      <div class="guide-icon">📅</div>
+      <div class="guide-term">Lag Days</div>
+      <div class="guide-def">How many days after an event before the effect typically shows up in market data. Freight rates often move within 2 weeks. Agricultural commodity prices can take 45 days. NAXA specifies the expected lag for every signal — so you know when to look, not just what to look for.</div>
+      <div class="guide-example">Freight rates: <span class="hl">lag 10–14d</span> · Shipping equities: <span class="hl">lag 7d</span> · Grain: <span class="hl">lag 45d</span></div>
+    </div>
+    <div class="guide-card">
+      <div class="guide-icon">🧱</div>
+      <div class="guide-term">Layers (1–4)</div>
+      <div class="guide-def">NAXA organizes the signal chain into layers by proximity to the event. Layer 1 is the most direct (canal throughput). Layer 2 is freight rates. Layer 3 is equity markets. Layer 4 is downstream commodities. Each layer moves at a different lag and with different confidence.</div>
+      <div class="guide-example">L1: Canal ops → <span class="hl">L2: Freight rates</span> → <span class="hl">L3: Equities</span> → <span class="hl">L4: Agricultural prices</span></div>
+    </div>
+    <div class="guide-card">
+      <div class="guide-icon">🏦</div>
+      <div class="guide-term">Backtesting</div>
+      <div class="guide-def">Running a model against historical data to see how it would have performed. NAXA backtests every signal against all comparable historical events in its database. This is the fundamental difference from LLM-generated confidence — backtested numbers have receipts.</div>
+      <div class="guide-example">14 events from 2011–2024 backtested. Every confidence score cites its <span class="hl">n=, hit_rate, date range</span></div>
+    </div>
+  </div>
+  <div class="guide-section-title">Frequently Asked Questions</div>
+  <div class="guide-faq" onclick="toggleFaq(this)">
+    <div class="guide-faq-q">Why does NAXA show "BELOW EXPECTED" on some signals? <span>+</span></div>
+    <div class="guide-faq-a">When a signal's measured 30-day move falls outside the historically expected range, NAXA flags it "BELOW EXPECTED" rather than hiding it. This is intentional — it tells you the historical pattern broke down for this event, possibly due to confounders like macroeconomic conditions or data lag. Honesty about failure is more valuable than silence about it.</div>
+  </div>
+  <div class="guide-faq" onclick="toggleFaq(this)">
+    <div class="guide-faq-q">What does "THIN BACKTEST" mean? <span>+</span></div>
+    <div class="guide-faq-a">It means the confidence score is based on fewer than 6 comparable historical events. The signal may still be directionally correct, but the statistical confidence is weaker. We show it so you can decide how much weight to give it. As the NAXA database grows, thin backtests will strengthen automatically.</div>
+  </div>
+  <div class="guide-faq" onclick="toggleFaq(this)">
+    <div class="guide-faq-q">Why does NAXA not predict prices? <span>+</span></div>
+    <div class="guide-faq-a">NAXA maps signal chains — it shows what typically moves, in which direction, with what lag, based on historical patterns. It does not predict exact price levels. Price prediction requires a different class of model and introduces a different kind of liability. NAXA's job is to compress the research workflow, not replace analyst judgment on position sizing.</div>
+  </div>
+  <div class="guide-faq" onclick="toggleFaq(this)">
+    <div class="guide-faq-q">How is NAXA different from Bloomberg? <span>+</span></div>
+    <div class="guide-faq-a">Bloomberg provides tier-1 market data — prices, fundamentals, news. NAXA provides alternative data signal chains. They're complementary. A boutique fund analyst using Bloomberg for price data can use NAXA to instantly map what downstream effects to look for after a macro event — without spending 20 minutes manually building the chain themselves.</div>
+  </div>
+  <div class="guide-faq" onclick="toggleFaq(this)">
+    <div class="guide-faq-q">Can AI agents use NAXA directly? <span>+</span></div>
+    <div class="guide-faq-a">Yes — that's the primary design intent. NAXA returns structured JSON with a machine_readable_chain field specifically built for agent consumption. Every response serves both humans (the analyst dashboard) and agents (the JSON payload) from the same API call. See the API tab for integration examples.</div>
+  </div>
+</div>
 
 </main>
 
 <script>
-// ── CONFIG ────────────────────────────────────────────────
-const CFG = {
-  base: '',
-  token: 'naxa_live_95461743c38831533f29b48652a7c7cb',
-  event: { event:'canal_restriction', date:'2023-08-01', severity:0.85 }
-};
+const CFG={base:'',token:'naxa_live_95461743c38831533f29b48652a7c7cb',event:{event:'canal_restriction',date:'2023-08-01',severity:0.85}};
+const SRC={fred_monthly:{label:'FRED (monthly PPI)',url:'https://fred.stlouisfed.org'},fred_weekly:{label:'FRED (weekly)',url:'https://fred.stlouisfed.org'},equity:{label:'yfinance',url:'https://finance.yahoo.com'}};
+const LAYER_META={1:{label:'Layer 1',desc:'Canal operations'},2:{label:'Layer 2',desc:'Freight & shipping rates'},3:{label:'Layer 3',desc:'Equity markets'},4:{label:'Layer 4',desc:'Agricultural commodities'}};
+const DIR_ARROW={UP:'↑',DOWN:'↓',MIXED:'↔'};
+let DATA=null,ARCHIVE_DATA=null,CMP_DATA=null;
+let ARCH_VIEW='grid',ARCH_SORT='date',ARCH_FILTER='',CMP_SCENARIO=0,CMP_LIVE=false;
 
-const SRC = {
-  fred_monthly:{ label:'FRED (monthly PPI)', url:'https://fred.stlouisfed.org' },
-  fred_weekly: { label:'FRED (weekly)',       url:'https://fred.stlouisfed.org' },
-  equity:      { label:'yfinance',            url:'https://finance.yahoo.com'   }
-};
-const LAYER_META = {
-  1:{label:'Layer 1',desc:'Canal operations'},
-  2:{label:'Layer 2',desc:'Freight & shipping rates'},
-  3:{label:'Layer 3',desc:'Equity markets'},
-  4:{label:'Layer 4',desc:'Agricultural commodities'}
-};
-const DIR_ARROW = {UP:'↑',DOWN:'↓',MIXED:'↔'};
-let DATA = null, ARCHIVE_DATA = null, CMP_DATA = null;
-let ARCH_VIEW = 'grid', ARCH_SORT = 'date', CMP_SCENARIO = 0;
-
-// ── MOCK DATA ─────────────────────────────────────────────
-const ARCHIVE_MOCK = {events:[
-  {event_id:'red_sea_houthi_2024',name:'Red Sea Houthi Attacks',event_type:'canal_restriction',date:'2023-12-19',severity:0.90,duration_weeks:28,summary:'Houthi attacks forced Maersk and MSC to suspend Red Sea transits, rerouting vessels around Cape of Good Hope.',data_quality:'PRIMARY',signal_summary:{freight_rate:{direction:'UP',move_30d_pct:62.4},container_equities:{direction:'UP',move_30d_pct:18.4},tanker_equities:{direction:'UP',move_30d_pct:9.7},grain_prices:{direction:'MIXED',move_30d_pct:-5.1}}},
-  {event_id:'panama_drought_2023',name:'Panama Canal Drought 2023',event_type:'canal_restriction',date:'2023-08-01',severity:0.85,duration_weeks:32,summary:'Gatun Lake fell to 78ft, triggering 36 to 24 transit slot reduction.',data_quality:'PRIMARY',signal_summary:{freight_rate:{direction:'UP',move_30d_pct:28.4},container_equities:{direction:'DOWN',move_30d_pct:-2.1},tanker_equities:{direction:'UP',move_30d_pct:11.2},grain_prices:{direction:'DOWN',move_30d_pct:-4.8}}},
-  {event_id:'suez_blockage_2021',name:'Suez Canal Blockage',event_type:'canal_restriction',date:'2021-03-23',severity:0.95,duration_weeks:1,summary:'Ever Given container ship blocked the canal for 6 days, halting ~12% of global trade.',data_quality:'PRIMARY',signal_summary:{freight_rate:{direction:'UP',move_30d_pct:31.4},container_equities:{direction:'UP',move_30d_pct:14.7},tanker_equities:{direction:'UP',move_30d_pct:9.1},grain_prices:{direction:'UP',move_30d_pct:5.1}}},
-  {event_id:'la_longbeach_2021',name:'LA/Long Beach Congestion',event_type:'port_congestion',date:'2021-09-01',severity:0.75,duration_weeks:20,summary:'COVID demand surge caused record vessel backlog at US West Coast ports.',data_quality:'PARTIAL',signal_summary:{freight_rate:{direction:'UP',move_30d_pct:24.6},container_equities:{direction:'UP',move_30d_pct:8.9},tanker_equities:{direction:'MIXED',move_30d_pct:1.2},grain_prices:{direction:'MIXED',move_30d_pct:-1.1}}},
-  {event_id:'west_coast_slowdown_2014',name:'US West Coast Port Slowdown',event_type:'port_congestion',date:'2014-11-01',severity:0.70,duration_weeks:18,summary:'ILWU-PMA labour dispute caused months of congestion at all West Coast ports.',data_quality:'PARTIAL',signal_summary:{freight_rate:{direction:'UP',move_30d_pct:14.1},container_equities:{direction:'MIXED',move_30d_pct:-3.2},tanker_equities:{direction:'MIXED',move_30d_pct:0.8},grain_prices:{direction:'DOWN',move_30d_pct:-2.4}}},
-  {event_id:'mississippi_low_2022',name:'Mississippi River Low Water',event_type:'waterway_restriction',date:'2022-08-01',severity:0.65,duration_weeks:12,summary:'Record low water levels restricted barge traffic for months, impacting grain exports.',data_quality:'PARTIAL',signal_summary:{freight_rate:{direction:'UP',move_30d_pct:8.2},container_equities:{direction:'MIXED',move_30d_pct:1.4},tanker_equities:{direction:'MIXED',move_30d_pct:2.1},grain_prices:{direction:'UP',move_30d_pct:6.8}}},
-  {event_id:'panama_drought_2019',name:'Panama Canal Drought 2019',event_type:'canal_restriction',date:'2019-02-01',severity:0.45,duration_weeks:8,summary:'Seasonal drought reduced Gatun Lake levels, limiting Neopanamax vessel transits.',data_quality:'PRIMARY',signal_summary:{freight_rate:{direction:'UP',move_30d_pct:18.7},container_equities:{direction:'UP',move_30d_pct:3.4},tanker_equities:{direction:'UP',move_30d_pct:6.2},grain_prices:{direction:'MIXED',move_30d_pct:1.2}}},
-  {event_id:'panama_expansion_2016',name:'Panama Canal Expansion Delay',event_type:'canal_restriction',date:'2016-04-01',severity:0.35,duration_weeks:4,summary:'Expansion project delays pushed back Neopanamax lane opening, affecting freight forecasts.',data_quality:'ESTIMATED',signal_summary:{freight_rate:{direction:'UP',move_30d_pct:14.2},container_equities:{direction:'UP',move_30d_pct:7.8},tanker_equities:{direction:'UP',move_30d_pct:6.8},grain_prices:{direction:'UP',move_30d_pct:1.4}}}
+const ARCHIVE_MOCK={events:[
+  {event_id:'red_sea_houthi_2024',name:'Red Sea Houthi Attacks',event_type:'canal_restriction',date:'2023-12-19',severity:0.90,duration_weeks:28,summary:'Houthi attacks forced Maersk and MSC to suspend Red Sea transits, rerouting vessels around Cape of Good Hope. Global container freight rates rose 62% within 30 days.',data_quality:'PRIMARY',signal_summary:{freight_rate:{direction:'UP',move_30d_pct:62.4},container_equities:{direction:'UP',move_30d_pct:18.4},tanker_equities:{direction:'UP',move_30d_pct:9.7},grain_prices:{direction:'MIXED',move_30d_pct:-5.1}}},
+  {event_id:'panama_drought_2023',name:'Panama Canal Drought 2023',event_type:'canal_restriction',date:'2023-08-01',severity:0.85,duration_weeks:32,summary:'Gatun Lake fell to 78ft, triggering reduction from 36 to 24 daily transit slots. Cascade effects across freight, tanker equities, and grain markets over 45 days.',data_quality:'PRIMARY',signal_summary:{freight_rate:{direction:'UP',move_30d_pct:28.4},container_equities:{direction:'DOWN',move_30d_pct:-2.1},tanker_equities:{direction:'UP',move_30d_pct:11.2},grain_prices:{direction:'DOWN',move_30d_pct:-4.8}}},
+  {event_id:'suez_blockage_2021',name:'Suez Canal Blockage',event_type:'canal_restriction',date:'2021-03-23',severity:0.95,duration_weeks:1,summary:'Ever Given container ship ran aground, blocking the canal for 6 days and halting approximately 12% of global trade volume.',data_quality:'PRIMARY',signal_summary:{freight_rate:{direction:'UP',move_30d_pct:31.4},container_equities:{direction:'UP',move_30d_pct:14.7},tanker_equities:{direction:'UP',move_30d_pct:9.1},grain_prices:{direction:'UP',move_30d_pct:5.1}}},
+  {event_id:'la_longbeach_2021',name:'LA/Long Beach Port Congestion',event_type:'port_congestion',date:'2021-09-01',severity:0.75,duration_weeks:20,summary:'COVID demand surge created record vessel backlog at US West Coast ports. Up to 109 vessels anchored waiting for berths.',data_quality:'PARTIAL',signal_summary:{freight_rate:{direction:'UP',move_30d_pct:24.6},container_equities:{direction:'UP',move_30d_pct:8.9},tanker_equities:{direction:'MIXED',move_30d_pct:1.2},grain_prices:{direction:'MIXED',move_30d_pct:-1.1}}},
+  {event_id:'west_coast_slowdown_2014',name:'US West Coast Port Slowdown',event_type:'port_congestion',date:'2014-11-01',severity:0.70,duration_weeks:18,summary:'ILWU-PMA labour dispute caused months of congestion across all US West Coast ports, delaying container movements significantly.',data_quality:'PARTIAL',signal_summary:{freight_rate:{direction:'UP',move_30d_pct:14.1},container_equities:{direction:'MIXED',move_30d_pct:-3.2},tanker_equities:{direction:'MIXED',move_30d_pct:0.8},grain_prices:{direction:'DOWN',move_30d_pct:-2.4}}},
+  {event_id:'mississippi_low_2022',name:'Mississippi River Low Water',event_type:'waterway_restriction',date:'2022-08-01',severity:0.65,duration_weeks:12,summary:'Record low water levels restricted barge traffic for months, significantly impacting grain and fertilizer export capacity from the US Midwest.',data_quality:'PARTIAL',signal_summary:{freight_rate:{direction:'UP',move_30d_pct:8.2},container_equities:{direction:'MIXED',move_30d_pct:1.4},tanker_equities:{direction:'MIXED',move_30d_pct:2.1},grain_prices:{direction:'UP',move_30d_pct:6.8}}},
+  {event_id:'black_sea_grain_2023',name:'Black Sea Grain Corridor Suspension',event_type:'waterway_restriction',date:'2023-07-17',severity:0.70,duration_weeks:16,summary:'Russia withdrew from Black Sea Grain Initiative, blocking Ukrainian grain exports and triggering significant grain price volatility.',data_quality:'PARTIAL',signal_summary:{freight_rate:{direction:'UP',move_30d_pct:6.1},container_equities:{direction:'MIXED',move_30d_pct:0.8},tanker_equities:{direction:'MIXED',move_30d_pct:1.4},grain_prices:{direction:'UP',move_30d_pct:8.4}}},
+  {event_id:'west_coast_lockout_2002',name:'US West Coast Port Lockout',event_type:'port_congestion',date:'2002-09-29',severity:0.80,duration_weeks:2,summary:'PMA locked out ILWU workers for 10 days across all 29 West Coast ports. President Bush invoked Taft-Hartley Act to end the dispute.',data_quality:'PARTIAL',signal_summary:{freight_rate:{direction:'UP',move_30d_pct:18.3},container_equities:{direction:'UP',move_30d_pct:6.4},tanker_equities:{direction:'MIXED',move_30d_pct:2.1},grain_prices:{direction:'DOWN',move_30d_pct:-1.8}}},
+  {event_id:'yantian_closure_2021',name:'Yantian Port Closure (COVID)',event_type:'port_congestion',date:'2021-05-26',severity:0.60,duration_weeks:3,summary:'Yantian International Container Terminal closed for 24 days after COVID outbreak among port workers. One of the world\'s busiest ports.',data_quality:'PARTIAL',signal_summary:{freight_rate:{direction:'UP',move_30d_pct:12.8},container_equities:{direction:'UP',move_30d_pct:4.2},tanker_equities:{direction:'MIXED',move_30d_pct:0.9},grain_prices:{direction:'MIXED',move_30d_pct:-0.6}}},
+  {event_id:'panama_drought_2019',name:'Panama Canal Drought 2019',event_type:'canal_restriction',date:'2019-02-01',severity:0.45,duration_weeks:8,summary:'Seasonal drought reduced Gatun Lake levels, limiting Neopanamax vessel drafts and slowing transit throughput.',data_quality:'PRIMARY',signal_summary:{freight_rate:{direction:'UP',move_30d_pct:18.7},container_equities:{direction:'UP',move_30d_pct:3.4},tanker_equities:{direction:'UP',move_30d_pct:6.2},grain_prices:{direction:'MIXED',move_30d_pct:1.2}}},
+  {event_id:'hurricane_harvey_2017',name:'Hurricane Harvey Gulf Ports',event_type:'weather_disruption',date:'2017-08-25',severity:0.65,duration_weeks:3,summary:'Port of Houston closed. Disrupted energy infrastructure across Texas Gulf Coast. Oil and LNG export capacity severely impacted for weeks.',data_quality:'PARTIAL',signal_summary:{freight_rate:{direction:'UP',move_30d_pct:9.4},container_equities:{direction:'MIXED',move_30d_pct:1.1},tanker_equities:{direction:'UP',move_30d_pct:4.8},grain_prices:{direction:'MIXED',move_30d_pct:0.6}}},
+  {event_id:'panama_expansion_2016',name:'Panama Canal Expansion Delay',event_type:'canal_restriction',date:'2016-04-01',severity:0.35,duration_weeks:4,summary:'Expansion project delays pushed back Neopanamax lane opening, affecting freight rate forecasts for Trans-Pacific routes.',data_quality:'ESTIMATED',signal_summary:{freight_rate:{direction:'UP',move_30d_pct:14.2},container_equities:{direction:'UP',move_30d_pct:7.8},tanker_equities:{direction:'UP',move_30d_pct:6.8},grain_prices:{direction:'UP',move_30d_pct:1.4}}},
+  {event_id:'mississippi_low_2012',name:'Mississippi River Low Water 2012',event_type:'waterway_restriction',date:'2012-12-01',severity:0.55,duration_weeks:6,summary:'Severe drought caused record low water levels on Mississippi River, threatening barge traffic and grain export capacity.',data_quality:'ESTIMATED',signal_summary:{freight_rate:{direction:'UP',move_30d_pct:5.8},container_equities:{direction:'MIXED',move_30d_pct:-0.9},tanker_equities:{direction:'MIXED',move_30d_pct:1.3},grain_prices:{direction:'UP',move_30d_pct:4.2}}},
+  {event_id:'panama_drought_2015',name:'Panama Canal Drought 2015',event_type:'canal_restriction',date:'2015-03-01',severity:0.40,duration_weeks:6,summary:'El Nino-driven drought reduced Gatun Lake, forcing Panama Canal Authority to impose vessel draft restrictions.',data_quality:'ESTIMATED',signal_summary:{freight_rate:{direction:'UP',move_30d_pct:11.3},container_equities:{direction:'MIXED',move_30d_pct:2.1},tanker_equities:{direction:'UP',move_30d_pct:4.7},grain_prices:{direction:'MIXED',move_30d_pct:0.8}}}
 ],count:14,date_range:'2011–2024'};
 
-const CMP_MOCK = {scenarios:[
-  {scenario_id:'red_sea_houthi_2024',title:'Red Sea Houthi Attacks — Dec 2023',
-   query:'Houthi militant attacks on Red Sea shipping began Dec 19 2023. Maersk and MSC suspended all Red Sea transits immediately. What happens next across commodities and equities?',
-   ground_truth:{container_equities_actual_30d:18.4,tanker_equities_actual_30d:9.7,freight_rate_actual_30d:62.4,note:'Measured across 30 days following the event.'},
-   case_a:{label:'Without NAXA',approach:'Multi-step LLM research agent',time_seconds:3.6,api_calls:4,sources:0,
-     assets_identified:[
-       {asset:'Brent Crude Oil',direction:'UP',confidence:0.8,basis:'Historical trends indicate upward pressure'},
-       {asset:'S&P Global Water Index (EPSIWP)',direction:'MIXED',confidence:0.2,basis:'Lack of direct correlation'},
-       {asset:'AP Moller-Maersk stock',direction:'DOWN',confidence:0.7,basis:'Disruptions could lead to operational losses'},
-       {asset:'DJ Transportation Average',direction:'DOWN',confidence:0.6,basis:'Potential disruption to supply chains'}
-     ],
-     issues:['Hallucinated Water Index as relevant signal — unrelated to shipping','Predicted Maersk DOWN — shipping equities actually rose +18.4%','Confidence scores invented with no historical basis','No source citations on any claim']},
-   case_b:{label:'With NAXA',approach:'Single NAXA API call',time_seconds:7.0,api_calls:1,sources:14,
-     assets_identified:[
-       {asset:'Container Freight (Drewry proxy)',direction:'UP',confidence:0.608,hit_rate:0.912,n_events:14,measured_30d:62.4},
-       {asset:'Container Shipping Equities',direction:'MIXED',confidence:0.487,hit_rate:0.804,n_events:14,measured_30d:18.4,flag:'LOW_CONFIDENCE'},
-       {asset:'Tanker Shipping Equities',direction:'UP',confidence:0.680,hit_rate:1.000,n_events:14,measured_30d:9.7},
-       {asset:'Global Soybean Price',direction:'MIXED',confidence:0.500,hit_rate:0.833,n_events:14,measured_30d:-5.1}
-     ],
-     strengths:['Tanker signal hit_rate=1.0 across 14 events — measured +9.7%, correct','Container equities flagged LOW_CONFIDENCE — honest about uncertainty','Every score backtested against 14 real events 2011–2024','FRED + yfinance source citations on every measurement']},
-   verdict:'Case A predicted Maersk would fall. Shipping equities rose +18.4%. Case B correctly identified tankers as the highest-confidence signal (hit_rate 1.0) and was honest about container equity uncertainty — rather than inventing a confident wrong answer.'},
-  {scenario_id:'panama_drought_2023',title:'Panama Canal Drought — Aug 2023',
-   query:'Panama Canal water levels dropped to historic lows in August 2023. Transit slots reduced from 36 to 24 per day. What happens next across commodities and equities?',
-   ground_truth:{container_equities_actual_30d:-2.1,tanker_equities_actual_30d:11.2,freight_rate_actual_30d:28.4,note:'Measured across 30 days following the event.'},
-   case_a:{label:'Without NAXA',approach:'Multi-step LLM research agent',time_seconds:4.1,api_calls:5,sources:0,
-     assets_identified:[
-       {asset:'Panama Canal Authority stock',direction:'DOWN',confidence:0.9,basis:'Reduced revenue from fewer transits'},
-       {asset:'US Consumer Price Index',direction:'UP',confidence:0.7,basis:'Higher shipping costs will raise prices'},
-       {asset:'Maersk (MAERSK-B)',direction:'DOWN',confidence:0.75,basis:'Disruption to operations'},
-       {asset:'Corn futures',direction:'UP',confidence:0.65,basis:'Supply chain disruption may affect grain'}
-     ],
-     issues:['Panama Canal Authority is not publicly traded — hallucinated asset','CPI is a macro indicator, not a tradeable signal','Maersk predicted DOWN — tanker equities actually rose +11.2%','No mention of lag days — when do effects materialise?']},
-   case_b:{label:'With NAXA',approach:'Single NAXA API call',time_seconds:8.1,api_calls:1,sources:14,
-     assets_identified:[
-       {asset:'Deep Sea Freight PPI (proxy)',direction:'UP',confidence:0.690,hit_rate:1.000,n_events:14,measured_30d:28.4},
-       {asset:'Container Shipping Equities',direction:'MIXED',confidence:0.456,hit_rate:0.688,n_events:14,measured_30d:-2.1,flag:'LOW_CONFIDENCE'},
-       {asset:'Tanker Shipping Equities',direction:'UP',confidence:0.702,hit_rate:1.000,n_events:14,measured_30d:11.2},
-       {asset:'Global Soybean Price',direction:'MIXED',confidence:0.475,hit_rate:0.750,n_events:14,measured_30d:-4.8,flag:'LOW_CONFIDENCE'}
-     ],
-     strengths:['Freight rate hit_rate=1.0 across 14 events — measured +28.4%, correct','Lag days specified: freight at 12d, equities at 7-10d, grain at 45d','Container equities correctly flagged as low-confidence and MIXED','Full source chain: FRED PCU483111483111 + yfinance STNG/INSW']},
-   verdict:'Case A invented a non-existent publicly-traded asset. Case B mapped the correct signals with specific lag windows and accurately identified tanker equities as the high-confidence directional bet — backed by n=14 historical events.'}
+const CMP_MOCK={scenarios:[
+  {scenario_id:'red_sea_houthi_2024',title:'Red Sea — Dec 2023',query:'Houthi militant attacks on Red Sea shipping began Dec 19 2023. Maersk and MSC suspended all Red Sea transits immediately. What happens next across commodities and equities?',ground_truth:{container_equities_actual_30d:18.4,tanker_equities_actual_30d:9.7,freight_rate_actual_30d:62.4,note:'Measured across 30 days following Dec 19 2023 event.'},case_a:{label:'Without NAXA',approach:'Multi-step LLM research agent',time_seconds:3.6,api_calls:4,sources:0,assets_identified:[{asset:'Brent Crude Oil',direction:'UP',confidence:0.8,basis:'Historical trends indicate upward pressure on oil'},{asset:'S&P Global Water Index (EPSIWP)',direction:'MIXED',confidence:0.2,basis:'Lack of direct correlation'},{asset:'AP Moller-Maersk stock',direction:'DOWN',confidence:0.7,basis:'Disruptions could lead to operational losses'},{asset:'DJ Transportation Average',direction:'DOWN',confidence:0.6,basis:'Potential disruption to supply chains'}],issues:['Hallucinated Water Index as a relevant signal — entirely unrelated to shipping','Predicted Maersk DOWN — shipping equities actually rose +18.4%','Confidence scores invented with no historical basis','No source citations on any claim']},case_b:{label:'With NAXA',approach:'Single NAXA API call',time_seconds:7.0,api_calls:1,sources:14,assets_identified:[{asset:'Container Freight (Drewry proxy)',direction:'UP',confidence:0.608,hit_rate:0.912,n_events:14,measured_30d:62.4},{asset:'Container Shipping Equities',direction:'MIXED',confidence:0.487,hit_rate:0.804,n_events:14,measured_30d:18.4,flag:'LOW_CONFIDENCE'},{asset:'Tanker Shipping Equities',direction:'UP',confidence:0.680,hit_rate:1.000,n_events:14,measured_30d:9.7},{asset:'Global Soybean Price',direction:'MIXED',confidence:0.500,hit_rate:0.833,n_events:14,measured_30d:-5.1}],strengths:['Tanker signal hit_rate=1.0 across 14 events — measured +9.7%, correct','Container equities flagged LOW_CONFIDENCE — honest about uncertainty','Every confidence score sourced from 14 backtested events 2011–2024','FRED + yfinance citations on every measurement']},verdict:'Case A predicted Maersk would fall. Shipping equities rose +18.4%. Case B correctly identified tankers as the highest-confidence signal (hit_rate 1.0) and was honest about container equity uncertainty — rather than inventing a confident wrong answer.'},
+  {scenario_id:'panama_drought_2023',title:'Panama Canal — Aug 2023',query:'Panama Canal water levels dropped to historic lows in August 2023. Transit slots reduced from 36 to 24 per day. What happens next across commodities and equities?',ground_truth:{container_equities_actual_30d:-2.1,tanker_equities_actual_30d:11.2,freight_rate_actual_30d:28.4,note:'Measured across 30 days following Aug 1 2023 event.'},case_a:{label:'Without NAXA',approach:'Multi-step LLM research agent',time_seconds:4.1,api_calls:5,sources:0,assets_identified:[{asset:'Panama Canal Authority stock',direction:'DOWN',confidence:0.9,basis:'Reduced revenue from fewer transits'},{asset:'US Consumer Price Index',direction:'UP',confidence:0.7,basis:'Higher shipping costs will raise prices'},{asset:'Maersk (MAERSK-B)',direction:'DOWN',confidence:0.75,basis:'Disruption to operations'},{asset:'Corn futures',direction:'UP',confidence:0.65,basis:'Supply chain disruption may affect grain'}],issues:['Panama Canal Authority is not publicly traded — hallucinated asset','CPI is a macro indicator, not a tradeable near-term signal','Maersk predicted DOWN — tanker equities actually rose +11.2%','No mention of lag days — when do effects materialise?']},case_b:{label:'With NAXA',approach:'Single NAXA API call',time_seconds:8.1,api_calls:1,sources:14,assets_identified:[{asset:'Deep Sea Freight PPI (proxy)',direction:'UP',confidence:0.690,hit_rate:1.000,n_events:14,measured_30d:28.4},{asset:'Container Shipping Equities',direction:'MIXED',confidence:0.456,hit_rate:0.688,n_events:14,measured_30d:-2.1,flag:'LOW_CONFIDENCE'},{asset:'Tanker Shipping Equities',direction:'UP',confidence:0.702,hit_rate:1.000,n_events:14,measured_30d:11.2},{asset:'Global Soybean Price',direction:'MIXED',confidence:0.475,hit_rate:0.750,n_events:14,measured_30d:-4.8,flag:'LOW_CONFIDENCE'}],strengths:['Freight rate hit_rate=1.0 across 14 events — measured +28.4%, correct','Lag windows specified: freight 12d, equities 7–10d, grain 45d','Container equities correctly flagged MIXED and LOW_CONFIDENCE','Full source chain: FRED PCU483111483111 + yfinance STNG/INSW']},verdict:'Case A invented a non-existent publicly-traded asset. Case B mapped the correct signals with specific lag windows and accurately identified tanker equities as the high-confidence directional bet — backed by n=14 historical events.'}
 ]};
 
-// ── BOOT ──────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => { startLoadingAnim(); doFetch(); });
+document.addEventListener('DOMContentLoaded',()=>{startLoadingAnim();doFetch();});
 
-// ── LOADING ───────────────────────────────────────────────
-const LS = [
-  {id:'ls0',t:0,p:8},{id:'ls1',t:1200,p:28},{id:'ls2',t:4000,p:46},
-  {id:'ls3',t:7500,p:63},{id:'ls4',t:12000,p:80},{id:'ls5',t:15500,p:92}
-];
-function startLoadingAnim() {
-  const bar = document.getElementById('lbar');
-  LS.forEach(s => setTimeout(() => { document.getElementById(s.id).classList.add('active'); bar.style.width=s.p+'%'; }, s.t));
-}
-function hideLoading() {
-  document.getElementById('lbar').style.width='100%';
-  setTimeout(() => {
-    const ov = document.getElementById('loadingOverlay');
-    ov.style.transition='opacity .4s'; ov.style.opacity='0';
-    setTimeout(()=>ov.style.display='none',420);
-  },300);
-}
+const LS=[{id:'ls0',t:0,p:8},{id:'ls1',t:1200,p:28},{id:'ls2',t:4000,p:46},{id:'ls3',t:7500,p:63},{id:'ls4',t:12000,p:80},{id:'ls5',t:15500,p:92}];
+function startLoadingAnim(){const bar=document.getElementById('lbar');LS.forEach(s=>setTimeout(()=>{document.getElementById(s.id).classList.add('active');bar.style.width=s.p+'%';},s.t));}
+function hideLoading(){document.getElementById('lbar').style.width='100%';setTimeout(()=>{const ov=document.getElementById('loadingOverlay');ov.style.transition='opacity .4s';ov.style.opacity='0';setTimeout(()=>ov.style.display='none',420);},300);}
 
-// ── FETCH ANALYZE ─────────────────────────────────────────
-function doFetch() {
-  fetch(CFG.base+'/v1/analyze',{
-    method:'POST',
-    headers:{'Content-Type':'application/json','Authorization':'Bearer '+CFG.token},
-    body:JSON.stringify(CFG.event)
-  })
+function doFetch(){
+  fetch(CFG.base+'/v1/analyze',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+CFG.token},body:JSON.stringify(CFG.event)})
   .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
   .then(data=>{DATA=data;hideLoading();setTimeout(()=>renderAll(data),120);})
-  .catch(err=>{hideLoading();document.getElementById('signalChain').innerHTML=errHTML(err.message);});
+  .catch(err=>{hideLoading();document.getElementById('signalChain').innerHTML=`<div class="err-state"><div class="err-title">API unreachable</div><div class="err-sub">${err.message}</div><div class="err-hint">Make sure Flask is running: <code>python api/app.py</code><br>Token in CFG.token must match NAXA_API_KEY</div><button class="retry-btn" onclick="location.reload()">retry \u21BA</button></div>`;});
 }
 
-function errHTML(msg) {
-  return `<div class="err-state"><div class="err-title">API unreachable</div><div class="err-sub">${msg}</div>
-  <div class="err-hint">Make sure Flask is running: <code>python api/app.py</code><br>Token in CFG.token must match NAXA_API_KEY</div>
-  <button class="retry-btn" onclick="location.reload()">retry ↺</button></div>`;
-}
-
-// ── RENDER ANALYZE ────────────────────────────────────────
-function renderAll(d) {
+function renderAll(d){
   const e=d.event,m=d.methodology;
-  document.getElementById('verTag').textContent     = d.naxa_version||'v0.3.0';
-  document.getElementById('footerVer').textContent  = d.naxa_version||'—';
-  document.getElementById('qId').textContent        = 'id: '+(d.query_id||'—').slice(0,22)+'…';
-  document.getElementById('qTime').textContent      = 'analyzed in '+(d.query_time_ms/1000).toFixed(1)+'s';
-  document.getElementById('evtTitle').textContent   = fmtEvtTitle(e.type,e.date);
-  document.getElementById('evtTypeTag').textContent = e.type;
-  document.getElementById('evtDateTag').textContent = fmtDate(e.date);
-  document.getElementById('evtNTag').textContent    = 'n='+m.n_comparable_events+' events';
-  document.getElementById('evtSummary').textContent = shortSummary(d.human_summary);
-  document.getElementById('sevNum').textContent     = e.severity_score.toFixed(2);
-  document.getElementById('statRows').innerHTML     = m.backtesting_period+'<br><a href="https://pancanal.com" target="_blank">PCA advisory ↗</a><br>'+(d.query_id?'id: '+d.query_id.slice(0,8)+'…':'');
-  renderOverview(d.signal_chain);
-  renderChain(d.signal_chain);
-  renderLims(m.known_limitations);
-  renderAgent(d);
+  document.getElementById('verTag').textContent=d.naxa_version||'v0.3.0';
+  document.getElementById('footerVer').textContent=d.naxa_version||'—';
+  document.getElementById('qId').textContent='id: '+(d.query_id||'—').slice(0,22)+'…';
+  document.getElementById('qTime').textContent='analyzed in '+(d.query_time_ms/1000).toFixed(1)+'s';
+  document.getElementById('evtTitle').textContent=fmtEvtTitle(e.type,e.date);
+  document.getElementById('evtTypeTag').textContent=e.type;
+  document.getElementById('evtDateTag').textContent=fmtDate(e.date);
+  document.getElementById('evtNTag').textContent='n='+m.n_comparable_events+' events';
+  document.getElementById('evtSummary').textContent=shortSummary(d.human_summary);
+  document.getElementById('sevNum').textContent=e.severity_score.toFixed(2);
+  document.getElementById('statRows').innerHTML=m.backtesting_period+'<br><a href="https://pancanal.com" target="_blank">PCA advisory \u2197</a><br>'+(d.query_id?'id: '+d.query_id.slice(0,8)+'…':'');
+  renderOverview(d.signal_chain);renderChain(d.signal_chain);renderLims(m.known_limitations);renderAgent(d);
 }
 
-// ── CASCADE CHART ─────────────────────────────────────────
-function renderOverview(signals) {
-  const el=document.getElementById('cascadeChart');
-  if(el) el.innerHTML=buildCascadeChart(signals);
-}
-function buildCascadeChart(signals) {
-  const vW=900,ROW_H=48,PT=28,PB=20,PL=164,PR=90;
-  const vH=PT+signals.length*ROW_H+PB+12;
-  const maxDay=65,iW=vW-PL-PR;
-  const xS=d=>PL+(d/maxDay)*iW;
-  const BAR_H=26,WIN=18;
+function renderOverview(signals){const el=document.getElementById('cascadeChart');if(el)el.innerHTML=buildCascadeChart(signals);}
+function buildCascadeChart(signals){
+  const vW=900,ROW_H=48,PT=28,PB=20,PL=164,PR=90,vH=PT+signals.length*ROW_H+PB+12,maxDay=65,iW=vW-PL-PR;
+  const xS=d=>PL+(d/maxDay)*iW,BAR_H=26,WIN=18;
   const COLS={UP:{fill:'#EEF2FF',stroke:'#6366F1',text:'#3730A3'},DOWN:{fill:'#FFF7ED',stroke:'#F97316',text:'#C2410C'},MIXED:{fill:'#F8FAFC',stroke:'#94A3B8',text:'#475569'}};
   let svg=`<svg viewBox="0 0 ${vW} ${vH}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;font-family:Inter,sans-serif">`;
-  [0,7,10,14,20,30,45,60].forEach(d=>{
-    const x=xS(d);
-    svg+=`<line x1="${x}" y1="${PT-4}" x2="${x}" y2="${vH-PB}" stroke="#E3E8EF" stroke-width="1"/>`;
-    svg+=`<text x="${x}" y="${PT-7}" font-size="10" fill="#8792A2" text-anchor="middle" font-weight="500">${d}</text>`;
-  });
+  [0,7,10,14,20,30,45,60].forEach(d=>{const x=xS(d);svg+=`<line x1="${x}" y1="${PT-4}" x2="${x}" y2="${vH-PB}" stroke="#E3E8EF" stroke-width="1"/><text x="${x}" y="${PT-7}" font-size="10" fill="#8792A2" text-anchor="middle" font-weight="500">${d}</text>`;});
   svg+=`<text x="${xS(0)}" y="10" font-size="9" fill="#8792A2" letter-spacing="0.8" font-weight="600">DAYS AFTER EVENT</text>`;
   signals.forEach((s,i)=>{
-    const rowY=PT+i*ROW_H+4,c=COLS[s.direction]||COLS.MIXED;
-    const lag=s.expected.lag_days,lagX=xS(lag);
-    const barW=Math.max(50,(WIN/maxDay)*iW);
-    const arrow=DIR_ARROW[s.direction]||'—';
+    const rowY=PT+i*ROW_H+4,c=COLS[s.direction]||COLS.MIXED,lag=s.expected.lag_days,lagX=xS(lag),barW=Math.max(50,(WIN/maxDay)*iW),arrow=DIR_ARROW[s.direction]||'—';
     const shortName=s.asset.replace(' (Drewry WCI proxy)','').replace(' (grain proxy)','').replace('Deep Sea Freight PPI','Freight PPI').replace('Container Shipping Equities','Container Equities').replace('Tanker Shipping Equities','Tanker Equities').replace('Global Soybean Price','Soybean / Grain');
-    const divg=isDivg(s.measured.move_30d_pct,s.expected.move_range);
-    const mTxt=fmtMov(s.measured.move_30d_pct);
-    const mCol=divg?'#DC2626':(s.measured.move_30d_pct>=0?'#3730A3':'#C2410C');
+    const divg=isDivg(s.measured.move_30d_pct,s.expected.move_range),mTxt=fmtMov(s.measured.move_30d_pct),mCol=divg?'#DC2626':(s.measured.move_30d_pct>=0?'#3730A3':'#C2410C');
     svg+=`<text x="${PL-10}" y="${rowY+BAR_H/2+4}" font-size="12" fill="#1A1F36" font-weight="500" text-anchor="end">${shortName}</text>`;
     svg+=`<line x1="${xS(0)}" y1="${rowY+BAR_H/2}" x2="${lagX}" y2="${rowY+BAR_H/2}" stroke="#E3E8EF" stroke-width="1.5" stroke-dasharray="4,4"/>`;
     svg+=`<circle cx="${lagX}" cy="${rowY+BAR_H/2}" r="3" fill="${c.stroke}"/>`;
     svg+=`<rect x="${lagX}" y="${rowY}" width="${barW}" height="${BAR_H}" fill="${divg?'#FEF2F2':c.fill}" stroke="${divg?'#FECACA':c.stroke}" stroke-width="1.5" rx="5"/>`;
     svg+=`<text x="${lagX+10}" y="${rowY+BAR_H/2+4}" font-size="11" font-weight="600" fill="${divg?'#DC2626':c.text}">${arrow} day ${lag}</text>`;
     svg+=`<text x="${lagX+barW+8}" y="${rowY+BAR_H/2}" font-size="10" fill="#8792A2" dominant-baseline="middle">${s.expected.move_range}</text>`;
-    svg+=`<text x="${vW-PR+8}" y="${rowY+BAR_H/2}" font-size="12" font-weight="600" fill="${mCol}" dominant-baseline="middle" text-anchor="start">${mTxt}${divg?' ⚠':''}</text>`;
+    svg+=`<text x="${vW-PR+8}" y="${rowY+BAR_H/2}" font-size="12" font-weight="600" fill="${mCol}" dominant-baseline="middle" text-anchor="start">${mTxt}${divg?' \u26a0':''}</text>`;
   });
   const ly=vH-6;
-  [{c:'#6366F1',l:'↑ UP'},{c:'#F97316',l:'↓ DOWN'},{c:'#94A3B8',l:'↔ MIXED'},{c:'#DC2626',l:'⚠ outside expected'}].forEach((item,i)=>{
-    const ox=PL+i*130;
-    svg+=`<circle cx="${ox}" cy="${ly}" r="4" fill="${item.c}"/><text x="${ox+8}" y="${ly+4}" font-size="10" fill="#8792A2">${item.l}</text>`;
-  });
+  [{c:'#6366F1',l:'\u2191 UP'},{c:'#F97316',l:'\u2193 DOWN'},{c:'#94A3B8',l:'\u2194 MIXED'},{c:'#DC2626',l:'\u26a0 outside expected'}].forEach((item,i)=>{const ox=PL+i*130;svg+=`<circle cx="${ox}" cy="${ly}" r="4" fill="${item.c}"/><text x="${ox+8}" y="${ly+4}" font-size="10" fill="#8792A2">${item.l}</text>`;});
   return svg+'</svg>';
 }
 
-// ── SIGNAL CHAIN ──────────────────────────────────────────
-function renderChain(signals) {
-  const by={};
-  signals.forEach(s=>{const l=s.layer||3;(by[l]=by[l]||[]).push(s);});
+function renderChain(signals){
+  const by={};signals.forEach(s=>{const l=s.layer||3;(by[l]=by[l]||[]).push(s);});
   let html='';
-  Object.keys(by).sort((a,b)=>a-b).forEach(l=>{
-    const mt=LAYER_META[l]||{label:'Layer '+l,desc:''};
-    html+=`<div class="layer-sec"><div class="layer-hdr"><span class="layer-lbl">${mt.label}</span><span class="layer-desc">${mt.desc}</span><div class="layer-rule"></div></div><div class="sig-grid">${by[l].map(cardHTML).join('')}</div></div>`;
-  });
-  const container=document.getElementById('signalChain');
-  container.innerHTML=html;
-  container.querySelectorAll('.sig-card').forEach((c,i)=>{
-    c.style.transitionDelay=(i*90)+'ms';
-    requestAnimationFrame(()=>requestAnimationFrame(()=>c.classList.add('in')));
-  });
+  Object.keys(by).sort((a,b)=>a-b).forEach(l=>{const mt=LAYER_META[l]||{label:'Layer '+l,desc:''};html+=`<div class="layer-sec"><div class="layer-hdr"><span class="layer-lbl">${mt.label}</span><span class="layer-desc">${mt.desc}</span><div class="layer-rule"></div></div><div class="sig-grid">${by[l].map(cardHTML).join('')}</div></div>`;});
+  const c=document.getElementById('signalChain');c.innerHTML=html;
+  c.querySelectorAll('.sig-card').forEach((el,i)=>{el.style.transitionDelay=(i*90)+'ms';requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('in')));});
 }
-function cardHTML(s) {
-  const c=s.confidence,msd=s.measured,exp=s.expected;
-  const score=c.score_30d,isLow=score<0.50,isProxy=msd.is_proxy,isThin=c.n<6;
-  const divg=isDivg(msd.move_30d_pct,exp.move_range);
-  const src=SRC[msd.data_source]||{label:msd.data_source,url:'#'};
-  const numCls=divg?'DIVG':s.direction,arrow=DIR_ARROW[s.direction]||'—';
-  let flags='';
-  if(isProxy) flags+=`<span class="fpill proxy">PROXY</span>`;
-  if(isThin)  flags+=`<span class="fpill thin">THIN BACKTEST</span>`;
-  if(isLow)   flags+=`<span class="fpill low">LOW CONFIDENCE</span>`;
-  if(divg)    flags+=`<span class="fpill divg">BELOW EXPECTED</span>`;
-  return `<div class="sig-card${isLow?' low-conf':''}" onclick="openDrill('${s.step_id}')">
-    <div class="card-hdr"><div><div class="asset-name">${s.asset}</div><div class="asset-cls">${s.asset_class.replace(/_/g,' ')}</div></div><span class="dir-badge ${s.direction}">${arrow} ${s.direction}</span></div>
-    <div class="mv-grid">
-      <div><div class="mv-lbl">Measured</div><div class="mv-num ${numCls}">${fmtMov(msd.move_30d_pct)}</div><div class="mv-sub">30d actual${isProxy?' · proxy':''}</div>${divg?`<div class="divg-note">outside expected range</div>`:''}</div>
-      <div><div class="mv-lbl">Expected</div><div class="mv-range">${exp.move_range}</div><div class="mv-sub">lag: ${exp.lag_days}d</div></div>
-    </div>
-    <div class="conf-block"><div class="conf-inline">Confidence <strong>${score.toFixed(3)}</strong> · n=${c.n} · hit_rate: ${c.hit_rate.toFixed(2)} · ${backRange(c.basis)}</div><div class="conf-method">${fmtMeth(c.methodology)}</div></div>
-    <div class="flag-row">${flags}<a class="src-link" href="${src.url}" target="_blank" onclick="event.stopPropagation()">${src.label} ↗</a></div>
-  </div>`;
+function cardHTML(s){
+  const c=s.confidence,msd=s.measured,exp=s.expected,score=c.score_30d,isLow=score<0.50,isProxy=msd.is_proxy,isThin=c.n<6,divg=isDivg(msd.move_30d_pct,exp.move_range);
+  const src=SRC[msd.data_source]||{label:msd.data_source,url:'#'},numCls=divg?'DIVG':s.direction,arrow=DIR_ARROW[s.direction]||'—';
+  let flags='';if(isProxy)flags+=`<span class="fpill proxy">PROXY</span>`;if(isThin)flags+=`<span class="fpill thin">THIN BACKTEST</span>`;if(isLow)flags+=`<span class="fpill low">LOW CONFIDENCE</span>`;if(divg)flags+=`<span class="fpill divg">BELOW EXPECTED</span>`;
+  return `<div class="sig-card${isLow?' low-conf':''}" onclick="openDrill('${s.step_id}')"><div class="card-hdr"><div><div class="asset-name">${s.asset}</div><div class="asset-cls">${s.asset_class.replace(/_/g,' ')}</div></div><span class="dir-badge ${s.direction}">${arrow} ${s.direction}</span></div><div class="mv-grid"><div><div class="mv-lbl">Measured</div><div class="mv-num ${numCls}">${fmtMov(msd.move_30d_pct)}</div><div class="mv-sub">30d actual${isProxy?' · proxy':''}</div>${divg?`<div class="divg-note">outside expected range</div>`:''}</div><div><div class="mv-lbl">Expected</div><div class="mv-range">${exp.move_range}</div><div class="mv-sub">lag: ${exp.lag_days}d</div></div></div><div class="conf-block"><div class="conf-inline">Confidence <strong>${score.toFixed(3)}</strong> · n=${c.n} · hit_rate: ${c.hit_rate.toFixed(2)} · ${backRange(c.basis)}</div><div class="conf-method">${fmtMeth(c.methodology)}</div></div><div class="flag-row">${flags}<a class="src-link" href="${src.url}" target="_blank" onclick="event.stopPropagation()">${src.label} \u2197</a></div></div>`;
 }
 
-// ── PRECEDENTS CHART ──────────────────────────────────────
-function buildPrecedentsChart(precs,measured,moveRange) {
-  if(!precs||!precs.length) return '';
+function buildPrecedentsChart(precs,measured,moveRange){
+  if(!precs||!precs.length)return '';
   const W=400,H=130,PL=46,PR=12,PT=16,PB=28,iW=W-PL-PR,iH=H-PT-PB;
   const allY=[...precs.map(p=>p.move_30d),measured].filter(v=>v!=null);
-  const rawMin=Math.min(...allY),rawMax=Math.max(...allY);
-  const pad=Math.max(5,(rawMax-rawMin)*0.25);
-  const yMin=rawMin-pad,yMax=rawMax+pad;
-  const yS=v=>PT+iH-((v-yMin)/(yMax-yMin))*iH;
-  const xS=i=>PL+(i+0.5)*(iW/precs.length);
+  const rawMin=Math.min(...allY),rawMax=Math.max(...allY),pad=Math.max(5,(rawMax-rawMin)*0.25),yMin=rawMin-pad,yMax=rawMax+pad;
+  const yS=v=>PT+iH-((v-yMin)/(yMax-yMin))*iH,xS=i=>PL+(i+0.5)*(iW/precs.length);
   let rLo=null,rHi=null;
   if(moveRange){const pts=moveRange.replace(/%/g,'').split(' to ');if(pts.length===2){rLo=parseFloat(pts[0]);rHi=parseFloat(pts[1]);}}
   let svg=`<svg width="100%" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="display:block">`;
@@ -655,299 +768,198 @@ function buildPrecedentsChart(precs,measured,moveRange) {
   return svg+'</svg>';
 }
 
-// ── LIMS + AGENT VIEW ─────────────────────────────────────
-function renderLims(lims) {
-  if(!lims||!lims.length) return;
-  document.getElementById('limsList').innerHTML=lims.map(l=>`<span class="lims-item">${l}</span>`).join('');
-  document.getElementById('limsBar').style.display='flex';
-}
-function renderAgent(d) {
-  const base=window.location.origin;
-  document.getElementById('curlBlock').textContent=`curl -X POST ${base}/v1/analyze \\\n  -H "Authorization: Bearer <your-token>" \\\n  -H "Content-Type: application/json" \\\n  -d '{"event":"${d.event.type}","date":"${d.event.date}"}'`;
-  document.getElementById('jsonFull').innerHTML=synHL(JSON.stringify(d,null,2));
-}
-function copyJson() {
-  if(!DATA) return;
-  navigator.clipboard.writeText(JSON.stringify(DATA,null,2)).then(()=>{
-    const b=document.getElementById('copyBtn');b.textContent='copied ✓';setTimeout(()=>b.textContent='copy JSON',2000);
-  });
-}
-function setView(v) {
-  const isA=v==='analyst';
-  document.getElementById('analystView').style.display=isA?'block':'none';
-  document.getElementById('agentView').style.display=isA?'none':'block';
-  document.getElementById('btnA').classList.toggle('active',isA);
-  document.getElementById('btnG').classList.toggle('active',!isA);
-}
+function renderLims(lims){if(!lims||!lims.length)return;document.getElementById('limsList').innerHTML=lims.map(l=>`<span class="lims-item">${l}</span>`).join('');document.getElementById('limsBar').style.display='flex';}
+function renderAgent(d){const base=window.location.origin;document.getElementById('curlBlock').textContent=`curl -X POST ${base}/v1/analyze \\\n  -H "Authorization: Bearer <your-token>" \\\n  -H "Content-Type: application/json" \\\n  -d '{"event":"${d.event.type}","date":"${d.event.date}"}'`;document.getElementById('jsonFull').innerHTML=synHL(JSON.stringify(d,null,2));}
+function copyJson(){if(!DATA)return;navigator.clipboard.writeText(JSON.stringify(DATA,null,2)).then(()=>{const b=document.getElementById('copyBtn');b.textContent='copied \u2713';setTimeout(()=>b.textContent='copy JSON',2000);});}
+function setView(v){const isA=v==='analyst';document.getElementById('analystView').style.display=isA?'block':'none';document.getElementById('agentView').style.display=isA?'none':'block';document.getElementById('btnA').classList.toggle('active',isA);document.getElementById('btnG').classList.toggle('active',!isA);}
 
-// ── DRILLDOWN (ANALYZE) ───────────────────────────────────
-function openDrill(stepId) {
-  if(!DATA) return;
-  const s=DATA.signal_chain.find(x=>x.step_id===stepId);
-  if(!s) return;
+function openDrill(stepId){
+  if(!DATA)return;const s=DATA.signal_chain.find(x=>x.step_id===stepId);if(!s)return;
   const c=s.confidence,m=s.measured,exp=s.expected;
-  document.getElementById('ddTitle').textContent=s.asset;
-  document.getElementById('ddSub').textContent=s.step_id+' · layer '+s.layer;
+  document.getElementById('ddTitle').textContent=s.asset;document.getElementById('ddSub').textContent=s.step_id+' · layer '+s.layer;
   document.getElementById('ddChart').innerHTML=buildPrecedentsChart(exp.precedents,m.move_30d_pct,exp.move_range);
-  document.getElementById('ddPrec').innerHTML=(exp.precedents||[]).map(p=>{
-    const col=p.move_30d>=0?'var(--up-text)':'var(--down-text)';
-    const yr=(p.event.match(/(\d{4})/)||['','—'])[1];
-    return `<tr><td>${p.event.replace(/_/g,' ')}</td><td>${yr}</td><td>${p.severity.toFixed(2)}</td><td style="color:${col};font-weight:500">${fmtMov(p.move_30d)}</td></tr>`;
-  }).join('');
-  document.getElementById('ddMethod').textContent=`Score = 0.6 × hit_rate + 0.4 × magnitude_consistency\n(penalized by sample size factor)\n\nHit rate:  ${c.hit_rate.toFixed(2)} — ${Math.round(c.hit_rate*c.n)}/${c.n} events moved correctly\nn:         ${c.n} comparable events\nWindow:    ${backRange(c.basis)}\n\nScore 14d: ${(c.score_14d||0).toFixed(3)}   30d: ${c.score_30d.toFixed(3)}   60d: ${(c.score_60d||0).toFixed(3)}`;
+  document.getElementById('ddPrec').innerHTML=(exp.precedents||[]).map(p=>{const col=p.move_30d>=0?'var(--up-text)':'var(--down-text)';const yr=(p.event.match(/(\d{4})/)||['','—'])[1];return `<tr><td>${p.event.replace(/_/g,' ')}</td><td>${yr}</td><td>${p.severity.toFixed(2)}</td><td style="color:${col};font-weight:500">${fmtMov(p.move_30d)}</td></tr>`;}).join('');
+  document.getElementById('ddMethod').textContent=`Score = 0.6 \u00d7 hit_rate + 0.4 \u00d7 magnitude_consistency\n(penalized by sample size factor)\n\nHit rate:  ${c.hit_rate.toFixed(2)} \u2014 ${Math.round(c.hit_rate*c.n)}/${c.n} events moved correctly\nn:         ${c.n} comparable events\nWindow:    ${backRange(c.basis)}\n\nScore 14d: ${(c.score_14d||0).toFixed(3)}   30d: ${c.score_30d.toFixed(3)}   60d: ${(c.score_60d||0).toFixed(3)}`;
   const src=SRC[m.data_source]||{label:m.data_source,url:'#'};
-  let srcHTML=`<div class="dd-src-item"><span class="dd-src-name">${src.label}</span><a class="dd-src-link" href="${src.url}" target="_blank">${src.url.replace('https://','').split('/')[0]} ↗</a></div>`;
-  if(m.proxy_note) srcHTML+=`<div style="font-family:var(--font-mono);font-size:11px;color:var(--text-3);line-height:1.7;margin-top:8px">${m.proxy_note}</div>`;
-  document.getElementById('ddSrcs').innerHTML=srcHTML;
-  document.getElementById('ddJson').innerHTML=synHL(JSON.stringify(s,null,2));
+  let srcHTML=`<div class="dd-src-item"><span style="color:var(--text-2);font-size:12px">${src.label}</span><a class="dd-src-link" href="${src.url}" target="_blank">${src.url.replace('https://','').split('/')[0]} \u2197</a></div>`;
+  if(m.proxy_note)srcHTML+=`<div style="font-family:var(--font-mono);font-size:11px;color:var(--text-3);line-height:1.7;margin-top:8px">${m.proxy_note}</div>`;
+  document.getElementById('ddSrcs').innerHTML=srcHTML;document.getElementById('ddJson').innerHTML=synHL(JSON.stringify(s,null,2));
   document.getElementById('ddOverlay').classList.add('open');
 }
-function closeDrilldown(evt) {
-  if(evt&&evt.target!==document.getElementById('ddOverlay')) return;
-  document.getElementById('ddOverlay').classList.remove('open');
-}
+function closeDrilldown(evt){if(evt&&evt.target!==document.getElementById('ddOverlay'))return;document.getElementById('ddOverlay').classList.remove('open');}
 
-// ── TAB SWITCHING ─────────────────────────────────────────
-function setTab(tab) {
+/* TAB SWITCHING */
+function setTab(tab){
   document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-'+tab).classList.add('active');
   document.getElementById('nav-'+tab).classList.add('active');
-  document.getElementById('viewToggle').style.display = tab==='analyze'?'flex':'none';
-  if(tab==='archive' && !ARCHIVE_DATA) loadArchive();
-  if(tab==='comparison' && !CMP_DATA) loadComparison();
+  document.getElementById('viewToggle').style.display=tab==='analyze'?'flex':'none';
+  if(tab==='archive'&&!ARCHIVE_DATA)loadArchive();
+  if(tab==='comparison'&&!CMP_DATA)loadComparison();
 }
 
-// ── ARCHIVE ───────────────────────────────────────────────
-function loadArchive() {
+/* ARCHIVE */
+function loadArchive(){
   fetch(CFG.base+'/v1/history',{headers:{'Authorization':'Bearer '+CFG.token}})
-  .then(r=>{if(!r.ok)throw new Error('not ready');return r.json();})
-  .then(data=>{ARCHIVE_DATA=data;renderArchive();})
-  .catch(()=>{ARCHIVE_DATA=ARCHIVE_MOCK;renderArchive();});
+  .then(r=>{if(!r.ok)throw new Error('');return r.json();})
+  .then(data=>{ARCHIVE_DATA=data;renderCurrentArchiveView();})
+  .catch(()=>{ARCHIVE_DATA=ARCHIVE_MOCK;renderCurrentArchiveView();});
 }
-function renderArchive() {
-  if(!ARCHIVE_DATA) return;
-  document.getElementById('archCount').innerHTML=`<span>${ARCHIVE_DATA.count}</span>`;
-  document.getElementById('archRange').textContent=ARCHIVE_DATA.date_range;
-  if(ARCH_VIEW==='grid') renderArchiveGrid();
-  else renderArchiveTable();
+function getFilteredSortedEvents(){
+  if(!ARCHIVE_DATA)return[];
+  let evs=[...ARCHIVE_DATA.events];
+  if(ARCH_FILTER){const q=ARCH_FILTER.toLowerCase();evs=evs.filter(e=>e.name.toLowerCase().includes(q)||e.event_type.toLowerCase().includes(q)||e.summary.toLowerCase().includes(q));}
+  if(ARCH_SORT==='severity')evs.sort((a,b)=>b.severity-a.severity);
+  else if(ARCH_SORT==='type')evs.sort((a,b)=>a.event_type.localeCompare(b.event_type));
+  else evs.sort((a,b)=>new Date(b.date)-new Date(a.date));
+  return evs;
 }
-function getSortedEvents() {
-  if(!ARCHIVE_DATA) return [];
-  return [...ARCHIVE_DATA.events].sort((a,b)=>{
-    if(ARCH_SORT==='severity') return b.severity-a.severity;
-    if(ARCH_SORT==='type') return a.event_type.localeCompare(b.event_type);
-    return new Date(b.date)-new Date(a.date);
-  });
+function filterArchive(){ARCH_FILTER=document.getElementById('archSearch').value;renderCurrentArchiveView();}
+function renderCurrentArchiveView(){
+  const evs=getFilteredSortedEvents();
+  document.getElementById('archMeta').textContent=evs.length+' of '+((ARCHIVE_DATA&&ARCHIVE_DATA.count)||0)+' events';
+  if(ARCH_VIEW==='grid')renderArchiveGrid(evs);else renderArchiveTable(evs);
 }
-const SIG_LABELS = {freight_rate:'FR',container_equities:'CE',tanker_equities:'TE',grain_prices:'GR'};
-function renderArchiveGrid() {
-  const events=getSortedEvents();
-  document.getElementById('archGrid').innerHTML=events.map(e=>{
-    const ss=e.signal_summary;
-    const chips=Object.entries(SIG_LABELS).map(([k,lbl])=>{
-      const sig=ss[k];if(!sig) return '';
-      const arrow=DIR_ARROW[sig.direction]||'';
-      return `<span class="arch-chip ${sig.direction}">${lbl}${arrow}</span>`;
-    }).join('');
-    const sevPct=Math.round(e.severity*100);
-    const sevCol=e.severity>0.75?'#DC2626':e.severity>0.5?'#F97316':'#6366F1';
-    return `<div class="arch-card${e.data_quality==='ESTIMATED'?' estimated':''}" onclick="openArchiveDrill('${e.event_id}')">
-      <div class="arch-card-name">${e.name}</div>
-      <div class="arch-card-date">${fmtDate(e.date)} · ${e.event_type.replace(/_/g,' ')}</div>
-      <div class="arch-sev-wrap"><div class="arch-sev-bar"><div class="arch-sev-fill" style="width:${sevPct}%;background:${sevCol}"></div></div><div class="arch-sev-val">${e.severity.toFixed(2)}</div></div>
-      <div class="arch-signals">${chips}</div>
-      <div><span class="arch-quality ${e.data_quality}">${e.data_quality}</span></div>
-    </div>`;
+const SIG_LABELS={freight_rate:'FR',container_equities:'CE',tanker_equities:'TE',grain_prices:'GR'};
+function renderArchiveGrid(evs){
+  if(!evs.length){document.getElementById('archGrid').innerHTML='<div class="arch-empty">No events match your search.</div>';return;}
+  document.getElementById('archGrid').innerHTML=evs.map(e=>{
+    const ss=e.signal_summary,sevPct=Math.round(e.severity*100),sevCol=e.severity>0.75?'#DC2626':e.severity>0.5?'#F97316':'#6366F1';
+    const chips=Object.entries(SIG_LABELS).map(([k,lbl])=>{const sig=ss[k];if(!sig)return '';return `<span class="arch-chip ${sig.direction}">${lbl}${DIR_ARROW[sig.direction]||''}</span>`;}).join('');
+    return `<div class="arch-card${e.data_quality==='ESTIMATED'?' estimated':''}" onclick="openArchiveDrill('${e.event_id}')"><div class="arch-card-name">${e.name}</div><div class="arch-card-date">${fmtDate(e.date)} · ${e.event_type.replace(/_/g,' ')}</div><div class="arch-sev-wrap"><div class="arch-sev-bar"><div class="arch-sev-fill" style="width:${sevPct}%;background:${sevCol}"></div></div><div class="arch-sev-val">${e.severity.toFixed(2)}</div></div><div class="arch-signals">${chips}</div><div><span class="arch-quality ${e.data_quality}">${e.data_quality}</span></div></div>`;
   }).join('');
 }
-function renderArchiveTable() {
-  const events=getSortedEvents();
-  const rows=events.map(e=>{
-    const ss=e.signal_summary;
-    const chips=Object.entries(SIG_LABELS).map(([k,lbl])=>{
-      const sig=ss[k];if(!sig) return `<span style="color:var(--text-3)">${lbl}—</span>`;
-      const arrow=DIR_ARROW[sig.direction]||'';
-      return `<span class="arch-chip ${sig.direction}" style="margin-right:3px">${lbl}${arrow}</span>`;
-    }).join('');
-    return `<tr onclick="openArchiveDrill('${e.event_id}')">
-      <td style="font-weight:500;color:var(--text-1)">${e.name}</td>
-      <td><span class="arch-quality ${e.data_quality}">${e.data_quality}</span></td>
-      <td style="font-family:var(--font-mono)">${fmtDate(e.date)}</td>
-      <td style="font-family:var(--font-mono)">${e.event_type.replace(/_/g,' ')}</td>
-      <td style="font-family:var(--font-mono);font-weight:600">${e.severity.toFixed(2)}</td>
-      <td>${chips}</td>
-    </tr>`;
-  }).join('');
-  document.getElementById('archTable').innerHTML=`<table class="arch-table">
-    <thead><tr>
-      <th onclick="sortArchive('name')">Event</th>
-      <th>Quality</th>
-      <th onclick="sortArchive('date')">Date ↕</th>
-      <th>Type</th>
-      <th onclick="sortArchive('severity')">Severity ↕</th>
-      <th>Signal summary</th>
-    </tr></thead>
-    <tbody>${rows}</tbody>
-  </table>`;
+function renderArchiveTable(evs){
+  if(!evs.length){document.getElementById('archTable').innerHTML='<div class="arch-empty">No events match your search.</div>';return;}
+  document.getElementById('archTable').innerHTML=`<table class="arch-table"><thead><tr><th>Event</th><th>Quality</th><th>Date</th><th>Type</th><th>Severity</th><th>Signals</th></tr></thead><tbody>${evs.map(e=>{const ss=e.signal_summary;const chips=Object.entries(SIG_LABELS).map(([k,lbl])=>{const sig=ss[k];if(!sig)return '';return `<span class="arch-chip ${sig.direction}" style="margin-right:3px">${lbl}${DIR_ARROW[sig.direction]||''}</span>`;}).join('');return `<tr onclick="openArchiveDrill('${e.event_id}')"><td style="font-weight:500;color:var(--text-1)">${e.name}</td><td><span class="arch-quality ${e.data_quality}">${e.data_quality}</span></td><td style="font-family:var(--font-mono)">${fmtDate(e.date)}</td><td style="font-family:var(--font-mono)">${e.event_type.replace(/_/g,' ')}</td><td style="font-family:var(--font-mono);font-weight:600">${e.severity.toFixed(2)}</td><td>${chips}</td></tr>`;}).join('')}</tbody></table>`;
 }
-function setArchiveView(v) {
+function setArchiveView(v){
   ARCH_VIEW=v;
   document.getElementById('archBtnGrid').classList.toggle('active',v==='grid');
   document.getElementById('archBtnTable').classList.toggle('active',v==='table');
   document.getElementById('archGrid').style.display=v==='grid'?'grid':'none';
   document.getElementById('archTable').style.display=v==='table'?'block':'none';
-  if(v==='grid') renderArchiveGrid();
-  else renderArchiveTable();
-}
-function sortArchive(by) {
-  ARCH_SORT=by;
-  if(ARCH_VIEW==='grid') renderArchiveGrid();
-  else renderArchiveTable();
-}
-function openArchiveDrill(eventId) {
-  document.getElementById('archDdTitle').textContent='Loading…';
-  document.getElementById('archDdSub').textContent=eventId;
-  document.getElementById('archOverlay').classList.add('open');
-  fetch(CFG.base+'/v1/history/'+eventId,{headers:{'Authorization':'Bearer '+CFG.token}})
-  .then(r=>{if(!r.ok)throw new Error('not ready');return r.json();})
-  .then(data=>renderArchiveDrill(data))
-  .catch(()=>{
-    const ev=ARCHIVE_DATA.events.find(e=>e.event_id===eventId);
-    if(ev) renderArchiveDrillMock(ev);
-  });
-}
-function renderArchiveDrillMock(ev) {
-  document.getElementById('archDdTitle').textContent=ev.name;
-  document.getElementById('archDdSub').textContent=ev.event_id+' · '+fmtDate(ev.date);
-  const ss=ev.signal_summary;
-  const chips=Object.entries(ss).map(([k,sig])=>`
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)">
-      <div style="font-size:13px;font-weight:500;color:var(--text-1)">${k.replace(/_/g,' ')}</div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <span class="dir-badge ${sig.direction}" style="padding:3px 9px;font-size:11px">${DIR_ARROW[sig.direction]||''} ${sig.direction}</span>
-        <span style="font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;color:${sig.move_30d_pct>=0?'var(--up-text)':'var(--down-text)'}">${fmtMov(sig.move_30d_pct)}</span>
-      </div>
-    </div>`).join('');
-  document.getElementById('archDdBody').innerHTML=`
-    <div style="margin-bottom:16px">
-      <div class="dd-sec-title" style="margin-bottom:8px">Event Summary</div>
-      <p style="font-size:13px;color:var(--text-2);line-height:1.7">${ev.summary}</p>
-    </div>
-    <div style="display:flex;gap:16px;margin-bottom:18px;flex-wrap:wrap">
-      <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:3px">Severity</div><div style="font-size:26px;font-weight:700;font-variant-numeric:tabular-nums">${ev.severity.toFixed(2)}</div></div>
-      <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:3px">Duration</div><div style="font-size:26px;font-weight:700;font-variant-numeric:tabular-nums">${ev.duration_weeks}w</div></div>
-      <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:3px">Data Quality</div><div style="margin-top:6px"><span class="arch-quality ${ev.data_quality}">${ev.data_quality}</span></div></div>
-    </div>
-    <div class="dd-sec-title" style="margin-bottom:8px">Signal Summary — 30d Moves</div>
-    ${chips}
-    <div style="margin-top:16px;padding:10px 12px;background:var(--surface-alt);border:1px solid var(--border);border-radius:var(--r-md);font-family:var(--font-mono);font-size:10px;color:var(--text-3)">Full signal chain available via GET /v1/history/${ev.event_id}</div>`;
-}
-function renderArchiveDrill(data) {
-  document.getElementById('archDdTitle').textContent=data.name||data.event_id;
-  document.getElementById('archDdSub').textContent=data.event_id+' · '+fmtDate(data.date);
-  document.getElementById('archDdBody').innerHTML=`<pre style="font-family:var(--font-mono);font-size:11px;line-height:1.65;overflow:auto;white-space:pre">${synHL(JSON.stringify(data,null,2))}</pre>`;
-}
-function closeArchiveDrill(evt) {
-  if(evt&&evt.target!==document.getElementById('archOverlay')) return;
-  document.getElementById('archOverlay').classList.remove('open');
+  renderCurrentArchiveView();
 }
 
-// ── COMPARISON ────────────────────────────────────────────
-function loadComparison() {
+/* ARCHIVE DRILLDOWN — proper signal summary */
+function openArchiveDrill(eventId){
+  const ev=ARCHIVE_DATA&&ARCHIVE_DATA.events.find(e=>e.event_id===eventId);
+  if(!ev)return;
+  document.getElementById('archDdTitle').textContent=ev.name;
+  document.getElementById('archDdSub').textContent=fmtDate(ev.date)+' · severity: '+ev.severity.toFixed(2);
+  const ss=ev.signal_summary;
+  const sigRows=Object.entries({freight_rate:'Freight Rates',container_equities:'Container Equities',tanker_equities:'Tanker Equities',grain_prices:'Grain Prices'}).map(([k,label])=>{
+    const sig=ss[k];if(!sig)return '';
+    const arrow=DIR_ARROW[sig.direction]||'';
+    const numCol=sig.move_30d_pct>=0?'var(--up-text)':'var(--down-text)';
+    return `<div class="arch-signal-row"><div><div class="arch-signal-name">${label}</div></div><div class="arch-signal-right"><span class="dir-badge ${sig.direction}">${arrow} ${sig.direction}</span><span style="font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;color:${numCol};min-width:60px;text-align:right">${fmtMov(sig.move_30d_pct)}</span></div></div>`;
+  }).join('');
+  document.getElementById('archDdBody').innerHTML=`
+    <div style="margin-bottom:18px">
+      <div class="dd-sec-title">Event Summary</div>
+      <p style="font-size:13px;color:var(--text-2);line-height:1.75;margin-bottom:12px">${ev.summary}</p>
+      <div style="display:flex;gap:16px;flex-wrap:wrap">
+        <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:4px">Severity</div><div style="font-size:28px;font-weight:700;font-variant-numeric:tabular-nums">${ev.severity.toFixed(2)}</div></div>
+        <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:4px">Duration</div><div style="font-size:28px;font-weight:700;font-variant-numeric:tabular-nums">${ev.duration_weeks}w</div></div>
+        <div style="padding-top:2px"><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:8px">Data Quality</div><span class="arch-quality ${ev.data_quality}">${ev.data_quality}</span></div>
+      </div>
+    </div>
+    <div class="dd-sec-title">Signal Moves — 30 Days</div>
+    ${sigRows}
+    <button class="arch-run-btn" onclick="loadEventInAnalyze('${ev.event_id}');closeArchiveDrill()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      Run full analysis in Analyze tab
+    </button>`;
+  document.getElementById('archOverlay').classList.add('open');
+}
+function closeArchiveDrill(evt){if(evt&&evt.target!==document.getElementById('archOverlay'))return;document.getElementById('archOverlay').classList.remove('open');}
+function loadEventInAnalyze(eventId){
+  const ev=ARCHIVE_DATA&&ARCHIVE_DATA.events.find(e=>e.event_id===eventId);if(!ev)return;
+  CFG.event={event:ev.event_type,date:ev.date,severity:ev.severity};
+  document.getElementById('evtLabel').textContent=ev.name+' · '+fmtDate(ev.date);
+  setTab('analyze');
+  document.getElementById('signalChain').innerHTML='<div style="text-align:center;padding:60px 0;font-family:var(--font-mono);font-size:12px;color:var(--text-3)">Running analysis…</div>';
+  DATA=null;doFetch();
+}
+
+/* COMPARISON */
+function loadComparison(){
   fetch(CFG.base+'/v1/demo/scenarios',{headers:{'Authorization':'Bearer '+CFG.token}})
-  .then(r=>{if(!r.ok)throw new Error('not ready');return r.json();})
-  .then(data=>{CMP_DATA=data;renderCmpScenarios();})
-  .catch(()=>{CMP_DATA=CMP_MOCK;renderCmpScenarios();});
+  .then(r=>{if(!r.ok)throw new Error('');return r.json();})
+  .then(data=>{CMP_DATA=data;initCmpUI();})
+  .catch(()=>{CMP_DATA=CMP_MOCK;initCmpUI();});
 }
-function renderCmpScenarios() {
-  if(!CMP_DATA) return;
-  const btnBar=document.getElementById('cmpScenarioBtns');
-  btnBar.innerHTML=CMP_DATA.scenarios.map((s,i)=>`<button class="cmp-scenario-btn${i===CMP_SCENARIO?' active':''}" onclick="setCmpScenario(${i})">${s.title}</button>`).join('');
-  renderCmpBody(CMP_DATA.scenarios[CMP_SCENARIO]);
+function initCmpUI(){
+  if(!CMP_DATA)return;
+  document.getElementById('cmpScenarioBtns').innerHTML=CMP_DATA.scenarios.map((s,i)=>`<button class="cmp-scenario-btn${i===0?' active':''}" onclick="setCmpScenario(${i})">${s.title}</button>`).join('');
+  renderCmpScenario(0);
 }
-function setCmpScenario(idx) {
+function setCmpScenario(idx){
   CMP_SCENARIO=idx;
   document.querySelectorAll('.cmp-scenario-btn').forEach((b,i)=>b.classList.toggle('active',i===idx));
-  renderCmpBody(CMP_DATA.scenarios[idx]);
+  renderCmpScenario(idx);
 }
-function renderCmpBody(s) {
-  const gt=s.ground_truth,ca=s.case_a,cb=s.case_b;
-  function colHTML(c,side) {
+function renderCmpScenario(idx){
+  const s=CMP_DATA.scenarios[idx];
+  document.getElementById('cmpQueryText').textContent=s.query;
+  document.getElementById('cmpStatus').textContent='Showing cached results — click to run live agents';
+  document.getElementById('cmpProgress').style.display='none';
+  document.getElementById('cmpRunBtn').disabled=false;
+  renderCmpBody(s,false);
+}
+function runLiveComparison(){
+  const s=CMP_DATA.scenarios[CMP_SCENARIO];
+  const btn=document.getElementById('cmpRunBtn'),prog=document.getElementById('cmpProgress');
+  btn.disabled=true;btn.innerHTML='<span>\u23f3</span> Running…';prog.style.display='block';
+  document.getElementById('cmpStatus').textContent='Live agents running — this takes ~25 seconds';
+  const pA=document.getElementById('cpA'),pB=document.getElementById('cpB');
+  pA.className='cmp-prog-row running';pB.className='cmp-prog-row running';
+  pA.innerHTML=`<span class="cmp-prog-dot"></span>Case A: Multi-step LLM agent (4 calls)…`;
+  pB.innerHTML=`<span class="cmp-prog-dot"></span>Case B: Single NAXA API call…`;
+  const start=Date.now();
+  fetch(CFG.base+'/v1/demo/compare',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+CFG.token},body:JSON.stringify({scenario:s.scenario_id}),signal:AbortSignal.timeout(90000)})
+  .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+  .then(data=>{
+    const elapsed=((Date.now()-start)/1000).toFixed(1);
+    pA.className='cmp-prog-row done';pA.innerHTML=`<span class="cmp-prog-dot"></span>Case A: done in ${data.case_a.time_seconds}s`;
+    pB.className='cmp-prog-row done';pB.innerHTML=`<span class="cmp-prog-dot"></span>Case B: done in ${data.case_b.time_seconds}s`;
+    btn.innerHTML='<span>\u25b6</span> Run Live Comparison';btn.disabled=false;
+    document.getElementById('cmpStatus').textContent=`Live run complete in ${elapsed}s`;
+    const liveScenario=Object.assign({},s,{case_a:data.case_a,case_b:data.case_b});
+    renderCmpBody(liveScenario,true);
+  })
+  .catch(err=>{
+    btn.innerHTML='<span>\u25b6</span> Run Live Comparison';btn.disabled=false;prog.style.display='none';
+    document.getElementById('cmpStatus').textContent='Live run failed ('+err.message+') — add POST /v1/demo/compare endpoint to app.py';
+  });
+}
+function renderCmpBody(s,isLive){
+  function colHTML(c,side){
     const isA=side==='a';
-    const assetsHTML=c.assets_identified.map(a=>`
-      <div class="cmp-asset-row">
-        <div><div class="cmp-asset-name">${a.asset}</div>${a.basis?`<div class="cmp-asset-basis">"${a.basis}"</div>`:''}</div>
-        <div class="cmp-asset-right">
-          <div><span class="cmp-asset-dir ${a.direction}">${DIR_ARROW[a.direction]||''} ${a.direction}</span></div>
-          ${isA
-            ? `<span class="cmp-asset-conf">conf: ${a.confidence.toFixed(1)} — no basis</span>`
-            : `<span class="cmp-asset-conf">conf: ${a.confidence.toFixed(3)} · n=${a.n_events} · hr: ${a.hit_rate.toFixed(3)}</span>`
-          }
-          ${a.flag?`<div><span class="cmp-asset-flag">${a.flag}</span></div>`:''}
-          ${!isA&&a.measured_30d!=null?`<div style="font-size:11px;font-weight:600;color:${a.measured_30d>=0?'var(--up-text)':'var(--down-text)'};font-variant-numeric:tabular-nums;text-align:right;margin-top:2px">actual: ${fmtMov(a.measured_30d)}</div>`:''}
-        </div>
-      </div>`).join('');
-    const listItems=(isA?c.issues:c.strengths).map(t=>`<div class="cmp-item"><span class="cmp-item-icon">${isA?'✗':'✓'}</span><span>${t}</span></div>`).join('');
-    const srcVal=isA?'None':'FRED + yfinance';
-    return `<div class="cmp-col case-${side}">
-      <div class="cmp-col-hdr">
-        <div class="cmp-col-label">${c.label}</div>
-        <div class="cmp-col-approach">${c.approach}</div>
-        <div class="cmp-metrics">
-          <div class="cmp-metric"><div class="cmp-metric-val">${c.time_seconds}s</div><div class="cmp-metric-lbl">Time</div></div>
-          <div class="cmp-metric"><div class="cmp-metric-val">${c.api_calls}</div><div class="cmp-metric-lbl">API calls</div></div>
-          <div class="cmp-metric"><div class="cmp-metric-val">${isA?'0':c.sources}</div><div class="cmp-metric-lbl">Sources</div></div>
-        </div>
-      </div>
-      <div class="cmp-col-body">
-        <div class="cmp-section-title">Assets identified</div>
-        ${assetsHTML}
-        <div class="cmp-item-list">
-          <div class="cmp-section-title">${isA?'Issues':'Strengths'}</div>
-          ${listItems}
-        </div>
-      </div>
-    </div>`;
+    const assetsHTML=c.assets_identified.map(a=>`<div class="cmp-asset-row"><div><div class="cmp-asset-name">${a.asset}</div>${a.basis?`<div class="cmp-asset-basis">"${a.basis}"</div>`:''}</div><div class="cmp-asset-right"><span class="cmp-asset-dir ${a.direction}">${DIR_ARROW[a.direction]||''} ${a.direction}</span>${isA?`<span class="cmp-asset-conf">conf: ${typeof a.confidence==='number'?a.confidence.toFixed(1):a.confidence} — no n=</span>`:`<span class="cmp-asset-conf">conf: ${typeof a.confidence==='number'?a.confidence.toFixed(3):a.confidence} · n=${a.n_events||'—'} · hr: ${a.hit_rate!=null?a.hit_rate.toFixed(3):'—'}</span>`}${a.flag?`<div><span class="cmp-asset-flag">${a.flag}</span></div>`:''}${!isA&&a.measured_30d!=null?`<div style="font-size:11px;font-weight:600;color:${a.measured_30d>=0?'var(--up-text)':'var(--down-text)'};text-align:right;font-variant-numeric:tabular-nums;margin-top:2px">actual: ${fmtMov(a.measured_30d)}</div>`:''}</div></div>`).join('');
+    const listItems=(isA?c.issues:c.strengths).map(t=>`<div class="cmp-item"><span class="cmp-item-icon">${isA?'\u2717':'\u2713'}</span><span>${t}</span></div>`).join('');
+    return `<div class="cmp-col case-${side}"><div class="cmp-col-hdr"><div class="cmp-col-label">${c.label}${isLive?'<span class="live-badge">LIVE</span>':''}</div><div class="cmp-col-approach">${c.approach}</div><div class="cmp-metrics"><div class="cmp-metric"><div class="cmp-metric-val">${c.time_seconds}s</div><div class="cmp-metric-lbl">Time</div></div><div class="cmp-metric"><div class="cmp-metric-val">${c.api_calls}</div><div class="cmp-metric-lbl">API calls</div></div><div class="cmp-metric"><div class="cmp-metric-val">${isA?'0':c.sources||14}</div><div class="cmp-metric-lbl">Sources</div></div></div></div><div class="cmp-col-body"><div class="cmp-section-title">Assets identified</div>${assetsHTML}<div class="cmp-item-list"><div class="cmp-section-title">${isA?'Issues':'Strengths'}</div>${listItems}</div></div></div>`;
   }
-  document.getElementById('cmpBody').innerHTML=`
-    <div class="cmp-query"><div class="cmp-query-label">Query</div><div class="cmp-query-text">${s.query}</div></div>
-    <div class="cmp-cols">${colHTML(ca,'a')}${colHTML(cb,'b')}</div>
-    <div class="cmp-truth">
-      <div class="cmp-truth-label">Ground Truth — What Actually Happened (30 days)</div>
-      <div class="cmp-truth-grid">
-        <div><div class="cmp-truth-val">+${gt.freight_rate_actual_30d}%</div><div class="cmp-truth-lbl">Freight Rates</div></div>
-        <div><div class="cmp-truth-val">+${gt.container_equities_actual_30d}%</div><div class="cmp-truth-lbl">Container Equities</div></div>
-        <div><div class="cmp-truth-val">+${gt.tanker_equities_actual_30d}%</div><div class="cmp-truth-lbl">Tanker Equities</div></div>
-      </div>
-      <div class="cmp-truth-note">${gt.note}</div>
-    </div>
-    <div class="cmp-verdict"><div class="cmp-verdict-label">Verdict</div><div class="cmp-verdict-text">${s.verdict}</div></div>`;
+  const gt=s.ground_truth,ca=s.case_a,cb=s.case_b;
+  document.getElementById('cmpBody').innerHTML=`<div class="cmp-cols">${colHTML(ca,'a')}${colHTML(cb,'b')}</div><div class="cmp-truth"><div class="cmp-truth-label">Ground Truth — What Actually Happened (30 days)</div><div class="cmp-truth-grid"><div><div class="cmp-truth-val">+${gt.freight_rate_actual_30d}%</div><div class="cmp-truth-lbl">Freight Rates</div></div><div><div class="cmp-truth-val">+${gt.container_equities_actual_30d}%</div><div class="cmp-truth-lbl">Container Equities</div></div><div><div class="cmp-truth-val">+${gt.tanker_equities_actual_30d}%</div><div class="cmp-truth-lbl">Tanker Equities</div></div></div><div class="cmp-truth-note">${gt.note}</div></div><div class="cmp-verdict"><div class="cmp-verdict-label">Verdict</div><div class="cmp-verdict-text">${s.verdict}</div></div>`;
 }
 
-// ── HELPERS ───────────────────────────────────────────────
-function synHL(json) {
-  return json.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/("(?:[^"\\]|\\.)*"(\s*:)?|\b(?:true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)/g,m=>{
-      if(/^"/.test(m)) return /:$/.test(m)?`<span class="json-k">${m}</span>`:`<span class="json-s">${m}</span>`;
-      if(/true|false/.test(m)) return `<span class="json-b">${m}</span>`;
-      if(/null/.test(m)) return `<span class="json-null">${m}</span>`;
-      return `<span class="json-n">${m}</span>`;
-    });
-}
-function fmtMov(n){if(n==null)return '—';return(n>=0?'+':'')+n.toFixed(1)+'%';}
-function isDivg(measured,rangeStr){
-  if(!rangeStr||measured==null) return false;
-  try{const pts=rangeStr.replace(/%/g,'').split(' to ');const lo=parseFloat(pts[0]),hi=parseFloat(pts[1]);return !isNaN(lo)&&!isNaN(hi)&&(measured<lo||measured>hi);}catch(e){return false;}
-}
-function fmtEvtTitle(type,date){
-  const map={canal_restriction:'Panama Canal Drought',suez_blockage:'Suez Canal Blockage',red_sea_disruption:'Red Sea Disruption'};
-  const d=new Date(date);
-  return(map[type]||type.replace(/_/g,' '))+' — '+d.toLocaleString('default',{month:'long',timeZone:'UTC'})+' '+d.getUTCFullYear();
-}
+/* GUIDE FAQS */
+function toggleFaq(el){el.classList.toggle('open');const icon=el.querySelector('.guide-faq-q span');if(icon)icon.textContent=el.classList.contains('open')?'\u2212':'+';}
+
+/* API NAV SCROLL */
+function scrollApiSec(id){document.getElementById('api-'+id).scrollIntoView({behavior:'smooth',block:'start'});}
+
+/* HELPERS */
+function synHL(json){return json.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/("(?:[^"\\]|\\.)*"(\s*:)?|\b(?:true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)/g,m=>{if(/^"/.test(m))return /:$/.test(m)?`<span class="json-k">${m}</span>`:`<span class="json-s">${m}</span>`;if(/true|false/.test(m))return `<span class="json-b">${m}</span>`;if(/null/.test(m))return `<span class="json-null">${m}</span>`;return `<span class="json-n">${m}</span>`;});}
+function fmtMov(n){if(n==null)return '\u2014';return(n>=0?'+':'')+n.toFixed(1)+'%';}
+function isDivg(measured,rangeStr){if(!rangeStr||measured==null)return false;try{const pts=rangeStr.replace(/%/g,'').split(' to ');const lo=parseFloat(pts[0]),hi=parseFloat(pts[1]);return !isNaN(lo)&&!isNaN(hi)&&(measured<lo||measured>hi);}catch(e){return false;}}
+function fmtEvtTitle(type,date){const map={canal_restriction:'Panama Canal Drought',suez_blockage:'Suez Canal Blockage',red_sea_disruption:'Red Sea Disruption'};const d=new Date(date);return(map[type]||type.replace(/_/g,' '))+' \u2014 '+d.toLocaleString('default',{month:'long',timeZone:'UTC'})+' '+d.getUTCFullYear();}
 function fmtDate(ds){const d=new Date(ds);return d.toLocaleString('default',{month:'short',year:'numeric',timeZone:'UTC'});}
-function shortSummary(raw){if(!raw)return '—';const s=raw.split('.').slice(0,2).join('.').trim();return(s.length>220?s.slice(0,220)+'…':s)+'.';}
-function backRange(basis){if(!basis)return '—';const m=basis.match(/(\d{4}-\d{4})/);return m?m[1]:basis;}
+function shortSummary(raw){if(!raw)return '\u2014';const s=raw.split('.').slice(0,2).join('.').trim();return(s.length>220?s.slice(0,220)+'\u2026':s)+'.';}
+function backRange(basis){if(!basis)return '\u2014';const m=basis.match(/(\d{4}-\d{4})/);return m?m[1]:basis;}
 function fmtMeth(m){if(!m)return '';return m.replace(/_/g,' ').replace('weighted ','wt. ').replace('penalized by sample size factor','sample-penalized');}
 </script>
 </body>

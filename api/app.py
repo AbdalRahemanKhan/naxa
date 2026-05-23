@@ -337,6 +337,29 @@ def list_events():
         "note":         "Additional event types (energy, agricultural) in roadmap.",
     }), 200
 
+@app.route("/v1/demo/compare", methods=["POST"])
+@require_api_key
+def demo_compare():
+    import threading
+    body = request.get_json(silent=True) or {}
+    scenario = body.get("scenario", "red_sea_houthi_2024")
+    results = {}
+
+    def run_a():
+        from agents.case_a_no_naxa import run_case_a
+        results['a'] = run_case_a()
+
+    def run_b():
+        from agents.case_b_with_naxa import run_case_b
+        results['b'] = run_case_b()
+
+    t1 = threading.Thread(target=run_a)
+    t2 = threading.Thread(target=run_b)
+    t1.start(); t2.start()
+    t1.join(timeout=90); t2.join(timeout=90)
+
+    return jsonify({"case_a": results.get('a', {}), "case_b": results.get('b', {})})
+
 
 # ── POST /v1/analyze ──────────────────────────────────────────
 #
